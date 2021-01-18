@@ -122,6 +122,8 @@ namespace Minecraft_Building_Generator.UI.ViewModel
                     containers_and_squares = new UI_GridContainer[grid_size, grid_size];
                     containers_and_squares = ui_gridmap.InitializeGrid(grid_size);
                     UpdateGridObservables(containers_and_squares);
+
+                    //initializes the first gridcontainer to be selected
                     ui_gridmap.SelectedContainer(containers_and_squares[0, 0]);
      
                 }
