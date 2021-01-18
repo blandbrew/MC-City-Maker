@@ -1,4 +1,5 @@
-﻿using Minecraft_Building_Generator.UI.ViewModel;
+﻿using Minecraft_Building_Generator.Constants;
+using Minecraft_Building_Generator.UI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace Minecraft_Building_Generator.UI.Model
 {
     public class UI_GridContainer : GridMap_ViewModel
     {
-        public Rectangle rect { get; set; }
+       
         public (int, int) ContainerArrayCoordinate { get; private set; }
 
-        public bool selected { get; set; } = false;
-        public bool previously_selected { get; set; } = false;
-        public GridSquare_Zoning zone { get; set; }
+
+
+        //public GridSquare_Zoning zone { get; set; }
 
         /// <summary>
         /// Stored Grid square array in each container
@@ -25,9 +26,24 @@ namespace Minecraft_Building_Generator.UI.Model
 
         public HashSet<UI_GridContainer> AdjacentContainers { get; set; }
 
-        
 
 
+
+        private UI_GridContainer _Selected_container;
+        public UI_GridContainer Selected_container
+        {
+            get { return _Selected_container; }
+            set { _Selected_container = value; RaisePropertyChanged(nameof(Selected_container)); }
+
+        }
+
+        private UI_GridContainer _PreviouslySelected_container;
+        public UI_GridContainer PreviouslySelected_container
+        {
+            get { return _PreviouslySelected_container; }
+            set { _PreviouslySelected_container = value; RaisePropertyChanged(nameof(PreviouslySelected_container)); }
+
+        }
         private double _X;
         public double X
         {
@@ -83,6 +99,32 @@ namespace Minecraft_Building_Generator.UI.Model
 
         }
 
+        //public void SelectedContainer(UI_GridContainer selected)
+        //{
+        //    //If true, reset the container.  if False, set to true and mark as selected
 
+        //    if (PreviouslySelected_container == null)
+        //    {
+        //        PreviouslySelected_container = selected;
+        //        selected.FillColor = UI_Constants.Selected_Container_Color;
+        //        return;
+        //    }
+
+        //    //if same container clicked - clears it
+        //    if(PreviouslySelected_container == selected)
+        //    {
+        //        selected.FillColor = UI_Constants.Unselected_grid;
+        //        PreviouslySelected_container = null;
+        //        return;
+        //    }
+
+        //    if(PreviouslySelected_container != selected)
+        //    {
+        //        PreviouslySelected_container.FillColor = UI_Constants.Unselected_grid;
+        //        PreviouslySelected_container = selected;
+        //        selected.FillColor = UI_Constants.Selected_Container_Color;
+
+        //    } 
+        //}
     }
 }

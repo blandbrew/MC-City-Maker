@@ -13,7 +13,7 @@ namespace Minecraft_Building_Generator.UI.ViewModel
 
         protected void OnPropertyChange(string propertyName)
         {
-
+            Console.WriteLine("Changed: " + propertyName);
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -22,7 +22,7 @@ namespace Minecraft_Building_Generator.UI.ViewModel
 
         protected void RaisePropertyChanged(string propertyName)
         {
-            
+            Console.WriteLine("Changed: " + propertyName);
             // take a copy to prevent thread issues
             PropertyChangedEventHandler handler = PropertyChanged;
 

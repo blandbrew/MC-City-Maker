@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Minecraft_Building_Generator.Constants;
+using Minecraft_Building_Generator.UI.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +12,30 @@ namespace Minecraft_Building_Generator.UI.Model
     class UI_GridMap
     {
 
-        public UI_GridContainer[,] ui_gridContainer_array { get; set; }
+        private UI_GridContainer[,] ui_gridContainer_array { get; set; }
 
-        public int gridSize { get; set; }
-        public int previousSizeOfGrid { get; set; }
+        public int gridSize { get; private set; }
+        //public int previousSizeOfGrid { get; set; }
 
-        private UI_GridContainer previouslySelected_container { get; set; }
-        private UI_GridContainer selected_container { get; set; }
+        public UI_GridContainer PreviouslySelected_container { get; set; }
 
 
+
+        //private UI_GridContainer _Selected_container;
+        //public UI_GridContainer Selected_container
+        //{
+        //    get { return _Selected_container; }
+        //    set { _Selected_container = value; RaisePropertyChanged(nameof(Selected_container)); }
+
+        //}
+
+        //private UI_GridContainer _PreviouslySelected_container;
+        //public UI_GridContainer PreviouslySelected_container
+        //{
+        //    get { return _PreviouslySelected_container; }
+        //    set { _PreviouslySelected_container = value; RaisePropertyChanged(nameof(PreviouslySelected_container)); }
+
+        //}
 
         public UI_GridContainer GetContainer((int, int) container_location)
         {
@@ -45,11 +62,54 @@ namespace Minecraft_Building_Generator.UI.Model
 
         }
 
-
-
-
-        public void InitializeUIGridContainer(int gridSize)
+        public void SelectedContainer(UI_GridContainer selected)
         {
+            //If true, reset the container.  if False, set to true and mark as selected
+
+            if (PreviouslySelected_container == null)
+            {
+                PreviouslySelected_container = selected;
+                selected.FillColor = UI_Constants.Selected_Container_Color;
+                return;
+            }
+
+            //if same container clicked - clears it
+            //if (PreviouslySelected_container == selected)
+            //{
+            //    selected.FillColor = UI_Constants.Unselected_grid;
+            //    PreviouslySelected_container = null;
+            //    return;
+            //}
+
+            if (PreviouslySelected_container != selected)
+            {
+                PreviouslySelected_container.FillColor = UI_Constants.Unselected_grid;
+                PreviouslySelected_container = selected;
+                selected.FillColor = UI_Constants.Selected_Container_Color;
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+        public UI_GridContainer[,] InitializeGrid(int gSize)
+        {
+            gridSize = gSize;
+            InitializeUIGridContainer();
+            InitializeUIGridSquare();
+
+            return ui_gridContainer_array;
+        }
+
+        private void InitializeUIGridContainer()
+        {
+            ui_gridContainer_array = new UI_GridContainer[gridSize, gridSize];
             int separatorValue = 17;
             int x = 20;
             int y = 20;
@@ -59,15 +119,17 @@ namespace Minecraft_Building_Generator.UI.Model
             {
                 for (int j = 0; j < gridSize; j++)
                 {
+                    //Console.WriteLine("Initalize grid1");
                     ui_gridContainer_array[i,j] = new UI_GridContainer(x, y, Colors.White, Colors.White, (i,j));
                     x += separatorValue;
                 }
                 x = 20;
                 y += separatorValue;
+                //Console.WriteLine("Initalize grid2");
             }
         }
 
-        public void InitializeUIGridSquare()
+        private void InitializeUIGridSquare()
         {
             UI_GridContainer selected_container;
             int separatorValue = 23;
@@ -79,16 +141,19 @@ namespace Minecraft_Building_Generator.UI.Model
             {
                 for (int j = 0; j < gridSize; j++)
                 {
+                    //Console.WriteLine("Initalize grid3");
                     selected_container = ui_gridContainer_array[i, j];
                     UI_Grid_Square[,] _uiGridSquares = new UI_Grid_Square[Shared_Constants.GRID_SQUARE_SIZE, Shared_Constants.GRID_SQUARE_SIZE];
-
+                    //Console.WriteLine("Initalize grid4");
                     for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
                     {
                         for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
                         {
+                            //Console.WriteLine("Initalize grid5");
                             _uiGridSquares[m, n] = new UI_Grid_Square(x, y, Colors.White, Colors.White, (i, j), (m, n));
 
                             x += separatorValue;
+                            //Console.WriteLine("Initalize grid6");
                         }
 
                         x = 10;
@@ -101,8 +166,8 @@ namespace Minecraft_Building_Generator.UI.Model
                
             }
 
-            AdjacenctContainerCalculation();
-            AdjacenctSquaresCalculation();
+            //AdjacenctContainerCalculation();
+            //AdjacenctSquaresCalculation();
         }
 
 
@@ -130,7 +195,7 @@ namespace Minecraft_Building_Generator.UI.Model
                     //next
                     if ((j + 1 < gridSize) && ui_gridContainer_array[i, j + 1] != null)
                     {
-                        Console.WriteLine("ADDED CONTAINER");
+                        //Console.WriteLine("ADDED CONTAINER");
                         aContainer.AdjacentContainers.Add(ui_gridContainer_array[i, j + 1]);
                     }
                     //above
@@ -195,13 +260,15 @@ namespace Minecraft_Building_Generator.UI.Model
                                 (bool, string) edgeResult = EdgeTest(i, j, m, n);
 
                                 if (edgeResult.Item1)
+                                {
+                                    Console.WriteLine(edgeResult.Item2);
                                     GetAdjacentSquareFromAnotherContainer(aGridSquare, edgeResult.Item2);
-
+                                }
 
                             }
                             catch (IndexOutOfRangeException err)
                             {
-                                Console.WriteLine(err);
+                                //Console.WriteLine(err);
                             }
 
                         }
@@ -218,12 +285,12 @@ namespace Minecraft_Building_Generator.UI.Model
             //not working because of the limits imposed by i != 0, what happens if i does equal zero....
             if (m == 0 && i - 1 >= 0)
                 return (true, "north");
-            else if (m == 12 && i + 1 <= 12)
+            else if (m == 12 && i + 1 <= gridSize)
                 return (true, "south");
             else if (n == 0 && j - 1 >= 0)
-                return (true, "West");
-            else if (n == 12 && j <= 12)
-                return (true, "East");
+                return (true, "west");
+            else if (n == 12 && j <= gridSize)
+                return (true, "east");
 
             return (false, "none");
         }
@@ -270,8 +337,9 @@ namespace Minecraft_Building_Generator.UI.Model
 
             //current grid square, need to know adjacnet one in another container
             //aGridSquare
-            Console.WriteLine("Parent square: " + current_square.SquareArrayCoordinate);
-            Console.WriteLine("adjcent square: " + adjSquare.SquareArrayCoordinate);
+            Console.WriteLine("direction: " + direction);
+            //Console.WriteLine("Parent square: " + current_square.SquareArrayCoordinate);
+            //Console.WriteLine("adjcent square: " + adjSquare.SquareArrayCoordinate);
             current_square.AdjacentSquares.Add(adjSquare);
             adjSquare.AdjacentSquares.Add(current_square);
         }

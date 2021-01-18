@@ -83,8 +83,6 @@
     <Compile Include="UI\Model\UI_GridContainer.cs" />
     <Compile Include="UI\Model\UI_GridMap.cs" />
     <Compile Include="UI\Model\UI_Grid_Square.cs" />
-    <Compile Include="UI\_UI_GridContainer.cs" />
-    <Compile Include="UI\_UI_GridSquares.cs" />
     <Compile Include="UI\ViewModel\GridMap_ViewModel.cs" />
     <Compile Include="UI\ViewModel\RelayCommand.cs" />
     <Compile Include="UI\ViewModel\ViewModelBase.cs" />

@@ -11,6 +11,8 @@ namespace Minecraft_Building_Generator.Constants
     {
         public const int UI_Rectangle_Width = 15;
         public const int UI_Rectangle_Height = 15;
+        public static Color Selected_Container_Color = Colors.Red;
+        public static Color Unselected_grid = Colors.White;
 
         public static Color GetZoningColor(GridSquare_Zoning zone)
         {
@@ -27,11 +29,11 @@ namespace Minecraft_Building_Generator.Constants
                 }
                 case GridSquare_Zoning.Water:
                 {
-                    return Colors.Gray;
+                    return Colors.Blue;
                 }
                 case GridSquare_Zoning.Scenery:
                 {
-                    return Colors.Gray;
+                    return Colors.Green;
                 }
             }
 

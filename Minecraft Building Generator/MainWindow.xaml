@@ -82,7 +82,7 @@
 
 
         <!--Middle-->
-        <ItemsControl ItemsSource="{Binding ui_gridContainer}" Margin="38,87,1082,447">
+        <ItemsControl ItemsSource="{Binding observable_ui_gridContainer}" Margin="38,87,1082,447">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="DarkOliveGreen"/>
@@ -114,10 +114,9 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding ui_gridSquare}" Margin="392,87,519,299">
+        <ItemsControl ItemsSource="{Binding observable_ui_gridSquare}" Margin="392,87,519,299">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-
                     <Canvas Background="gray"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>

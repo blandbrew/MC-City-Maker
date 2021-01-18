@@ -75,6 +75,8 @@ namespace Minecraft_Building_Generator.UI.Model
         {
             X = x;
             Y = y;
+            Width = Shared_Constants.UI_GRID_RECTANGLE_SIZE;
+            Height = Shared_Constants.UI_GRID_RECTANGLE_SIZE;
             Color = color;
             FillColor = fillcolor;
             ParentContainerArrayCoordinate = containerarraycoords;
@@ -83,7 +85,7 @@ namespace Minecraft_Building_Generator.UI.Model
 
         }
 
-        public 
+       
 
 
     }

@@ -26,10 +26,19 @@ namespace Minecraft_Building_Generator.UI.ViewModel
         private ICommand vmClickGridContainer;
         private ICommand vmClickGridSquare;
 
+        UI_GridContainer[,] containers_and_squares;
+
+        public ObservableCollection<UI_GridContainer> observable_ui_gridContainer { get; private set; } = new ObservableCollection<UI_GridContainer>();
+        public ObservableCollection<UI_Grid_Square> observable_ui_gridSquare { get; private set; } = new ObservableCollection<UI_Grid_Square>();
+        //ObservableCollection<UI_GridContainer> observable_ui_gridContainer;
+        //ObservableCollection<UI_Grid_Square> observable_ui_gridSquare;
+
         //initializes 
         public GridMap_ViewModel()
         {
             ui_gridmap = new UI_GridMap();
+            //observable_ui_gridContainer = new ObservableCollection<UI_GridContainer>();
+            //observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
             NewCity = new RelayCommand(new Action<object>(ShowMessage));
             MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
@@ -93,18 +102,28 @@ namespace Minecraft_Building_Generator.UI.ViewModel
             get { return GridMapSizes; }
             set { GridMapSizes = value;  }
         }
+
         public int SelectedGridSize
         {
             get { return GridMap.number_of_Grid_Containers; }
             set {
-                    if(ui_gridContainer != null)
+                    if(observable_ui_gridContainer != null)
                     {
-                        ui_gridContainer.Clear();
-                        ui_gridSquare.Clear();
+                        observable_ui_gridContainer.Clear();   
                     }
-                        GridMap.number_of_Grid_Containers = (int)Math.Sqrt(value);
-                        SetUIGridContainer(GridMap.number_of_Grid_Containers);
-                        SetUIGridSquare();
+                    if(observable_ui_gridSquare != null)
+                    {
+                        observable_ui_gridSquare.Clear();
+                    }
+                
+                    //Inlitializes the grid with the square root of the selected map size, the container array
+                    //is returned to be added to observables
+                    int grid_size = (int)Math.Sqrt(value);
+                    containers_and_squares = new UI_GridContainer[grid_size, grid_size];
+                    containers_and_squares = ui_gridmap.InitializeGrid(grid_size);
+                    UpdateGridObservables(containers_and_squares);
+                    ui_gridmap.SelectedContainer(containers_and_squares[0, 0]);
+     
                 }
         }
         #endregion GridMapSize Definition
@@ -113,140 +132,92 @@ namespace Minecraft_Building_Generator.UI.ViewModel
 
 
 
-        public ObservableCollection<UI_GridContainer> ui_gridContainer { get; private set; } = new ObservableCollection<UI_GridContainer>();
-        public ObservableCollection<UI_Grid_Square> ui_gridSquare { get; private set; } = new ObservableCollection<UI_Grid_Square>();
-        
-        //public void SetUIGridContainer(int gridSize)
-        //{   
-        //    int separatorValue = 17;
-        //    int x = 20;
-        //    int y = 20;
- 
-        //    //initialize 2d array of grid planner
-        //    for (int i = 0; i < gridSize; i++)
+
+
+        //private ObservableCollection<UI_Grid_Square> _observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
+        //public ObservableCollection<UI_Grid_Square> _observable_ui_gridSquare
+        //{
+        //    get { return observable_ui_gridSquare; }
+        //    set
         //    {
-        //        for (int j = 0; j < gridSize; j++)
-        //        {
-
-
-        //            ui_gridContainer.Add(new UI_GridContainer(x, y, Colors.White, Colors.White));
-
-        //            x += separatorValue;
-        //        }
-        //        x = 20;
-        //        y += separatorValue;
+        //        observable_ui_gridSquare = value;
+        //        //RaisePropertyChanged("observable_ui_gridSquare");
         //    }
+
         //}
-        public void SetUIGridSquare()
-        {
-            int separatorValue = 23;
-            int x = 10;
-            int y = 10;
 
-            //initialize 2d array of grid planner
-            for (int i = 0; i < Shared_Constants.GRID_SQUARE_SIZE; i++)
-            {
-                for (int j = 0; j < Shared_Constants.GRID_SQUARE_SIZE; j++)
-                {
-                    ui_gridSquare.Add(new UI_GridSquare
-                    {
-                        X = x,
-                        Y = y,
-                        Width = Shared_Constants.UI_GRID_RECTANGLE_SIZE+7,
-                        Height = Shared_Constants.UI_GRID_RECTANGLE_SIZE+7,
-                        Color = Colors.White,
-                        FillColor = Colors.White
-                    });
-                
-                        
-                       
-                    x += separatorValue;
-                }
-                x = 10;
-                y += separatorValue;
-            }
-        }
+        //public ObservableCollection<UI_GridContainer> _observable_ui_gridContainer
+        //{
+        //    get { return observable_ui_gridContainer; }
+        //    set
+        //    {
+        //        observable_ui_gridContainer = value;
+        //        //RaisePropertyChanged("observable_ui_gridContainer");
+        //    }
 
+        //}
 
-        
 
 
         public void ShowMessage(object obj)
         {
-            Console.WriteLine(obj);
-            _UI_GridSquares temp = (_UI_GridSquares)obj;
-            Console.WriteLine(temp.X);
+            
             MessageBox.Show("Showme");
         }
 
-        public void SelectGridSquare(object obj)
-        {
-            _UI_GridSquares temp = (_UI_GridSquares)obj;
-            Console.WriteLine(temp.X);
-          
-        }
  
         public void SelectContainer(object obj)
         {
 
-            _UI_GridContainer temp = (_UI_GridContainer)obj;
-            Console.WriteLine(temp.X);
+            UI_GridContainer temp = (UI_GridContainer)obj;
+            ui_gridmap.SelectedContainer(temp);
+            Console.WriteLine("SelectingContainer");
 
         }
-
-
 
         public void SelectSquare(object obj)
         {
 
-            _UI_GridSquares temp = (_UI_GridSquares)obj;
-            Console.WriteLine(temp.X);
+            UI_Grid_Square temp = (UI_Grid_Square)obj;
+            Console.WriteLine("Selectingsquare");
 
         }
 
 
 
+        public void UpdateGridObservables(UI_GridContainer[,] grid)
+        {
+
+            UI_GridContainer initial = grid[0,0]; 
+            for (int i = 0; i < ui_gridmap.gridSize; i++)
+            {
+                for (int j = 0; j < ui_gridmap.gridSize; j++)
+                {
+                    //adds each gridcontainer to observables
+                    
+                    observable_ui_gridContainer.Add(grid[i, j]);  
+                }
+            }
+
+            for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
+            {
+                for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
+                {
+                    //adds each grid square to observables (But only one container)
+                    //if the for loop is not split up like this then, it will continue to add ALL the gridsquares
+                    //to the observable and then it will have hundreds of squares on the canvas.
+                    observable_ui_gridSquare.Add(initial.ui_GridSquares_array[m, n]);
+                    //Console.WriteLine("Coordinate is: " + grid[i, j].ui_GridSquares_array[m, n].X + ", " + grid[i, j].ui_GridSquares_array[m, n].Y);
+
+                }
+            }
+
+        }
 
 
 
-        //public string SetNumberOfContainers()
-        //{
-        //    get => ui_gridmap.gridSize + "";
-
-        //    set
-        //    {
-        //        if (ui_gridmap.gridSize != value)
-        //        {
-        //            string _temp = ui_gridmap.gridSize + "";
-        //            _temp = value;
-        //            OnPropertyChange("GridSize");
-
-        //        }
-        //    }
-        //}
-
-
-        //public string GridSize
-        //{
-        //    get => gridmap.gridSize + "";
-        //    set
-        //    {
-        //        if (gridmap.gridSize + "" != value)
-        //        {
-        //            string _temp = gridmap.gridSize + "";
-        //            _temp = value;
-        //            OnPropertyChange("GridSize");
-
-        //        }
-        //    }
-        //}
-
-
-
-
-
-
-
+        
+        
 
 
     }
