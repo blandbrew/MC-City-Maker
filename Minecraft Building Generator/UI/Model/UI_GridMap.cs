@@ -73,13 +73,6 @@ namespace Minecraft_Building_Generator.UI.Model
                 return;
             }
 
-            //if same container clicked - clears it
-            //if (PreviouslySelected_container == selected)
-            //{
-            //    selected.FillColor = UI_Constants.Unselected_grid;
-            //    PreviouslySelected_container = null;
-            //    return;
-            //}
 
             if (PreviouslySelected_container != selected)
             {
@@ -90,7 +83,31 @@ namespace Minecraft_Building_Generator.UI.Model
             }
         }
 
+        public void SelectedSquare(UI_Grid_Square selected, GridSquare_Zoning zone)
+        {
+            if(selected.Selected == false)
+            {
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                selected.Zone = zone;
+                selected.Selected = true;
+                return;
+            }
+            if (selected.Selected == true && selected.Zone != zone)
+            {
+               
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                selected.Zone = zone;
+                return;
+            }
 
+            if (selected.Selected == true)
+            {
+                //clear the square
+                selected.FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);
+                selected.Zone = GridSquare_Zoning.None;
+                selected.Selected = false;  
+            }
+        }
 
 
 
@@ -150,7 +167,7 @@ namespace Minecraft_Building_Generator.UI.Model
                         for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
                         {
                             //Console.WriteLine("Initalize grid5");
-                            _uiGridSquares[m, n] = new UI_Grid_Square(x, y, Colors.White, Colors.White, (i, j), (m, n));
+                            _uiGridSquares[m, n] = new UI_Grid_Square(x, y,Shared_Constants.UI_GRID_RECTANGLE_SIZE+7, Shared_Constants.UI_GRID_RECTANGLE_SIZE+7, Colors.White, Colors.White, (i, j), (m, n));
 
                             x += separatorValue;
                             //Console.WriteLine("Initalize grid6");
@@ -161,7 +178,7 @@ namespace Minecraft_Building_Generator.UI.Model
                     }
                     selected_container.ui_GridSquares_array = _uiGridSquares;
                     x = 10;
-                    y += separatorValue;
+                    y = 10;
                 }
                
             }

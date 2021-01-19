@@ -21,14 +21,50 @@ namespace Minecraft_Building_Generator.UI.Model
         public (int, int) SquareArrayCoordinate { get; private set; }
 
         public Rectangle rectangle { get; set; }
-        public bool Selected { get; set; }
-        public GridSquare_Zoning zone { get; set; }
+
+        //public GridSquare_Zoning zone { get; set; }
         public HashSet<UI_Grid_Square> AdjacentSquares { get; set; }
 
         public int clicks;
 
+   
 
 
+        //public (int, int) _ParentContainerArrayCoordinate;
+        //public (int, int) ParentContainerArrayCoordinate
+        //{
+        //    get { return _ParentContainerArrayCoordinate; }
+        //    set
+        //    {
+        //        _ParentContainerArrayCoordinate = value; RaisePropertyChanged(nameof(ParentContainerArrayCoordinate));
+        //    }
+        //}
+
+        //private (int, int) _SquareArrayCoordinate;
+        //public (int, int) SquareArrayCoordinate
+        //{
+        //    get { return _SquareArrayCoordinate; }
+        //    set
+        //    {
+        //        _SquareArrayCoordinate = value; RaisePropertyChanged(nameof(SquareArrayCoordinate));
+        //    }
+        //}
+
+        private GridSquare_Zoning _Zone;
+        public GridSquare_Zoning Zone
+        {
+            get { return _Zone; }
+            set { _Zone = value; RaisePropertyChanged(nameof(Zone)); }
+
+        }
+
+        private bool _Selected = false;
+        public bool Selected
+        {
+            get { return _Selected; }
+            set { _Selected = value; RaisePropertyChanged(nameof(Selected)); }
+
+        }
         private double _X;
         public double X
         {
@@ -71,12 +107,12 @@ namespace Minecraft_Building_Generator.UI.Model
             set { _FillColor = value; RaisePropertyChanged(nameof(FillColor)); }
         }
 
-        public UI_Grid_Square(double x, double y, Color color, Color fillcolor, (int, int) containerarraycoords, (int, int) SquareCoord)
+        public UI_Grid_Square(double x, double y, double width, double height, Color color, Color fillcolor, (int, int) containerarraycoords, (int, int) SquareCoord)
         {
             X = x;
             Y = y;
-            Width = Shared_Constants.UI_GRID_RECTANGLE_SIZE;
-            Height = Shared_Constants.UI_GRID_RECTANGLE_SIZE;
+            Width = width;
+            Height = height;
             Color = color;
             FillColor = fillcolor;
             ParentContainerArrayCoordinate = containerarraycoords;

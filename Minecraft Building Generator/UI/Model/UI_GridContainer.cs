@@ -28,6 +28,15 @@ namespace Minecraft_Building_Generator.UI.Model
 
 
 
+        //public (int, int) _ContainerArrayCoordinate;
+        //public (int, int) ContainerArrayCoordinate
+        //{
+        //    get { return _ContainerArrayCoordinate; }
+        //    set
+        //    {
+        //        _ContainerArrayCoordinate = value; RaisePropertyChanged(nameof(ContainerArrayCoordinate));
+        //    }
+        //}
 
         private UI_GridContainer _Selected_container;
         public UI_GridContainer Selected_container

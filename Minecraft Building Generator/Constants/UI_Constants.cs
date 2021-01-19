@@ -35,10 +35,40 @@ namespace Minecraft_Building_Generator.Constants
                 {
                     return Colors.Green;
                 }
+                case GridSquare_Zoning.None:
+                {
+                    return Colors.White;
+                }
             }
 
             return Colors.Transparent;
         }
 
+        public static GridSquare_Zoning StringToZoneConverter(string zone)
+        {
+            switch (zone)
+            {
+                case Shared_Constants.BUILDING:
+                    {
+                        return GridSquare_Zoning.Building;
+                    }
+                case Shared_Constants.INFRUSTRUCTURE:
+                    {
+                        return GridSquare_Zoning.Infrustructure;
+                    }
+                case Shared_Constants.WATER:
+                    {
+                        return GridSquare_Zoning.Water;
+                    }
+                case Shared_Constants.SCENARY:
+                    {
+                        return GridSquare_Zoning.Scenery;
+                    }
+                default:
+                    {
+                        return GridSquare_Zoning.None;
+                    }
+            }
+        }
     }
 }

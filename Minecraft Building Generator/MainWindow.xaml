@@ -23,7 +23,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <DockPanel>
+        <DockPanel Margin="0,0,0,0">
             <Menu DockPanel.Dock="Top" Background="#FF686868" Foreground="#FFD42929" Height="18" VerticalAlignment="Top" Visibility="Visible">
 
                 <MenuItem Header="_File" Foreground="Black">
@@ -52,12 +52,10 @@
                     <MenuItem Header="Building Editor" />
                 </MenuItem>
             </Menu>
-
-
         </DockPanel>
 
         <!--Left Side-->
-        <GroupBox x:Name="groupBox" Header="Coordinates" HorizontalAlignment="Left" Height="117" Margin="38,414,0,0" VerticalAlignment="Top" Width="233" FontFamily="Segoe UI Black" FontSize="14" RenderTransformOrigin="0.524,0.786">
+        <GroupBox x:Name="groupBox" Header="Coordinates" HorizontalAlignment="Left" Height="117" Margin="24,400,0,0" VerticalAlignment="Top" Width="233" FontFamily="Segoe UI Black" FontSize="14" RenderTransformOrigin="0.524,0.786">
             <Grid >
                 <Label x:Name="label_xcoordinate" Content="X:" VerticalAlignment="Top" Height="29" Width="26" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
                 <TextBox x:Name="textBox_xcoordinate" Height="19" Margin="22,5,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
@@ -80,9 +78,13 @@
             </Grid>
         </GroupBox>
 
+        <StackPanel Orientation="Horizontal" Margin="68,52,1075,659">
+            <Label x:Name="label_containercoordinate" Content="Container Coordinate:" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Height="27" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,0"/>
+            <Label x:Name="dynamic_containercoordinate" Content="{Binding UIContainerArrayCoordinate}" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Width="57"/>
+        </StackPanel>
 
-        <!--Middle-->
-        <ItemsControl ItemsSource="{Binding observable_ui_gridContainer}" Margin="38,87,1082,447">
+
+        <ItemsControl ItemsSource="{Binding observable_ui_gridContainer}" Width="255" Margin="0,0,1042,407" VerticalAlignment="Bottom" Height="247"  HorizontalAlignment="Right" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="DarkOliveGreen"/>
@@ -99,7 +101,7 @@
                         </Rectangle.Fill>
                         <Rectangle.InputBindings>
                             <MouseBinding 
-                                Command="{Binding DataContext.ClickGridContainer, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                Command="{Binding DataContext.ClickGridContainer, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
                                 CommandParameter="{Binding}" 
                                 MouseAction="LeftClick"/>
                         </Rectangle.InputBindings>
@@ -113,6 +115,9 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
+
+        <!--Middle-->
+
 
         <ItemsControl ItemsSource="{Binding observable_ui_gridSquare}" Margin="392,87,519,299">
             <ItemsControl.ItemsPanel>
@@ -145,16 +150,68 @@
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
-        <!--<Canvas x:Name="Grid_Square_Canvas" HorizontalAlignment="Left" Height="399" Margin="362,89,0,0" VerticalAlignment="Top" Width="418" Background="Black" Grid.Column="1"/>-->
-        <!--<Canvas x:Name="Grid_Container_Canvas" HorizontalAlignment="Left" Height="399" Margin="19,61,0,0" VerticalAlignment="Top" Width="324" Background="#FFA81D1D" Grid.Column="1"/>-->
+
+        <GroupBox x:Name="groupBox1" Header="Zoning" HorizontalAlignment="Left" Height="48"  VerticalAlignment="Top" Width="339" Margin="401,447,0,0">
+            <StackPanel   Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="317" Margin="0,0,0,5">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type RadioButton}">
+                        <Setter Property="Margin" Value="10,0,0,0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <RadioButton x:Name="building" 
+                             Content="Building" 
+                             Command="{Binding ClickZone}" 
+                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                             IsChecked="True"
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top" />
+                <RadioButton x:Name="infrustructure" 
+                             Content="Infrustructure" 
+                             Command="{Binding ClickZone}"
+                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top"/>
+                <RadioButton x:Name="water" 
+                             Content="Water" 
+                             Command="{Binding ClickZone}"
+                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top" />
+                <RadioButton x:Name="Scenary" 
+                             Content="Scenary" 
+                             Command="{Binding ClickZone}"
+                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top"/>
+            </StackPanel>
+
+        </GroupBox>
+
+        <Label x:Name="label_squarecoordinate" Content="Square Coordinate:" HorizontalAlignment="Left" Margin="401,53,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+        <Label x:Name="dynamic_squarecoordinate" Content="{Binding UISquareArrayCoordinate}" HorizontalAlignment="Left" Margin="538,56,0,0" VerticalAlignment="Top" Height="26" Width="50"/>
 
 
-        <!--Right side-->
-        <StackPanel  Margin="0,51,17,56" HorizontalAlignment="Right" Width="250">
+
+        <!--Right side--><!--
+        <StackPanel  Margin="0,43,137,64" HorizontalAlignment="Right" Width="310">
             <Label Grid.Column="0" Grid.Row="1" Margin="4" Content="Grid Size:" HorizontalAlignment="Left"/>
-            <!-- UpdateSourceTrigger=PropertyChanged makes sure that changes in the TextBoxes are immediately applied to the model. -->
+            --><!-- UpdateSourceTrigger=PropertyChanged makes sure that changes in the TextBoxes are immediately applied to the model. --><!--
             <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="100"/>
-        </StackPanel>
+        </StackPanel>-->
+        <Grid Margin="1038,56,85,64">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,598">
+                <Label  Content="Grid Size:" Margin="0,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,598">
+                <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0" Width="141"  />
+            </StackPanel>
+        </Grid>
+
+
+
+
+
+
 
 
 

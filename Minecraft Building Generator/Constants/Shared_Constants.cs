@@ -41,6 +41,9 @@ namespace Minecraft_Building_Generator
 
         public const int FLAT_WORLD_STARTING_Y = 3;
 
-
+        public const string BUILDING = "Building";
+        public const string INFRUSTRUCTURE = "Infrustructure";
+        public const string WATER = "Water";
+        public const string SCENARY = "Scenary";
     }
 }

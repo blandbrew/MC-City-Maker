@@ -1,4 +1,5 @@
-﻿using Minecraft_Building_Generator.UI.Model;
+﻿using Minecraft_Building_Generator.Constants;
+using Minecraft_Building_Generator.UI.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -25,6 +27,12 @@ namespace Minecraft_Building_Generator.UI.ViewModel
         private ICommand vm_MouseDownCommand;
         private ICommand vmClickGridContainer;
         private ICommand vmClickGridSquare;
+        private ICommand vmSelectZone;
+
+        private (int, int) _UIContainerArrayCoordinate;
+        private (int, int) _UISquareArrayCoordinate;
+
+        private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
 
         UI_GridContainer[,] containers_and_squares;
 
@@ -43,6 +51,7 @@ namespace Minecraft_Building_Generator.UI.ViewModel
             MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
             ClickGridSquare = new RelayCommand(new Action<object>(SelectSquare));
+            ClickZone = new RelayCommand(new Action<object>(SelectZone));
         }
 
         #region Icommands
@@ -83,6 +92,16 @@ namespace Minecraft_Building_Generator.UI.ViewModel
                 vmClickGridSquare = value;
             }
         }
+        public ICommand ClickZone
+        {
+            get { return vmSelectZone; }
+            set
+            {
+                vmSelectZone = value;
+            }
+        }
+
+        
 
         #endregion Icommands
 
@@ -121,7 +140,7 @@ namespace Minecraft_Building_Generator.UI.ViewModel
                     int grid_size = (int)Math.Sqrt(value);
                     containers_and_squares = new UI_GridContainer[grid_size, grid_size];
                     containers_and_squares = ui_gridmap.InitializeGrid(grid_size);
-                    UpdateGridObservables(containers_and_squares);
+                    InitalizeGridObservables(containers_and_squares);
 
                     //initializes the first gridcontainer to be selected
                     ui_gridmap.SelectedContainer(containers_and_squares[0, 0]);
@@ -130,6 +149,108 @@ namespace Minecraft_Building_Generator.UI.ViewModel
         }
         #endregion GridMapSize Definition
 
+
+        public void ShowMessage(object obj)
+        {
+            
+            MessageBox.Show("Showme");
+        }
+
+ 
+        public void SelectContainer(object obj)
+        {
+
+            UI_GridContainer _selected = (UI_GridContainer)obj;
+            ui_gridmap.SelectedContainer(_selected);
+            UpdateGridSquares(_selected);
+            UIContainerArrayCoordinate = _selected.ContainerArrayCoordinate;
+            //Console.WriteLine("SelectingContainer");
+
+        }
+
+        public void SelectSquare(object obj)
+        {
+            UI_Grid_Square _selectedSquare = (UI_Grid_Square)obj;
+            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            ui_gridmap.SelectedSquare(_selectedSquare, vmSelectedZone);
+            //_selectedSquare.FillColor = UI_Constants.GetZoningColor(vmSelectedZone);
+            //Console.WriteLine("Selectingsquare: " + UISquareArrayCoordinate.Item1 + "," + UISquareArrayCoordinate.Item2);
+
+        }
+
+        public void SelectZone(object obj)
+        {
+            string selectedZone = (string)obj;
+            vmSelectedZone = UI_Constants.StringToZoneConverter(selectedZone);
+            Console.WriteLine(selectedZone);
+            
+        }
+
+
+        /// <summary>
+        /// Updates the Gridcontainer and square observables when there are changes
+        /// </summary>
+        /// <param name="grid"></param>
+        public void InitalizeGridObservables(UI_GridContainer[,] grid)
+        {
+
+            UI_GridContainer initial = grid[0,0]; 
+            for (int i = 0; i < ui_gridmap.gridSize; i++)
+            {
+                for (int j = 0; j < ui_gridmap.gridSize; j++)
+                {
+                    //adds each gridcontainer to observables
+                    
+                    observable_ui_gridContainer.Add(grid[i, j]);  
+                }
+            }
+
+            for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
+            {
+                for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
+                {
+                    //adds each grid square to observables (But only one container)
+                    //if the for loop is not split up like this then, it will continue to add ALL the gridsquares
+                    //to the observable and then it will have hundreds of squares on the canvas.
+                    observable_ui_gridSquare.Add(initial.ui_GridSquares_array[m, n]);
+                    //Console.WriteLine("Coordinate is: " + grid[i, j].ui_GridSquares_array[m, n].X + ", " + grid[i, j].ui_GridSquares_array[m, n].Y);
+
+                }
+            }
+
+        }
+
+        public void UpdateGridSquares(UI_GridContainer aContainer)
+        {
+            observable_ui_gridSquare.Clear();
+            
+            for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
+            {
+                for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
+                {
+                    observable_ui_gridSquare.Add(aContainer.ui_GridSquares_array[m, n]);
+                }
+            }
+        }
+
+        public (int,int) UIContainerArrayCoordinate
+        {
+            get { return _UIContainerArrayCoordinate; }
+            set
+            {
+                _UIContainerArrayCoordinate = value;
+                RaisePropertyChanged(nameof(UIContainerArrayCoordinate));
+            }
+        }
+        public (int, int) UISquareArrayCoordinate
+        {
+            get { return _UISquareArrayCoordinate; }
+            set
+            {
+                _UISquareArrayCoordinate = value;
+                RaisePropertyChanged(nameof(UISquareArrayCoordinate));
+            }
+        }
 
 
 
@@ -159,67 +280,6 @@ namespace Minecraft_Building_Generator.UI.ViewModel
 
         //}
 
-
-
-        public void ShowMessage(object obj)
-        {
-            
-            MessageBox.Show("Showme");
-        }
-
- 
-        public void SelectContainer(object obj)
-        {
-
-            UI_GridContainer temp = (UI_GridContainer)obj;
-            ui_gridmap.SelectedContainer(temp);
-            Console.WriteLine("SelectingContainer");
-
-        }
-
-        public void SelectSquare(object obj)
-        {
-
-            UI_Grid_Square temp = (UI_Grid_Square)obj;
-            Console.WriteLine("Selectingsquare");
-
-        }
-
-
-
-        public void UpdateGridObservables(UI_GridContainer[,] grid)
-        {
-
-            UI_GridContainer initial = grid[0,0]; 
-            for (int i = 0; i < ui_gridmap.gridSize; i++)
-            {
-                for (int j = 0; j < ui_gridmap.gridSize; j++)
-                {
-                    //adds each gridcontainer to observables
-                    
-                    observable_ui_gridContainer.Add(grid[i, j]);  
-                }
-            }
-
-            for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
-            {
-                for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
-                {
-                    //adds each grid square to observables (But only one container)
-                    //if the for loop is not split up like this then, it will continue to add ALL the gridsquares
-                    //to the observable and then it will have hundreds of squares on the canvas.
-                    observable_ui_gridSquare.Add(initial.ui_GridSquares_array[m, n]);
-                    //Console.WriteLine("Coordinate is: " + grid[i, j].ui_GridSquares_array[m, n].X + ", " + grid[i, j].ui_GridSquares_array[m, n].Y);
-
-                }
-            }
-
-        }
-
-
-
-        
-        
 
 
     }
