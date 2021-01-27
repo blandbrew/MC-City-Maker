@@ -19,6 +19,7 @@
         <local1:GridMap_ViewModel/>
     </Window.DataContext>
 
+   
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -203,7 +204,7 @@
             <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="100"/>
         </StackPanel>-->
         <Grid Margin="964,56,85,64">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding BuildingStackPanel, UpdateSourceTrigger=PropertyChanged}">
+            <!--<StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding BuildingStackPanel, UpdateSourceTrigger=PropertyChanged}">
                 <Label  Content="Grid Size:" />
                 <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Width="141"  />
             </StackPanel>
@@ -214,9 +215,10 @@
             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding InfrustructureStackPanel, UpdateSourceTrigger=PropertyChanged}">
                 <Label  Content="Grid Size:" />
                 <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Width="141"  />
-            </StackPanel>
+            </StackPanel>-->
+            <ContentControl x:Name="foo" Content="{Binding GenericBuildingTest}" />
         </Grid>
-
+        
     </Grid>
 </Window>
 

@@ -249,6 +249,11 @@ namespace MC_City_Maker
 
                 }
 
+
+                //Add UI_GRIDMAP Section here, run through all the containers
+
+
+
                 this.PrimaryGridMap = PrimaryGridMap;
 
         } catch(Exception err)
