@@ -31,6 +31,20 @@ namespace MC_City_Maker.Structures
 
         }
 
+        private string _TemplateLabelTest;
+        public string TemplateLabelTest
+        {
+            get
+            {
+                return _TemplateLabelTest;
+            }
+            set
+            {
+                _TemplateLabelTest = value;
+                
+            }
+        }
+
         public void Building_OutsideWalls(Grid_Square square)
         {
 
@@ -90,5 +104,6 @@ namespace MC_City_Maker.Structures
 
             //throw new NotImplementedException();
         }
+
     }
 }

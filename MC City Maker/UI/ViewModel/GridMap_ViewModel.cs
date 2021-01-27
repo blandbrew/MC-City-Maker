@@ -1,4 +1,5 @@
 ﻿using MC_City_Maker.Constants;
+using MC_City_Maker.Structures;
 using MC_City_Maker.UI.Model;
 using MC_City_Maker.UI.View;
 using System;
@@ -52,7 +53,8 @@ namespace MC_City_Maker.UI.ViewModel
 
 
         private String _BuildingStackPanel;
-
+        private GenericBuilding _GenericBuildingTest;
+        private string _TemplateLabelTest;
 
 
         NewCity_ViewModel NewCity_ViewModel;
@@ -67,6 +69,7 @@ namespace MC_City_Maker.UI.ViewModel
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
             ClickGridSquare = new RelayCommand(new Action<object>(SelectSquare));
             ClickZone = new RelayCommand(new Action<object>(SelectZone));
+            _TemplateLabelTest = "THIS IS A TEST";
         }
 
         #region Icommands
@@ -158,7 +161,33 @@ namespace MC_City_Maker.UI.ViewModel
                 RaisePropertyChanged(nameof(BuildingStackPanel));
             }
         }
+        public GenericBuilding GenericBuildingTest
+        {
+            get
+            {
+                return _GenericBuildingTest;
+            }
+            set
+            {
+                _GenericBuildingTest = value;
+                RaisePropertyChanged(nameof(GenericBuildingTest));
+            }
+        }
 
+
+        
+        public string TemplateLabelTest
+        {
+            get
+            {
+                return _TemplateLabelTest;
+            }
+            set
+            {
+                _TemplateLabelTest = value;
+                RaisePropertyChanged(nameof(TemplateLabelTest));
+            }
+        }
         //public int SelectedGridSize
         //{
         //    get { return GridMap.number_of_Grid_Containers; }
@@ -245,6 +274,10 @@ namespace MC_City_Maker.UI.ViewModel
         public void SelectSquare(object obj)
         {
             BuildingStackPanel = "Hidden";
+            GenericBuilding aaa = new GenericBuilding();
+            aaa.TemplateLabelTest = "SELECT SQUARE LABEL TEST";
+
+            GenericBuildingTest = aaa;
             UI_Grid_Square _selectedSquare = (UI_Grid_Square)obj;
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
             ui_gridmap.SelectedSquare(_selectedSquare, vmSelectedZone);

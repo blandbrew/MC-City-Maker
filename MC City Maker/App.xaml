@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:MC_City_Maker"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="UI/View/BuildingDataTemplate.xaml" />
+                <!--<ResourceDictionary Source="\UI\View\BuildingDataTemplate.xaml" />-->
+                <!--<ResourceDictionary Source="Another/Path/To/Your/ResourceFile/EGButtonTemplateStyle.xaml" />-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
