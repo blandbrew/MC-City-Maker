@@ -293,6 +293,7 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
+
         /// <summary>
         /// Updates the Gridcontainer and square observables when there are changes
         /// </summary>
