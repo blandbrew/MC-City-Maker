@@ -11,6 +11,6 @@ namespace MC_City_Maker.Grid_Classes
 
         void Add_Adjacent_Container(Grid_Container adjacentContainer);
 
-        List<Grid_Container> GetAll_Adjacent_Containers();
+        HashSet<Grid_Container> GetAll_Adjacent_Containers();
     }
 }

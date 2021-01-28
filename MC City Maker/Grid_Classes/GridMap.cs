@@ -32,6 +32,7 @@
 
 
 
+using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.UI;
 using System;
@@ -40,8 +41,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
+using System.Windows.Media;
 
 namespace MC_City_Maker
 {
@@ -49,11 +49,12 @@ namespace MC_City_Maker
     {
 
         /*Variables*/
-        public static int number_of_Grid_Containers; //size of the grid in 169x169 block chunks
+        public int gridSize { get; private set; }//size of the grid in 169x169 block chunks
         public Coordinate startCoordinate { get; set; }
         public Coordinate endCoordinate { get; set; }
         public Grid_Container[,] PrimaryGridMap { get; set; }//This 2D array stores all the Grid Containers
         Grid_Square[,] ContainerMap { get; set; }
+        public Grid_Container PreviouslySelected_container { get; set; }
 
 
         /// <summary>
@@ -80,12 +81,14 @@ namespace MC_City_Maker
 
             if (number_of_Grid_Containers == 1)
             {
-                GridMap.number_of_Grid_Containers = 1;  
+                gridSize = 1;  
             }
             else
             {
-                GridMap.number_of_Grid_Containers = number_of_Grid_Containers;
+                gridSize = number_of_Grid_Containers;
             }
+
+            GenerateGrids();
         }
 
 
@@ -97,20 +100,25 @@ namespace MC_City_Maker
             //Call GridMapProvision_Start to invoke the start process if not start from GridMap Constructor
         }
 
-        /*Methods*/
-        public void GridMapProvision_Start(int startX, int startY, int startZ, int number_of_Grid_Containers)
-        {
-            startCoordinate = new Coordinate(startX, startY, startZ);
 
-            if (number_of_Grid_Containers == 1)
-            {
-                GridMap.number_of_Grid_Containers = 1;
-            }
-            else
-            {
-                GridMap.number_of_Grid_Containers = number_of_Grid_Containers;
-            }
-        }
+
+        /*Methods*/
+        
+        
+        //marked for deletion
+        //public void GridMapProvision_Start(int startX, int startY, int startZ, int number_of_Grid_Containers)
+        //{
+        //    startCoordinate = new Coordinate(startX, startY, startZ);
+
+        //    if (number_of_Grid_Containers == 1)
+        //    {
+        //        GridMap.gridSize = 1;
+        //    }
+        //    else
+        //    {
+        //        GridMap.gridSize = number_of_Grid_Containers;
+        //    }
+        //}
 
 
 
@@ -139,62 +147,92 @@ namespace MC_City_Maker
         }
 
 
+        public void SelectedContainer(Grid_Container selected)
+        {
+            //If true, reset the container.  if False, set to true and mark as selected
+
+            if (PreviouslySelected_container == null)
+            {
+                PreviouslySelected_container = selected;
+                selected.FillColor = UI_Constants.Selected_Container_Color;
+                return;
+            }
 
 
+            if (PreviouslySelected_container != selected)
+            {
+                PreviouslySelected_container.FillColor = UI_Constants.Unselected_grid;
+                PreviouslySelected_container = selected;
+                selected.FillColor = UI_Constants.Selected_Container_Color;
+
+            }
+        }
+
+        public void SelectedSquare(Grid_Square selected, GridSquare_Zoning zone)
+        {
+            if (selected.Selected == false)
+            {
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                selected.Zone = zone;
+                selected.Selected = true;
+                return;
+            }
+            if (selected.Selected == true && selected.Zone != zone)
+            {
+
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                selected.Zone = zone;
+                return;
+            }
+
+            if (selected.Selected == true)
+            {
+                //clear the square
+                selected.FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);
+                selected.Zone = GridSquare_Zoning.None;
+                selected.Selected = false;
+            }
+        }
 
         /// <summary>
         /// Method to begin the process of generating all of the grids.
         /// </summary>
-        public void GenerateGrids()
+        private void GenerateGrids()
         {
-            Generate_Grid_Containers(startCoordinate, number_of_Grid_Containers);
+            PrimaryGridMap = new Grid_Container[gridSize, gridSize];
+            Map_out_GridContainer();
+            InitializeUIGridContainer();
 
-            Generate_Grid_Squares(this.PrimaryGridMap);
+            Generate_Grid_Squares();
+            InitializeUIGridSquare();
+            Generate_Adjacent_Containers();
 
-            Generate_Adjacent_Containers(this.PrimaryGridMap);
-
-            Generate_Adjacent_Grid_Squares(this.PrimaryGridMap);
+            Generate_Adjacent_Grid_Squares();
 
         }
 
         /// <summary>
-        /// Private method that generates <see cref="Grid_Container"/>s
+        /// Generates a New Grid based on a new starting point and gridsize
         /// </summary>
-        /// <param name="startPoint"></param>
-        /// <param name="number_of_Grid_Containers"></param>
-        private void Generate_Grid_Containers(Coordinate startPoint, int number_of_Grid_Containers)
+        public void GenerateGrids(Coordinate newStartingCoordinate, int newGridSize)
         {
-            //PrimaryGridMap = new Grid_Container[,];
-            if(number_of_Grid_Containers == 1)
-            {
-            
-                PrimaryGridMap = new Grid_Container[1,1];
+            startCoordinate = newStartingCoordinate;
+            gridSize = newGridSize;
+            PrimaryGridMap = new Grid_Container[gridSize, gridSize];
 
-                Map_out_GridContainer(startPoint, PrimaryGridMap);
+            Map_out_GridContainer();
+            InitializeUIGridContainer();
 
-            } else
-            {
-                
-                //If the number of grid containers is larger than 1, must be an even number.
-                //to make an even grid map, divide the number of containers by 2 then minus 1 to account of array's starting at 0 and instantiate the 2D array.
-                /**Example
-                 * 
-                 * number of containers: 4
-                 * (4/2) - 1 = 1
-                 * primaryGridMap[1,1] => now there are 4 accessible containers
-                 */
+            Generate_Grid_Squares();
+            InitializeUIGridSquare();
 
+            Generate_Adjacent_Containers();
 
-                int _container = (int)Math.Sqrt(GridMap.number_of_Grid_Containers);
-                //Console.WriteLine("Size of Containers: " + _container);
-                PrimaryGridMap = new Grid_Container[_container, _container];
-
-                //Sets the primary grid Map
-                Map_out_GridContainer(startPoint, PrimaryGridMap);
-            }
-
+            Generate_Adjacent_Grid_Squares();
 
         }
+
+
 
 
         /// <summary>
@@ -202,21 +240,19 @@ namespace MC_City_Maker
         /// </summary>
         /// <param name="startPoint"></param>
         /// <returns></returns>
-        private void Map_out_GridContainer(Coordinate startPoint, Grid_Container[,] PrimaryGridMap)
+        private void Map_out_GridContainer()
         {
 
-            double containerSize = ContainerSize();
-
-            int _tempX = startPoint.x;
-            int _tempY = startPoint.y;
-            int _tempZ = startPoint.z;
+            int _tempX = startCoordinate.x;
+            int _tempY = startCoordinate.y;
+            int _tempZ = startCoordinate.z;
 
             try
             {
 
-                for (int i = 0; i < containerSize; i++)
+                for (int i = 0; i < gridSize; i++)
                 {
-                    for (int k = 0; k < containerSize; k++)
+                    for (int k = 0; k < gridSize; k++)
                     {
                       
                         Grid_Container aGridContainer = new Grid_Container(new Coordinate(_tempX, _tempY, _tempZ), (i,k));
@@ -224,13 +260,13 @@ namespace MC_City_Maker
                         aGridContainer.endCoordinate = new Coordinate
                             (
                                 aGridContainer.startCoordinate.x + Shared_Constants.GRID_CONTAINER_SIZE-1,
-                                startPoint.y,
+                                startCoordinate.y,
                                 aGridContainer.startCoordinate.z + Shared_Constants.GRID_CONTAINER_SIZE-1
                             );
                         aGridContainer.centerblock = new Coordinate
                             (
                                 aGridContainer.startCoordinate.x + Shared_Constants.GRID_CONTAINER_CENTER,
-                                startPoint.y,
+                                startCoordinate.y,
                                 aGridContainer.startCoordinate.y + Shared_Constants.GRID_CONTAINER_CENTER
                             );
 
@@ -241,7 +277,7 @@ namespace MC_City_Maker
                         _tempX = aGridContainer.startCoordinate.x + Shared_Constants.GRID_CONTAINER_SIZE; //adds one on to mark the start point of next grid   
                        
                 }
-                    if (containerSize > 1)
+                    if (gridSize > 1)
                     {
                         _tempX = PrimaryGridMap[i, 0].startCoordinate.x; //Resets the X coord so process can iterate across again. (like a typewriter)
                         _tempZ += Shared_Constants.GRID_CONTAINER_SIZE; //adds 1 to mark the start point of next container
@@ -250,11 +286,7 @@ namespace MC_City_Maker
                 }
 
 
-                //Add UI_GRIDMAP Section here, run through all the containers
 
-
-
-                this.PrimaryGridMap = PrimaryGridMap;
 
         } catch(Exception err)
             {
@@ -262,27 +294,47 @@ namespace MC_City_Maker
 
             }
 
+        }
 
+        private void InitializeUIGridContainer()
+        {
+          
 
+            //ui_gridContainer_array = new UI_GridContainer[gridSize, gridSize];
+            int separatorValue = 17;
+            int x = 20;
+            int y = 20;
 
-}
+            //initialize 2d array of grid planner
+            for (int i = 0; i < gridSize; i++)
+            {
+                for (int j = 0; j < gridSize; j++)
+                {
+                    /*Add all values for UI container to this location*/
+
+                    PrimaryGridMap[i, j].Set_Grid_ContainerUIvalues(x, y, Colors.White, Colors.White, (i, j));
+
+                    x += separatorValue;
+                }
+                x = 20;
+                y += separatorValue;
+         
+            }
+        }
 
 
         /// <summary>
         /// Private method to generate <see cref="Grid_Square"/>s within a grid container
         /// </summary>
         /// <param name="PrimaryGridMap"></param>
-        private void Generate_Grid_Squares(Grid_Container[,] PrimaryGridMap)
+        private void Generate_Grid_Squares()
         {
-            double containerSize = ContainerSize();
-
-            for (int i = 0; i < containerSize; i++)
+          
+            for (int i = 0; i < gridSize; i++)
             {
-                for (int k = 0; k < containerSize; k++)
+                for (int k = 0; k < gridSize; k++)
                 {
-                    
-                    
-                    
+
                     Coordinate startPoint = PrimaryGridMap[i, k].startCoordinate;
                     int _tempX = startPoint.x;
                     int _tempY = startPoint.y;
@@ -330,18 +382,56 @@ namespace MC_City_Maker
             }
         }
 
+        private void InitializeUIGridSquare()
+        {
+            Grid_Container selected_container;
+            int separatorValue = 23;
+            int x = 10;
+            int y = 10;
+
+            //initialize 2d array of grid planner
+            for (int i = 0; i < gridSize; i++)
+            {
+                for (int j = 0; j < gridSize; j++)
+                {
+                    //Console.WriteLine("Initalize grid3");
+                    selected_container = PrimaryGridMap[i, j];
+                    Grid_Square[,] _uiGridSquares = selected_container.gridSquareMap;
+                    //Console.WriteLine("Initalize grid4");
+                    for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
+                    {
+                        for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
+                        {
+                            //Console.WriteLine("Initalize grid5");
+                            //_uiGridSquares[m, n] = new UI_Grid_Square(x, y, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Colors.White, Colors.White, (i, j), (m, n));
+                            _uiGridSquares[m, n].SetGrid_Square_UI(x, y, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Colors.White, Colors.White, (i, j), (m, n));
+
+                            x += separatorValue;
+                            //Console.WriteLine("Initalize grid6");
+                        }
+
+                        x = 10;
+                        y += separatorValue;
+                    }
+                    selected_container.gridSquareMap = _uiGridSquares;
+                    x = 10;
+                    y = 10;
+                }
+
+            }
+        }
+
+
         /// <summary>
         /// Private method to identify and store adjacent <see cref="Grid_Container"/>
         /// </summary>
         /// <param name="PrimaryGridMap"></param>
-        public void Generate_Adjacent_Containers(Grid_Container[,] PrimaryGridMap)
+        public void Generate_Adjacent_Containers()
         {
 
-            double containerSize = ContainerSize();
-
-            for (int i = 0; i < containerSize; i++)
+            for (int i = 0; i < gridSize; i++)
             {
-                for (int k = 0; k < containerSize; k++)
+                for (int k = 0; k < gridSize; k++)
                 {
                     Grid_Container aContainer = PrimaryGridMap[i, k];
 
@@ -358,12 +448,12 @@ namespace MC_City_Maker
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i, k - 1]);
                         }
                         //next
-                        if ((k + 1 < containerSize) && PrimaryGridMap[i, k + 1].isValid)
+                        if ((k + 1 < gridSize) && PrimaryGridMap[i, k + 1].isValid)
                         {
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i, k + 1]);
                         }
                         //above
-                        if ((i + 1 < containerSize) && PrimaryGridMap[i + 1, k].isValid)
+                        if ((i + 1 < gridSize) && PrimaryGridMap[i + 1, k].isValid)
                         {
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i + 1, k]);
                         }
@@ -387,13 +477,13 @@ namespace MC_City_Maker
         /// Private method to identify and store adjacent <see cref="Grid_Square"/>
         /// </summary>
         /// <param name="PrimaryGridMap"></param>
-        private void Generate_Adjacent_Grid_Squares(Grid_Container[,] PrimaryGridMap)
+        private void Generate_Adjacent_Grid_Squares()
         {
-            double containerSize = ContainerSize();
+            
 
-            for (int i = 0; i < containerSize; i++)
+            for (int i = 0; i < gridSize; i++)
             {
-                for (int j = 0; j < containerSize; j++)
+                for (int j = 0; j < gridSize; j++)
                 {
                     Grid_Container aContainer = PrimaryGridMap[i, j];
                     Grid_Square[,] aGridSquareMap = aContainer.gridSquareMap;
@@ -511,21 +601,5 @@ namespace MC_City_Maker
             adjSquare.adjacent_Squares.Add(current_square);
         }
 
-
-
-
-
-
-
-
-
-
-        public double ContainerSize()
-        {
-            if (number_of_Grid_Containers == 1)
-                return 1;
-            else
-                return Math.Sqrt(number_of_Grid_Containers);
-        }
     }
 }

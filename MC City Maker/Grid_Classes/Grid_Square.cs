@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace MC_City_Maker.Grid_Classes
@@ -16,11 +17,10 @@ namespace MC_City_Maker.Grid_Classes
     public class Grid_Square : Grid_Properties, IGrid_Square
     {
 
-        public GridSquare_Zoning zone { get; set; }
-
         public (int, int) ParentContainerArrayCoordinate { get; private set; }
         public (int, int) SquareArrayCoordinate { get; private set; }
 
+        //marked for removal
         public Rectangle gridSquareRectangle { get; set; }
 
 
@@ -36,15 +36,100 @@ namespace MC_City_Maker.Grid_Classes
         /// </summary>
         public HashSet<Grid_Square> Joined_Squares { get; set; }
 
-        
 
+        private GridSquare_Zoning _Zone;
+        public GridSquare_Zoning Zone
+        {
+            get { return _Zone; }
+            set { _Zone = value; RaisePropertyChanged(nameof(Zone)); }
+
+        }
+
+        private bool _Selected = false;
+        public bool Selected
+        {
+            get { return _Selected; }
+            set { _Selected = value; RaisePropertyChanged(nameof(Selected)); }
+
+        }
+
+        private double _X;
+        public double X
+        {
+            get { return _X; }
+            set { _X = value; RaisePropertyChanged(nameof(X)); }
+        }
+
+        private double _Y;
+        public double Y
+        {
+            get { return _Y; }
+            set { _Y = value; RaisePropertyChanged(nameof(Y)); }
+        }
+
+        private double _Width;
+        public double Width
+        {
+            get { return _Width; }
+            set { _Width = value; RaisePropertyChanged(nameof(Width)); }
+        }
+
+        private double _Height;
+        public double Height
+        {
+            get { return _Height; }
+            set { _Height = value; RaisePropertyChanged(nameof(Height)); }
+        }
+
+        private System.Windows.Media.Color _Color;
+        public System.Windows.Media.Color Color
+        {
+            get { return _Color; }
+            set { _Color = value; RaisePropertyChanged(nameof(Color)); }
+        }
+
+        private System.Windows.Media.Color _FillColor;
+        public System.Windows.Media.Color FillColor
+        {
+            get { return _FillColor; }
+            set { _FillColor = value; RaisePropertyChanged(nameof(FillColor)); }
+        }
+
+        //marked for removal
+        //public Grid_Square(double x, double y, double width, double height, Color color, Color fillcolor, (int, int) containerarraycoords, (int, int) SquareCoord)
+        //{
+        //    X = x;
+        //    Y = y;
+        //    Width = width;
+        //    Height = height;
+        //    Color = color;
+        //    FillColor = fillcolor;
+        //    ParentContainerArrayCoordinate = containerarraycoords;
+        //    SquareArrayCoordinate = SquareCoord;
+        //    adjacent_Squares = new HashSet<Grid_Square>();
+
+        //}
+
+        public void SetGrid_Square_UI(double x, double y, double width, double height, Color color, Color fillcolor, (int, int) containerarraycoords, (int, int) SquareCoord)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+            Color = color;
+            FillColor = fillcolor;
+            ParentContainerArrayCoordinate = containerarraycoords;
+            SquareArrayCoordinate = SquareCoord;
+        }
 
         /*Constructor*/
-        public Grid_Square(Coordinate startPoint)
-        {
-            startCoordinate = startPoint;
-            adjacent_Squares = new HashSet<Grid_Square>();
-        }
+
+        //marked for removal
+        //public Grid_Square(Coordinate startPoint)
+        //{
+        //    startCoordinate = startPoint;
+        //    adjacent_Squares = new HashSet<Grid_Square>();
+        //}
 
         /// <summary>
         /// Create Grid squares and define array coordinates for the grid layout

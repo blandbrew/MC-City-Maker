@@ -37,9 +37,9 @@ namespace MC_City_Maker.Structures
         {
             Random rand = new Random();
             //loop through containers
-            for (int i = 0; i < Math.Sqrt(GridMap.number_of_Grid_Containers); i++)
+            for (int i = 0; i < Math.Sqrt(GridMap.gridSize); i++)
             {
-                for (int j = 0; j < Math.Sqrt(GridMap.number_of_Grid_Containers); j++)
+                for (int j = 0; j < Math.Sqrt(GridMap.gridSize); j++)
                 {
                     Grid_Container aContainer = FullGridMap[i, j];
                     Grid_Square[,] squareMap = aContainer.gridSquareMap;

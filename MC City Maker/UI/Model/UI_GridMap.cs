@@ -182,9 +182,6 @@ namespace MC_City_Maker.UI.Model
                 }
                
             }
-
-            //AdjacenctContainerCalculation();
-            //AdjacenctSquaresCalculation();
         }
 
 

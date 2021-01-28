@@ -188,6 +188,8 @@ namespace MC_City_Maker.UI.ViewModel
                 RaisePropertyChanged(nameof(TemplateLabelTest));
             }
         }
+
+        //marked for deletion
         //public int SelectedGridSize
         //{
         //    get { return GridMap.number_of_Grid_Containers; }
