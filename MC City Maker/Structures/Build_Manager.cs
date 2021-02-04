@@ -35,11 +35,12 @@ namespace MC_City_Maker.Structures
         //This is where types of buildings will need to be identified and 
         public void Process_Containers()
         {
+            int gridSize = 16;
             Random rand = new Random();
             //loop through containers
-            for (int i = 0; i < Math.Sqrt(GridMap.gridSize); i++)
+            for (int i = 0; i < Math.Sqrt(gridSize); i++)
             {
-                for (int j = 0; j < Math.Sqrt(GridMap.gridSize); j++)
+                for (int j = 0; j < Math.Sqrt(gridSize); j++)
                 {
                     Grid_Container aContainer = FullGridMap[i, j];
                     Grid_Square[,] squareMap = aContainer.gridSquareMap;
@@ -50,7 +51,7 @@ namespace MC_City_Maker.Structures
                         {
                             Grid_Square aSquare = squareMap[m, n];
 
-                            switch(aSquare.zone)
+                            switch(aSquare.Zone)
                             {
                                 case GridSquare_Zoning.Building:
                                     int randomHeight = rand.Next(20, 40);

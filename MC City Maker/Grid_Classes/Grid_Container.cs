@@ -12,6 +12,7 @@ using MC_City_Maker.UI.Model;
 using MC_City_Maker.UI.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,27 +20,40 @@ using System.Windows.Media;
 
 namespace MC_City_Maker.Grid_Classes
 {
-    public class Grid_Container : Grid_Properties, IGrid_Container
+    public class Grid_Container : Grid_Properties, IGrid_Container, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            //Console.WriteLine("Changed: " + propertyName);
+            // take a copy to prevent thread issues
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         /*Variables*/
         public Grid_Square[,] gridSquareMap { get; set; }
         public (int, int) ContainerArrayUICoordinate { get; private set; }
         public HashSet<Grid_Container> AdjacentContainers { get; set; }
 
-        private UI_GridContainer _Selected_container;
-        public UI_GridContainer Selected_container
+        private Grid_Container _Selected_container;
+        public Grid_Container Selected_container
         {
             get { return _Selected_container; }
             set { _Selected_container = value; RaisePropertyChanged(nameof(Selected_container)); }
 
         }
 
-        private UI_GridContainer _PreviouslySelected_container;
-        public UI_GridContainer PreviouslySelected_container
+        private Grid_Container _PreviouslySelected_container;
+        public Grid_Container PreviouslySelected_container
         {
             get { return _PreviouslySelected_container; }
-            set { _PreviouslySelected_container = value; RaisePropertyChanged(nameof(PreviouslySelected_container)); }
+            set { _PreviouslySelected_container = value; RaisePropertyChanged(nameof(PreviouslySelected_container));}
 
         }
         private double _X;
@@ -109,7 +123,7 @@ namespace MC_City_Maker.Grid_Classes
             FillColor = fillcolor;
             ContainerArrayUICoordinate = containerarraycoords;
             AdjacentContainers = new HashSet<Grid_Container>();
-
+            
         }
 
         public void Set_Grid_ContainerUIvalues(double x, double y, Color color, Color fillcolor, (int, int) containerarraycoords)

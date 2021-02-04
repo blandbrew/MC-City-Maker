@@ -1,4 +1,5 @@
 ﻿using MC_City_Maker.Constants;
+using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.Structures;
 using MC_City_Maker.UI.Model;
 using MC_City_Maker.UI.View;
@@ -23,7 +24,7 @@ namespace MC_City_Maker.UI.ViewModel
 {
     public class GridMap_ViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        private UI_GridMap ui_gridmap;
+        private GridMap gridMap;
 
         /*Menu File Commands*/
         private ICommand vm_NewCity;
@@ -46,10 +47,10 @@ namespace MC_City_Maker.UI.ViewModel
 
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
 
-        UI_GridContainer[,] containers_and_squares;
+        Grid_Container[,] containers_and_squares;
 
-        public ObservableCollection<UI_GridContainer> observable_ui_gridContainer { get; private set; } = new ObservableCollection<UI_GridContainer>();
-        public ObservableCollection<UI_Grid_Square> observable_ui_gridSquare { get; private set; } = new ObservableCollection<UI_Grid_Square>();
+        public ObservableCollection<Grid_Container> observable_ui_gridContainer { get; private set; } = new ObservableCollection<Grid_Container>();
+        public ObservableCollection<Grid_Square> observable_ui_gridSquare { get; private set; } = new ObservableCollection<Grid_Square>();
 
 
         private String _BuildingStackPanel;
@@ -61,7 +62,7 @@ namespace MC_City_Maker.UI.ViewModel
         //initializes 
         public GridMap_ViewModel()
         {
-            ui_gridmap = new UI_GridMap();
+            gridMap = new GridMap();
             //observable_ui_gridContainer = new ObservableCollection<UI_GridContainer>();
             //observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
             NewCityMenu = new RelayCommand(new Action<object>(NewCity));
@@ -219,6 +220,22 @@ namespace MC_City_Maker.UI.ViewModel
         #endregion GridMapSize Definition
 
 
+        /// <summary>
+        /// Launches NewCity Window to define coordinate and starting grid size
+        /// </summary>
+        /// <param name="obj"></param>
+        public void NewCity(object obj)
+        {
+
+            //NewCity_ViewModel.OpenNewCityWindow();
+            NewCityWindow _ncwindow = new NewCityWindow();
+            _ncwindow.ShowDialog();
+            SelectedGridSize();
+
+            Console.WriteLine("Static size of grid is: " + Property_SizeOfTheGrid);
+            Console.WriteLine("Static X,y,z is: " + StartCoordinate.x + "," + StartCoordinate.y + "," + StartCoordinate.z);
+        }
+
         public void SelectedGridSize()
         {
             if (observable_ui_gridContainer != null)
@@ -235,12 +252,12 @@ namespace MC_City_Maker.UI.ViewModel
             //Inlitializes the grid with the square root of the selected map size, the container array
             //is returned to be added to observables
             int grid_size = (int)Math.Sqrt(Property_SizeOfTheGrid);
-            containers_and_squares = new UI_GridContainer[grid_size, grid_size];
-            containers_and_squares = ui_gridmap.InitializeGrid(grid_size);
-            InitalizeGridObservables(containers_and_squares);
+
+            gridMap.GenerateGrids(StartCoordinate, grid_size);
+            InitalizeGridObservables(gridMap.PrimaryGridMap);
 
             //initializes the first gridcontainer to be selected
-            ui_gridmap.SelectedContainer(containers_and_squares[0, 0]);
+            gridMap.SelectedContainer(gridMap.PrimaryGridMap[0, 0]);
         }
 
         public void ShowMessage(object obj)
@@ -249,26 +266,23 @@ namespace MC_City_Maker.UI.ViewModel
             MessageBox.Show("Showme");
         }
 
-        public void NewCity(object obj)
-        {
 
-            //NewCity_ViewModel.OpenNewCityWindow();
-            NewCityWindow _ncwindow = new NewCityWindow();
-            _ncwindow.ShowDialog();
-            SelectedGridSize();
-            
-            Console.WriteLine("Static size of grid is: " + Property_SizeOfTheGrid);
-            Console.WriteLine("Static X,y,z is: " + StartCoordinate.x + "," + StartCoordinate.y + "," + StartCoordinate.z);
-        }
 
- 
+        /// <summary>
+        /// When a Grid Container is selected this method executes
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <remarks>Object is of type Grid_Container</remarks>
         public void SelectContainer(object obj)
         {
+            if (obj is not Grid_Container)
+                return;
 
-            UI_GridContainer _selected = (UI_GridContainer)obj;
-            ui_gridmap.SelectedContainer(_selected);
+            Grid_Container _selected = (Grid_Container)obj;
+            gridMap.SelectedContainer(_selected);
+
             UpdateGridSquares(_selected);
-            UIContainerArrayCoordinate = _selected.ContainerArrayCoordinate;
+            UIContainerArrayCoordinate = _selected.ContainerArrayUICoordinate;
             //Console.WriteLine("SelectingContainer");
 
         }
@@ -280,9 +294,9 @@ namespace MC_City_Maker.UI.ViewModel
             aaa.TemplateLabelTest = "SELECT SQUARE LABEL TEST";
 
             GenericBuildingTest = aaa;
-            UI_Grid_Square _selectedSquare = (UI_Grid_Square)obj;
+            Grid_Square _selectedSquare = (Grid_Square)obj;
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-            ui_gridmap.SelectedSquare(_selectedSquare, vmSelectedZone);
+            gridMap.SelectedSquare(_selectedSquare, vmSelectedZone);
             //_selectedSquare.FillColor = UI_Constants.GetZoningColor(vmSelectedZone);
             //Console.WriteLine("Selectingsquare: " + UISquareArrayCoordinate.Item1 + "," + UISquareArrayCoordinate.Item2);
         }
@@ -300,13 +314,13 @@ namespace MC_City_Maker.UI.ViewModel
         /// Updates the Gridcontainer and square observables when there are changes
         /// </summary>
         /// <param name="grid"></param>
-        public void InitalizeGridObservables(UI_GridContainer[,] grid)
+        public void InitalizeGridObservables(Grid_Container[,] grid)
         {
             Console.WriteLine("Initializing observables");
-            UI_GridContainer initial = grid[0,0]; 
-            for (int i = 0; i < ui_gridmap.gridSize; i++)
+            Grid_Container initial = grid[0,0]; 
+            for (int i = 0; i < gridMap.gridSize; i++)
             {
-                for (int j = 0; j < ui_gridmap.gridSize; j++)
+                for (int j = 0; j < gridMap.gridSize; j++)
                 {
                     //adds each gridcontainer to observables
                     
@@ -321,7 +335,7 @@ namespace MC_City_Maker.UI.ViewModel
                     //adds each grid square to observables (But only one container)
                     //if the for loop is not split up like this then, it will continue to add ALL the gridsquares
                     //to the observable and then it will have hundreds of squares on the canvas.
-                    observable_ui_gridSquare.Add(initial.ui_GridSquares_array[m, n]);
+                    observable_ui_gridSquare.Add(initial.gridSquareMap[m, n]);
                     //Console.WriteLine("Coordinate is: " + initial.ui_GridSquares_array[m, n].X + ", " + initial.ui_GridSquares_array[m, n].Y);
 
                 }
@@ -336,7 +350,7 @@ namespace MC_City_Maker.UI.ViewModel
             Console.WriteLine("UPDATING CONDITIONS");
         }
 
-        public void UpdateGridSquares(UI_GridContainer aContainer)
+        public void UpdateGridSquares(Grid_Container aContainer)
         {
             observable_ui_gridSquare.Clear();
             
@@ -344,10 +358,11 @@ namespace MC_City_Maker.UI.ViewModel
             {
                 for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
                 {
-                    observable_ui_gridSquare.Add(aContainer.ui_GridSquares_array[m, n]);
+                    observable_ui_gridSquare.Add(aContainer.gridSquareMap[m, n]);
                 }
             }
         }
+
 
         public (int,int) UIContainerArrayCoordinate
         {
@@ -369,7 +384,31 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
+        public void ContainerChanges(Grid_Container container)
+        {
 
+           
+
+            RaisePropertyChanged(nameof(container.PreviouslySelected_container));
+            RaisePropertyChanged(nameof(container.X));
+            RaisePropertyChanged(nameof(container.Y));
+            RaisePropertyChanged(nameof(container.Width));
+            RaisePropertyChanged(nameof(container.Height));
+            RaisePropertyChanged(nameof(container.Color));
+            RaisePropertyChanged(nameof(container.FillColor));
+        }
+
+        //public void SquareChange(Grid_Square square)
+        //{
+        //    RaisePropertyChanged(nameof(square.Zone));
+        //    RaisePropertyChanged(nameof(square.Selected));
+        //    RaisePropertyChanged(nameof(square.X));
+        //    RaisePropertyChanged(nameof(square.Y));
+        //    RaisePropertyChanged(nameof(square.Width));
+        //    RaisePropertyChanged(nameof(square.Height));
+        //    RaisePropertyChanged(nameof(square.Color));
+        //    RaisePropertyChanged(nameof(square.FillColor));
+        //}
 
 
 

@@ -6,6 +6,7 @@ using MC_City_Maker.UI;
 using MC_City_Maker.UI.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,21 @@ using System.Windows.Shapes;
 
 namespace MC_City_Maker.Grid_Classes
 {
-    public class Grid_Square : Grid_Properties, IGrid_Square
+    public class Grid_Square : Grid_Properties, IGrid_Square, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            //Console.WriteLine("Changed: " + propertyName);
+            // take a copy to prevent thread issues
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         public (int, int) ParentContainerArrayCoordinate { get; private set; }
         public (int, int) SquareArrayCoordinate { get; private set; }
@@ -44,6 +58,12 @@ namespace MC_City_Maker.Grid_Classes
             set { _Zone = value; RaisePropertyChanged(nameof(Zone)); }
 
         }
+
+
+
+
+
+
 
         private bool _Selected = false;
         public bool Selected

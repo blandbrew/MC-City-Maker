@@ -36,11 +36,6 @@ using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.UI;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace MC_City_Maker
@@ -122,7 +117,11 @@ namespace MC_City_Maker
 
 
 
-
+        /// <summary>
+        /// Retrieve a Grid_Container
+        /// </summary>
+        /// <param name="container_location"></param>
+        /// <returns></returns>
         public Grid_Container Get_Container((int, int) container_location)
         {
             //application is working but throwing errors, need to test for validity without getting errors.  length maybe?
@@ -132,6 +131,12 @@ namespace MC_City_Maker
                 return null;
         }
 
+        /// <summary>
+        /// Retrieve a grid_squre from a container
+        /// </summary>
+        /// <param name="container_location"></param>
+        /// <param name="square_location"></param>
+        /// <returns></returns>
         public Grid_Square Get_SquareFromContainer((int, int) container_location, (int, int) square_location)
         {
             if (PrimaryGridMap[container_location.Item1, container_location.Item2].gridSquareMap[square_location.Item1, square_location.Item2] != null)
@@ -140,6 +145,11 @@ namespace MC_City_Maker
                 return null;
         }
 
+        /// <summary>
+        /// Set a container
+        /// </summary>
+        /// <param name="container_location"></param>
+        /// <param name="aContainer"></param>
         public void SetContainer((int, int) container_location, Grid_Container aContainer)
         {
             if (PrimaryGridMap[container_location.Item1, container_location.Item2] != null)
@@ -147,6 +157,10 @@ namespace MC_City_Maker
         }
 
 
+        /// <summary>
+        /// Handles selection of a container
+        /// </summary>
+        /// <param name="selected"></param>
         public void SelectedContainer(Grid_Container selected)
         {
             //If true, reset the container.  if False, set to true and mark as selected
@@ -155,6 +169,7 @@ namespace MC_City_Maker
             {
                 PreviouslySelected_container = selected;
                 selected.FillColor = UI_Constants.Selected_Container_Color;
+                
                 return;
             }
 
@@ -164,8 +179,9 @@ namespace MC_City_Maker
                 PreviouslySelected_container.FillColor = UI_Constants.Unselected_grid;
                 PreviouslySelected_container = selected;
                 selected.FillColor = UI_Constants.Selected_Container_Color;
-
+                return;
             }
+       
         }
 
         public void SelectedSquare(Grid_Square selected, GridSquare_Zoning zone)
@@ -291,7 +307,7 @@ namespace MC_City_Maker
         } catch(Exception err)
             {
                 //MessageBox.Show(err.Message, "Grid Map Generator Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                Console.WriteLine(err);
             }
 
         }

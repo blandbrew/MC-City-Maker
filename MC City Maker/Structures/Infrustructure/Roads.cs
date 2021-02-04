@@ -79,7 +79,7 @@ namespace MC_City_Maker.Structures.Infrustructure
             List<Grid_Square> adjacentRoads = new List<Grid_Square>();
             foreach (Grid_Square adjsquare in adjacentSquaresList)
             {
-                if (adjsquare.zone == GridSquare_Zoning.Infrustructure)
+                if (adjsquare.Zone == GridSquare_Zoning.Infrustructure)
                 {
                     if (adjsquare.SquareArrayCoordinate.Item1 < startSquare.SquareArrayCoordinate.Item1)   
                     {//if X is greater, adjsquare is above(north)
