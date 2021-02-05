@@ -22,26 +22,20 @@ namespace MC_City_Maker.Grid_Classes
 {
     public class Grid_Container : Grid_Properties, IGrid_Container, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged(string propertyName)
-        {
-            //Console.WriteLine("Changed: " + propertyName);
-            // take a copy to prevent thread issues
-            PropertyChangedEventHandler handler = PropertyChanged;
 
-            if (handler != null)
-            {
-
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
 
         /*Variables*/
         public Grid_Square[,] gridSquareMap { get; set; }
         public (int, int) ContainerArrayUICoordinate { get; private set; }
         public HashSet<Grid_Container> AdjacentContainers { get; set; }
 
+
+
         private Grid_Container _Selected_container;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// The cointainer that is selected on the UI
+        /// </summary>
         public Grid_Container Selected_container
         {
             get { return _Selected_container; }
@@ -50,6 +44,10 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private Grid_Container _PreviouslySelected_container;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// This is a reference to the previously selected container
+        /// </summary>
         public Grid_Container PreviouslySelected_container
         {
             get { return _PreviouslySelected_container; }
@@ -57,6 +55,10 @@ namespace MC_City_Maker.Grid_Classes
 
         }
         private double _X;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// Stores the X value location on the Canvas
+        /// </summary>
         public double X
         {
             get { return _X; }
@@ -64,6 +66,10 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private double _Y;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// Stores the Y value location on the Canvas
+        /// </summary>
         public double Y
         {
             get { return _Y; }
@@ -71,6 +77,10 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private double _Width;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// Stores the width of the square
+        /// </summary>
         public double Width
         {
             get { return _Width; }
@@ -78,13 +88,23 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private double _Height;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// Stores the hieght of the square
+        /// </summary>
         public double Height
         {
             get { return _Height; }
             set { _Height = value; RaisePropertyChanged(nameof(Height)); }
         }
 
+
+        //Review to see if necessary
         private System.Windows.Media.Color _Color;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// Stores a color
+        /// </summary>
         public System.Windows.Media.Color Color
         {
             get { return _Color; }
@@ -92,6 +112,10 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private System.Windows.Media.Color _FillColor;
+        /// <summary>
+        /// <remark>UI Field - </remark>
+        /// The fill color of the square
+        /// </summary>
         public System.Windows.Media.Color FillColor
         {
             get { return _FillColor; }
@@ -100,12 +124,22 @@ namespace MC_City_Maker.Grid_Classes
 
 
         /*Constructor*/
+
+        /// <summary>
+        /// Constructor with a Coordinate parameter defining the startPoint
+        /// </summary>
+        /// <param name="startPoint"></param>
         public Grid_Container(Coordinate startPoint)
         {
             startCoordinate = startPoint;
             AdjacentContainers = new HashSet<Grid_Container>();
         }
 
+        /// <summary>
+        /// Constructor with a Coordinate parameter defining the startPoint And the container location within the UI Array
+        /// </summary>
+        /// <param name="startPoint"></param>
+        /// <param name="ContainerArrayCoordinate"></param>
         public Grid_Container(Coordinate startPoint, (int, int) ContainerArrayCoordinate)
         {
             startCoordinate = startPoint;
@@ -113,6 +147,11 @@ namespace MC_City_Maker.Grid_Classes
             this.ContainerArrayUICoordinate = ContainerArrayCoordinate;
         }
 
+
+        /// <summary>
+        /// Constructor with all parameters necessary to setup a new grid container
+        /// </summary>
+        /// <param name="startPoint"></param>
         public Grid_Container(double x, double y, Color color, Color fillcolor, (int, int) containerarraycoords)
         {
             X = x;
@@ -126,6 +165,14 @@ namespace MC_City_Maker.Grid_Classes
             
         }
 
+        /// <summary>
+        /// Updates the values of an existing grid container
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="color"></param>
+        /// <param name="fillcolor"></param>
+        /// <param name="containerarraycoords"></param>
         public void Set_Grid_ContainerUIvalues(double x, double y, Color color, Color fillcolor, (int, int) containerarraycoords)
         {
             X = x;
@@ -138,15 +185,43 @@ namespace MC_City_Maker.Grid_Classes
             
         }
 
+
+
         /*Methods*/
+        /// <summary>
+        /// Adds ann adjacent container to the hashset
+        /// </summary>
+        /// <param name="adjacentContainer"></param>
         public void Add_Adjacent_Container(Grid_Container adjacentContainer)
         {
             AdjacentContainers.Add(adjacentContainer);
         }
 
+        /// <summary>
+        /// Retrieves all adjacent containers from the hashset
+        /// </summary>
+        /// <returns></returns>
         public HashSet<Grid_Container> GetAll_Adjacent_Containers()
         {
             return AdjacentContainers;
+        }
+
+
+        /// <summary>
+        /// Property changed event handles to propagate bindings
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            //Console.WriteLine("Changed: " + propertyName);
+            // take a copy to prevent thread issues
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
     }

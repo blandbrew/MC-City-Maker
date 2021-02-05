@@ -384,31 +384,9 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        public void ContainerChanges(Grid_Container container)
-        {
+ 
 
-           
-
-            RaisePropertyChanged(nameof(container.PreviouslySelected_container));
-            RaisePropertyChanged(nameof(container.X));
-            RaisePropertyChanged(nameof(container.Y));
-            RaisePropertyChanged(nameof(container.Width));
-            RaisePropertyChanged(nameof(container.Height));
-            RaisePropertyChanged(nameof(container.Color));
-            RaisePropertyChanged(nameof(container.FillColor));
-        }
-
-        //public void SquareChange(Grid_Square square)
-        //{
-        //    RaisePropertyChanged(nameof(square.Zone));
-        //    RaisePropertyChanged(nameof(square.Selected));
-        //    RaisePropertyChanged(nameof(square.X));
-        //    RaisePropertyChanged(nameof(square.Y));
-        //    RaisePropertyChanged(nameof(square.Width));
-        //    RaisePropertyChanged(nameof(square.Height));
-        //    RaisePropertyChanged(nameof(square.Color));
-        //    RaisePropertyChanged(nameof(square.FillColor));
-        //}
+ 
 
 
 
