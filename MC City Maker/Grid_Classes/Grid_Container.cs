@@ -8,7 +8,6 @@
  */
 
 using MC_City_Maker.UI;
-using MC_City_Maker.UI.Model;
 using MC_City_Maker.UI.ViewModel;
 using System;
 using System.Collections.Generic;

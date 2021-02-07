@@ -1,5 +1,4 @@
-﻿using MC_City_Maker.UI.Model;
-using MC_City_Maker.UI.View;
+﻿using MC_City_Maker.UI.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

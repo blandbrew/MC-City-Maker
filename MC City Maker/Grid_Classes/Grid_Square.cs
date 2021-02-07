@@ -3,7 +3,6 @@
 //marking adjacent grids, offsets for roads, subterannian features, etc.
 
 using MC_City_Maker.UI;
-using MC_City_Maker.UI.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -36,6 +36,7 @@ using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.UI;
 using System;
+using System.Diagnostics;
 using System.Windows.Media;
 
 namespace MC_City_Maker
@@ -221,8 +222,9 @@ namespace MC_City_Maker
 
             Generate_Grid_Squares();
             InitializeUIGridSquare();
-            Generate_Adjacent_Containers();
 
+            
+            Generate_Adjacent_Containers();
             Generate_Adjacent_Grid_Squares();
 
         }
@@ -232,18 +234,19 @@ namespace MC_City_Maker
         /// </summary>
         public void GenerateGrids(Coordinate newStartingCoordinate, int newGridSize)
         {
+
             startCoordinate = newStartingCoordinate;
             gridSize = newGridSize;
             PrimaryGridMap = new Grid_Container[gridSize, gridSize];
 
+           
             Map_out_GridContainer();
             InitializeUIGridContainer();
-
+            
             Generate_Grid_Squares();
             InitializeUIGridSquare();
 
             Generate_Adjacent_Containers();
-
             Generate_Adjacent_Grid_Squares();
 
         }
@@ -444,6 +447,7 @@ namespace MC_City_Maker
         /// <param name="PrimaryGridMap"></param>
         public void Generate_Adjacent_Containers()
         {
+            
 
             for (int i = 0; i < gridSize; i++)
             {
@@ -451,7 +455,7 @@ namespace MC_City_Maker
                 {
                     Grid_Container aContainer = PrimaryGridMap[i, k];
 
-
+                    
                     //This section is to test for adjacency and then associate the adjacent unit.
                     //Minecraft only has to test 4 directions since we are not considering diagnal adjacency
                     try
@@ -462,27 +466,32 @@ namespace MC_City_Maker
                         {
 
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i, k - 1]);
+                            
                         }
                         //next
                         if ((k + 1 < gridSize) && PrimaryGridMap[i, k + 1].isValid)
                         {
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i, k + 1]);
+                            
                         }
                         //above
                         if ((i + 1 < gridSize) && PrimaryGridMap[i + 1, k].isValid)
                         {
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i + 1, k]);
+                            
                         }
                         //below
                         if ((i - 1 >= 0) && PrimaryGridMap[i - 1, k].isValid)
                         {
                             aContainer.Add_Adjacent_Container(PrimaryGridMap[i - 1, k]);
+                            
                         }
 
                     }
                     catch (IndexOutOfRangeException err)
                     {
                         Console.WriteLine(err);
+                        Debug.WriteLine("adjacent container error");
                     }
                 }
             }
@@ -495,42 +504,53 @@ namespace MC_City_Maker
         /// <param name="PrimaryGridMap"></param>
         private void Generate_Adjacent_Grid_Squares()
         {
-            
+            string error = "";
 
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
                 {
+
                     Grid_Container aContainer = PrimaryGridMap[i, j];
                     Grid_Square[,] aGridSquareMap = aContainer.gridSquareMap;
 
-                    for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE; m++)
+                    for (int m = 0; m < Shared_Constants.GRID_SQUARE_SIZE-1; m++)
                     {
-                        for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE; n++)
+                        for (int n = 0; n < Shared_Constants.GRID_SQUARE_SIZE-1; n++)
                         {
-
+                            
                             Grid_Square aGridSquare = aGridSquareMap[m, n];
+
                             try
                             {
+                                
                                 //before
                                 if ((n - 1 >= 0) && aGridSquareMap[m, n - 1].isValid)
                                 {
+                                    error = "before";
                                     aGridSquare.Add_Adjacent_Square(aGridSquareMap[m, n - 1]);
+                                    
                                 }
                                 //next
                                 if ((n + 1 < Shared_Constants.GRID_SQUARE_SIZE) && aGridSquareMap[m, n + 1].isValid)
                                 {
+                                    error = "next";
                                     aGridSquare.Add_Adjacent_Square(aGridSquareMap[m, n + 1]);
+                                    
                                 }
                                 //above
                                 if ((m + 1 < Shared_Constants.GRID_SQUARE_SIZE) && aGridSquareMap[m + 1, n].isValid)
                                 {
+                                    error = "above";
                                     aGridSquare.Add_Adjacent_Square(aGridSquareMap[m + 1, n]);
+                                    
                                 }
                                 //below
                                 if ((m - 1 >= 0) && aGridSquareMap[m - 1, n].isValid)
                                 {
+                                    error = "below"; //errors look like they are coming from here
                                     aGridSquare.Add_Adjacent_Square(aGridSquareMap[m - 1, n]);
+                                    
                                 }
 
                                 (bool, string) edgeResult = EdgeTest(i, j, m, n);
@@ -541,7 +561,9 @@ namespace MC_City_Maker
                             }
                             catch (IndexOutOfRangeException err)
                             {
-                                Console.WriteLine(err);
+                                Debug.WriteLine(error);
+                                Debug.WriteLine(err.Message);
+                                
                             }
 
                         }
@@ -608,7 +630,7 @@ namespace MC_City_Maker
             //get a container that is above this container
             Grid_Container adjContainer = Get_Container((parentContainer.Item1 + row, parentContainer.Item2 + col));
             Grid_Square adjSquare = adjContainer.gridSquareMap[adjSquareCoordinate.Item1, adjSquareCoordinate.Item2];
-
+            Console.WriteLine("Here1");
             //current grid square, need to know adjacnet one in another container
             //aGridSquare
             //Console.WriteLine("Parent square: " + current_square.SquareCoordinate);

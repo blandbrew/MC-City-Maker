@@ -1,7 +1,6 @@
 ﻿using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.Structures;
-using MC_City_Maker.UI.Model;
 using MC_City_Maker.UI.View;
 using System;
 using System.Collections.Generic;
@@ -26,7 +25,7 @@ namespace MC_City_Maker.UI.ViewModel
     {
         private GridMap gridMap;
 
-        /*Menu File Commands*/
+        /*Menu File Commands - vm prefix is View Model*/
         private ICommand vm_NewCity;
         private ICommand vm_OpenCity;
         private ICommand vm_SaveCity;
@@ -38,16 +37,14 @@ namespace MC_City_Maker.UI.ViewModel
         private ICommand vmSelectZone;
         private ICommand closeWindow;
         
-
-        NewCity_ViewModel vmNewCity { get; set; }
-
-        
+        //used for displaying the coordinates in labels on the UI Window
         private (int, int) _UIContainerArrayCoordinate;
         private (int, int) _UISquareArrayCoordinate;
 
+        //initializes zone to building
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
 
-        Grid_Container[,] containers_and_squares;
+        //Grid_Container[,] containers_and_squares;
 
         public ObservableCollection<Grid_Container> observable_ui_gridContainer { get; private set; } = new ObservableCollection<Grid_Container>();
         public ObservableCollection<Grid_Square> observable_ui_gridSquare { get; private set; } = new ObservableCollection<Grid_Square>();
@@ -59,6 +56,7 @@ namespace MC_City_Maker.UI.ViewModel
 
 
         NewCity_ViewModel NewCity_ViewModel;
+
         //initializes 
         public GridMap_ViewModel()
         {
@@ -135,21 +133,26 @@ namespace MC_City_Maker.UI.ViewModel
 
         #region GridMapSize Definition
 
+        /*Marked for deletion*/
+        ///// <summary>
+        ///// Number of Grid Containers that the city will contain.
+        ///// </summary>
+        //ObservableCollection<string> GridMapSizes = new ObservableCollection<string>()
+        //{
+        //    "1","4","9","16","25","36","49","64","81","100","121","144","169","196"
+        //};
+        ////public ObservableCollection<UIRectangle> RectItems { get; set; }
+
+        //public ObservableCollection<string> GridSizes
+        //{
+        //    get { return GridMapSizes; }
+        //    set { GridMapSizes = value;  }
+        //}
+
+
         /// <summary>
-        /// Number of Grid Containers that the city will contain.
+        /// Handles building stack panel on the UI
         /// </summary>
-        ObservableCollection<string> GridMapSizes = new ObservableCollection<string>()
-        {
-            "1","4","9","16","25","36","49","64","81","100","121","144","169","196"
-        };
-        //public ObservableCollection<UIRectangle> RectItems { get; set; }
-
-        public ObservableCollection<string> GridSizes
-        {
-            get { return GridMapSizes; }
-            set { GridMapSizes = value;  }
-        }
-
         public string BuildingStackPanel
         {
             get
@@ -162,6 +165,10 @@ namespace MC_City_Maker.UI.ViewModel
                 RaisePropertyChanged(nameof(BuildingStackPanel));
             }
         }
+
+        /// <summary>
+        /// Testing creation of templates for 
+        /// </summary>
         public GenericBuilding GenericBuildingTest
         {
             get
@@ -176,7 +183,9 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        
+        /// <summary>
+        /// Testing the label on a template
+        /// </summary>
         public string TemplateLabelTest
         {
             get
@@ -236,6 +245,9 @@ namespace MC_City_Maker.UI.ViewModel
             Console.WriteLine("Static X,y,z is: " + StartCoordinate.x + "," + StartCoordinate.y + "," + StartCoordinate.z);
         }
 
+        /// <summary>
+        /// Processes grid size once collected from new window.
+        /// </summary>
         public void SelectedGridSize()
         {
             if (observable_ui_gridContainer != null)
@@ -260,6 +272,10 @@ namespace MC_City_Maker.UI.ViewModel
             gridMap.SelectedContainer(gridMap.PrimaryGridMap[0, 0]);
         }
 
+        /// <summary>
+        /// Example Message
+        /// </summary>
+        /// <param name="obj"></param>
         public void ShowMessage(object obj)
         {
             
@@ -287,6 +303,10 @@ namespace MC_City_Maker.UI.ViewModel
 
         }
 
+        /// <summary>
+        /// Handles action when square is selected
+        /// </summary>
+        /// <param name="obj"></param>
         public void SelectSquare(object obj)
         {
             BuildingStackPanel = "Hidden";
@@ -301,6 +321,10 @@ namespace MC_City_Maker.UI.ViewModel
             //Console.WriteLine("Selectingsquare: " + UISquareArrayCoordinate.Item1 + "," + UISquareArrayCoordinate.Item2);
         }
 
+        /// <summary>
+        /// Sets zone value for the clicked square
+        /// </summary>
+        /// <param name="obj"></param>
         public void SelectZone(object obj)
         {
             string selectedZone = (string)obj;
@@ -344,12 +368,18 @@ namespace MC_City_Maker.UI.ViewModel
             
 
         }
+
+
         void updateConditions(object sender, NotifyCollectionChangedEventArgs e)
         {
             /* Conditions = something */
             Console.WriteLine("UPDATING CONDITIONS");
         }
 
+        /// <summary>
+        /// Clears existing observable gridsquares and replaces it with the grid squares of the selected container
+        /// </summary>
+        /// <param name="aContainer"></param>
         public void UpdateGridSquares(Grid_Container aContainer)
         {
             observable_ui_gridSquare.Clear();
@@ -364,6 +394,9 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
+        /// <summary>
+        /// Container coordinate Label within the UI Window 
+        /// </summary>
         public (int,int) UIContainerArrayCoordinate
         {
             get { return _UIContainerArrayCoordinate; }
@@ -373,6 +406,10 @@ namespace MC_City_Maker.UI.ViewModel
                 RaisePropertyChanged(nameof(UIContainerArrayCoordinate));
             }
         }
+
+        /// <summary>
+        /// Square coordinate label within the UI Window
+        /// </summary>
         public (int, int) UISquareArrayCoordinate
         {
             get { return _UISquareArrayCoordinate; }
