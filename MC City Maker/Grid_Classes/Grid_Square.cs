@@ -2,6 +2,7 @@
 //each can have specific properties such ash
 //marking adjacent grids, offsets for roads, subterannian features, etc.
 
+using MC_City_Maker.Structures;
 using MC_City_Maker.UI;
 using System;
 using System.Collections.Generic;
@@ -60,8 +61,13 @@ namespace MC_City_Maker.Grid_Classes
 
 
 
-
-
+        //stores a generic building on the grid, remember to cycle through this during generation
+        private GenericBuilding building;
+        public GenericBuilding Building
+        {
+            get { return building; }
+            set { building = value; RaisePropertyChanged(nameof(Building)); }
+        }
 
 
         private bool _Selected = false;
@@ -69,7 +75,13 @@ namespace MC_City_Maker.Grid_Classes
         {
             get { return _Selected; }
             set { _Selected = value; RaisePropertyChanged(nameof(Selected)); }
+        }
 
+        private bool _Placed = false;
+        public bool Placed
+        {
+            get { return _Placed; }
+            set { _Placed = value; RaisePropertyChanged(nameof(Placed)); }
         }
 
         private double _X;
@@ -100,11 +112,11 @@ namespace MC_City_Maker.Grid_Classes
             set { _Height = value; RaisePropertyChanged(nameof(Height)); }
         }
 
-        private System.Windows.Media.Color _Color;
-        public System.Windows.Media.Color Color
+        private System.Windows.Media.Color _OutlineColor;
+        public System.Windows.Media.Color OutlineColor
         {
-            get { return _Color; }
-            set { _Color = value; RaisePropertyChanged(nameof(Color)); }
+            get { return _OutlineColor; }
+            set { _OutlineColor = value; RaisePropertyChanged(nameof(OutlineColor)); }
         }
 
         private System.Windows.Media.Color _FillColor;
@@ -135,7 +147,7 @@ namespace MC_City_Maker.Grid_Classes
             Y = y;
             Width = width;
             Height = height;
-            Color = color;
+            OutlineColor = color;
             FillColor = fillcolor;
             ParentContainerArrayCoordinate = containerarraycoords;
             SquareArrayCoordinate = SquareCoord;

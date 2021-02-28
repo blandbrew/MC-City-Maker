@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MC_City_Maker" 
-        xmlns:local1="clr-namespace:MC_City_Maker.UI.ViewModel" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local1="clr-namespace:MC_City_Maker.UI.ViewModel" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MC City Maker" Height="771.773" Width="1371.046" Icon="/blandbrew_Resource_Icon.png">
+        Title="MC City Maker" MinHeight="817" MinWidth="1127" MaxHeight="817" MaxWidth="1127" Icon="/blandbrew_Resource_Icon.png" Height="817" Width="1127">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF415128" Offset="0"/>
@@ -19,16 +19,35 @@
         <local1:GridMap_ViewModel/>
     </Window.DataContext>
 
-   
-    <Grid>
+
+
+
+
+    <Grid Grid.IsSharedSizeScope="True">
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="18*" />
+            <ColumnDefinition Width="309*" />
+            <ColumnDefinition Width="18*" />
+            <ColumnDefinition Width="382*" />
+            <ColumnDefinition Width="18*" />
+            <ColumnDefinition Width="363*" />
+            <ColumnDefinition Width="18*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".18*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height=".05*" />
+            <RowDefinition Height=".65*" />
+            <RowDefinition Height=".05*" />
+        </Grid.RowDefinitions>
 
-        <DockPanel Margin="0,0,0,0">
-            <Menu DockPanel.Dock="Top" Background="#FF686868" Foreground="#FFD42929" Height="18" VerticalAlignment="Top" Visibility="Visible">
 
-                <MenuItem Header="_File" Foreground="Black">
+
+        <DockPanel Grid.ColumnSpan="7" >
+            <Menu DockPanel.Dock="Top" Background="#FF686868" Foreground="#FFD42929" Visibility="Visible" MinHeight="50" MaxHeight="50">
+
+                <MenuItem VerticalAlignment="Center" Header="_File" Foreground="Black">
                     <MenuItem Header="New City" Command="{Binding NewCityMenu}"/>
                     <!--<MenuItem Header="_Load City" Command="{StaticResource DoSomethingCommand}"/>-->
                     <MenuItem Header="Open City" Command="Open" />
@@ -36,19 +55,19 @@
                     <Separator />
                     <MenuItem Header="Close Application" Command="Close" />
                 </MenuItem>
-                <MenuItem Header="Edit" Foreground="Black">
+                <MenuItem VerticalAlignment="Center" Header="Edit" Foreground="Black">
                     <MenuItem Command="Cut" />
                     <MenuItem Command="Copy" />
                     <MenuItem Command="Paste" />
                 </MenuItem>
-                <MenuItem Header="View" Foreground="Black">
+                <MenuItem VerticalAlignment="Center" Header="View" Foreground="Black">
                     <MenuItem Header="Coordinates" />
                     <MenuItem Header="Full Map" />
                     <MenuItem Header="_Save" />
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>
-                <MenuItem Header="Tools" Foreground="Black">
+                <MenuItem VerticalAlignment="Center" Header="Tools" Foreground="Black">
                     <MenuItem Header="Preferences" />
                     <MenuItem Header="Full Map Editor" />
                     <MenuItem Header="Building Editor" />
@@ -56,169 +75,243 @@
             </Menu>
         </DockPanel>
 
-        <!--Left Side-->
-        <!--<GroupBox x:Name="groupBox" Header="Coordinates" HorizontalAlignment="Left" Height="117" Margin="24,400,0,0" VerticalAlignment="Top" Width="233" FontFamily="Segoe UI Black" FontSize="14" RenderTransformOrigin="0.524,0.786">
-            <Grid >
-                <Label x:Name="label_xcoordinate" Content="X:" VerticalAlignment="Top" Height="29" Width="26" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_xcoordinate" Height="19" Margin="22,5,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_ycoordinate" Content="Y:" VerticalAlignment="Top" Height="28" Width="26" Margin="68,0,0,0" RenderTransformOrigin="0.439,0.319" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_ycoordinate" Height="19" Margin="90,5,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_zcoordinate" Content="Z:" VerticalAlignment="Top" Height="29" Width="27" Margin="139,0,0,0" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_zcoordinate" Height="19" Margin="162,5,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_numberofcontainers" Content="Number of Containers?"  FontFamily="Segoe UI Black" ToolTip="Each container is 169x169 blocks" Margin="-4,36,4,30"/>
-                <ComboBox x:Name="comboBox_numberofgridcontainers" 
-                          HorizontalAlignment="Left" 
-                          Margin="163,38,0,0" 
-                          VerticalAlignment="Top" 
-                          Width="56"
-                          ItemsSource="{Binding GridSizes}"
-                          SelectedItem="{Binding SelectedGridSize}"
-                          />
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="2,18,0,0" Grid.Column="1" Grid.Row="1">
+
+            <!-- ROW 0 -->
+
+            <Grid ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="FirstColumn" />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" x:Name="label_containercoordinate" Content="Container Coordinate:" FontSize="14" FontWeight="Bold" Height="27" />
+                <Label HorizontalAlignment="Left" x:Name="dynamic_containercoordinate" Content="{Binding UIContainerArrayCoordinate}" Height="26" Width="37" Margin="149,1,0,0"/>
+
             </Grid>
-        </GroupBox>-->
 
-        <StackPanel Orientation="Horizontal" Margin="68,52,1075,659">
-            <Label x:Name="label_containercoordinate" Content="Container Coordinate:" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Height="27" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,0"/>
-            <Label x:Name="dynamic_containercoordinate" Content="{Binding UIContainerArrayCoordinate}" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="26" Width="57"/>
-        </StackPanel>
+            <!-- ROW 1 -->
 
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="FirstRow"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="FirstColumn"  />
+                </Grid.ColumnDefinitions>
 
-        <ItemsControl ItemsSource="{Binding observable_ui_gridContainer}" Width="255" Margin="0,0,1042,407" VerticalAlignment="Bottom" Height="247"  HorizontalAlignment="Right" >
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Background="DarkOliveGreen"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle Width="{Binding Width}" Height="{Binding Height}">
-                        <Rectangle.Stroke>
-                            <SolidColorBrush Color="{Binding Color}" />
-                        </Rectangle.Stroke>
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding FillColor}" />
-                        </Rectangle.Fill>
-                        <Rectangle.InputBindings>
-                            <MouseBinding 
+                <ItemsControl Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding observable_ui_gridContainer}" Width="255"  Height="247"   >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Background="DarkOliveGreen"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle Width="{Binding Width}" Height="{Binding Height}">
+                                <Rectangle.Stroke>
+                                    <SolidColorBrush Color="{Binding Color}" />
+                                </Rectangle.Stroke>
+                                <Rectangle.Fill>
+                                    <SolidColorBrush Color="{Binding FillColor}" />
+                                </Rectangle.Fill>
+                                <Rectangle.InputBindings>
+                                    <MouseBinding 
                                 Command="{Binding DataContext.ClickGridContainer, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
                                 CommandParameter="{Binding}" 
                                 MouseAction="LeftClick"/>
-                        </Rectangle.InputBindings>
-                    </Rectangle>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Canvas.Left" Value="{Binding X}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+                                </Rectangle.InputBindings>
+                            </Rectangle>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
 
-        <!--Middle-->
+            </Grid>
+        </StackPanel>
 
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Margin="2,18,1,0" Grid.Row="1">
 
-        <ItemsControl ItemsSource="{Binding observable_ui_gridSquare}" Margin="392,87,519,299">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Background="gray"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle Width="{Binding Width}" Height="{Binding Height}">
-                        <Rectangle.Stroke>
-                            <SolidColorBrush Color="{Binding Color}" />
-                        </Rectangle.Stroke>
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{Binding FillColor}" />
-                        </Rectangle.Fill>
-                        <Rectangle.InputBindings>
-                            <MouseBinding 
-                                Command="{Binding DataContext.ClickGridSquare, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                                CommandParameter="{Binding}" 
-                                MouseAction="LeftClick"/>
-                        </Rectangle.InputBindings>
-                    </Rectangle>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Canvas.Left" Value="{Binding X}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+            <!-- ROW 0 -->
 
-        <GroupBox x:Name="groupBox1" Header="Zoning" HorizontalAlignment="Left" Height="48"  VerticalAlignment="Top" Width="339" Margin="401,447,0,0">
-            <StackPanel   Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="317" Margin="0,0,0,5">
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type RadioButton}">
-                        <Setter Property="Margin" Value="10,0,0,0"/>
-                    </Style>
-                </StackPanel.Resources>
-                <RadioButton x:Name="building" 
-                             Content="Building" 
-                             Command="{Binding ClickZone}" 
-                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                             IsChecked="True"
-                             HorizontalAlignment="Left" 
-                             VerticalAlignment="Top" />
-                <RadioButton x:Name="infrustructure" 
-                             Content="Infrustructure" 
-                             Command="{Binding ClickZone}"
-                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                             HorizontalAlignment="Left" 
-                             VerticalAlignment="Top"/>
-                <RadioButton x:Name="water" 
-                             Content="Water" 
-                             Command="{Binding ClickZone}"
-                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                             HorizontalAlignment="Left" 
-                             VerticalAlignment="Top" />
-                <RadioButton x:Name="Scenary" 
-                             Content="Scenary" 
-                             Command="{Binding ClickZone}"
-                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                             HorizontalAlignment="Left" 
-                             VerticalAlignment="Top"/>
-            </StackPanel>
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="FirstColumn" />
+                </Grid.ColumnDefinitions>
 
-        </GroupBox>
+                <Label Grid.Row="0" x:Name="label_squarecoordinate" Content="Square Coordinate:" FontSize="14" FontWeight="Bold" Margin="0,18,0,-18"/>
+                <Label Grid.Row="0" x:Name="dynamic_squarecoordinate" Content="{Binding UISquareArrayCoordinate}"  Height="26" Margin="130,20,177,-1"/>
 
-        <Label x:Name="label_squarecoordinate" Content="Square Coordinate:" HorizontalAlignment="Left" Margin="401,53,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-        <Label x:Name="dynamic_squarecoordinate" Content="{Binding UISquareArrayCoordinate}" HorizontalAlignment="Left" Margin="538,56,0,0" VerticalAlignment="Top" Height="26" Width="50"/>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton" 
+                    Margin="232,11,90,-1"
+                    Background="White"
+                    IsChecked="{Binding ToolSelect}"
+                    Command="{Binding ClickToolSelect}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                      Kind="Select"
+                      Height="25"
+                      Width="25" 
+                      HorizontalAlignment="Center" />
+                </ToggleButton>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton"
+                    Margin="272,11,50,-1"
+                    Background="White"
+                    IsChecked="{Binding ToolPlace}"
+                    Command="{Binding ClickToolPlace}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                      Kind="Place"
+                      Height="25"
+                      Width="25" />
+                </ToggleButton>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton" 
+                    Margin="312,11,10,-1"
+                    Background="White"
+                    IsChecked="{Binding ToolDelete}"
+                    Command="{Binding ClickToolDelete}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                    Kind="Delete"
+                    Height="25"
+                    Width="25"
+                    />
+                </ToggleButton>
 
+            </Grid>
 
+            <!-- ROW 1 -->
 
-        <!--Right side-->
-        <!--
-        <StackPanel  Margin="0,43,137,64" HorizontalAlignment="Right" Width="310">
-            <Label Grid.Column="0" Grid.Row="1" Margin="4" Content="Grid Size:" HorizontalAlignment="Left"/>
-            -->
-        <!-- UpdateSourceTrigger=PropertyChanged makes sure that changes in the TextBoxes are immediately applied to the model. -->
-        <!--
-            <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="100"/>
-        </StackPanel>-->
-        <Grid Margin="964,56,85,64">
-            <!--<StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding BuildingStackPanel, UpdateSourceTrigger=PropertyChanged}">
-                <Label  Content="Grid Size:" />
-                <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Width="141"  />
-            </StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding InfrustructureStackPanel, UpdateSourceTrigger=PropertyChanged}">
-                <Label  Content="Grid Size:" />
-                <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Width="141"  />
-            </StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Visibility="{Binding InfrustructureStackPanel, UpdateSourceTrigger=PropertyChanged}">
-                <Label  Content="Grid Size:" />
-                <TextBox Text="{Binding GridSize, UpdateSourceTrigger=PropertyChanged}" Width="141"  />
-            </StackPanel>-->
-            <ContentControl x:Name="foo" Content="{Binding GenericBuildingTest}" />
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="FirstColumn" Width="88*"  />
+                    <ColumnDefinition Width="253*"/>
+                    <ColumnDefinition Width="80*"/>
+                </Grid.ColumnDefinitions>
+
+                <ItemsControl Grid.Column="0" Margin="10,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding observable_ui_gridSquare}" Width="316"  Height="316" Grid.ColumnSpan="2" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Background="gray"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle Width="{Binding Width}" Height="{Binding Height}">
+                                <Rectangle.Stroke>
+                                    <SolidColorBrush Color="{Binding OutlineColor}" />
+                                </Rectangle.Stroke>
+                                <Rectangle.Fill>
+                                    <SolidColorBrush Color="{Binding FillColor}" />
+                                </Rectangle.Fill>
+                                <Rectangle.InputBindings>
+                                    <MouseBinding 
+                                    Command="{Binding DataContext.ClickGridSquare, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                    CommandParameter="{Binding}" 
+                                    MouseAction="LeftClick"/>
+                                    <MouseBinding 
+                                    Command="{Binding DataContext.RightClickGridSquare, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                    CommandParameter="{Binding}" 
+                                    MouseAction="RightClick"/>
+                                </Rectangle.InputBindings>
+                            </Rectangle>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Grid>
+
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="FirstColumn"  />
+                </Grid.ColumnDefinitions>
+
+                <GroupBox x:Name="groupBox1" 
+                          Style="{DynamicResource MaterialDesignGroupBox}" 
+                          Header="Zoning" 
+                          HorizontalAlignment="Center"  
+                          Width="339" 
+                          Margin="0,23,0,-18" 
+                          UseLayoutRounding="True"
+                          SnapsToDevicePixels="True"
+                          AutomationProperties.IsColumnHeader="True" >
+                    <StackPanel   Orientation="Horizontal"  Width="317">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type RadioButton}">
+                                <Setter Property="Margin" Value="10,0,0,0"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <RadioButton x:Name="building" 
+                                 Content="Building" 
+                                 Command="{Binding ClickZone}" 
+                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                                 IsChecked="True"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top" />
+                        <RadioButton x:Name="infrustructure" 
+                                 Content="Infrustructure" 
+                                 Command="{Binding ClickZone}"
+                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top"/>
+                        <RadioButton x:Name="water" 
+                                 Content="Water" 
+                                 Command="{Binding ClickZone}"
+                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top" />
+                        <RadioButton x:Name="Scenary" 
+                                 Content="Scenary" 
+                                 Command="{Binding ClickZone}"
+                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top"/>
+                    </StackPanel>
+                </GroupBox>
+
+            </Grid>
+        </StackPanel>
+
+        <Grid Grid.RowSpan="4" Grid.Column="5" Margin="0,18,2,13" Grid.Row="1" >
+            <ContentControl x:Name="foo" Content="{Binding BuildingTemplate}" />
         </Grid>
-        
     </Grid>
+
 </Window>
 

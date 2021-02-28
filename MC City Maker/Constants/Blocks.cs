@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,31 +16,92 @@ namespace MC_City_Maker.Constants
      * This task will be on hold for a while.
      */
 
-
-
-
     public class Blocks
     {
-        public static Dictionary<int, Block> blockList = new Dictionary<int, Block>();    
+        HashSet<Block> MinecraftBlockData { get; set; }
 
 
-
-        public void Populate_BlockList()
+        public Blocks()
         {
+            //blockList = new List<Block>(); ;
+            Deserialize_BlockList();
+        }
 
 
-            //Block account = JsonConvert.DeserializeObject<Block>(block_data_JSON);
-            //List<Block> Blocks = JsonConvert.DeserializeObject<List<Block>>(block_data_JSON);
-
-            //var objects = JsonConvert.DeserializeObject<List<Block>>(block_data_JSON);
-            //var result = objects.Select(obj => JsonConvert.SerializeObject(obj)).ToArray();
-
+        /// <summary>
+        /// Deserializes the JSON BLock list and then stroes it in a Hashset of block data
+        /// </summary>
+        private void Deserialize_BlockList()
+        {
+            HashSet<Block> MinecraftBlockData = JsonConvert.DeserializeObject<HashSet<Block>>(block_data_JSON);
 
         }
 
 
-        public string block_data_JSON =
-                @"[
+        /// <summary>
+        /// Retrieves Minecraft Block by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Block by name</returns>
+        public Block GetBlockByName(string name)
+        {
+            
+            foreach (var block in MinecraftBlockData)
+            {
+                if (block.name.Equals(name))
+                {
+                    Block aBlock = block;
+                    return aBlock;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieve a block list 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>List of Blocks by the type</returns>
+        public List<Block> GetBlockByType(string type)
+        {
+            List<Block> blocksbytype = new List<Block>();
+            foreach(var block in MinecraftBlockData)
+            {
+                if(block.type.Equals(type))
+                {
+                    blocksbytype.Add(block);
+                }
+            }
+
+            return blocksbytype;
+        }
+
+        /// <summary>
+        /// Retrieves blocks by ID number and adds them to list.  
+        /// Note: Some blocks may have same ID number and differentiate with datavalue number
+        /// 
+        /// Example: Concrete ID is 251, and data value 0 is White, 1 is orange, and 2 is magenta, etc.
+        /// </summary>
+        /// <param name="id_num"></param>
+        /// <returns>List of Blocks by ID number</returns>
+    public List<Block> GetBlockByID(int id_num)
+        {
+            List<Block> blocksbyID = new List<Block>();
+            foreach (var block in MinecraftBlockData)
+            {
+                if (block.id == id_num)
+                {
+                    blocksbyID.Add(block);
+                }
+            }
+
+            return blocksbyID;
+        }
+
+
+        string block_data_JSON =
+           @"{""data"":[
            {
               'id': 0,
               'datavalue': 0,
@@ -986,7 +1048,7 @@ Wool',
            {
               'id': 91,
               'datavalue': 0,
-              'name': 'Jack o'Lantern',
+              'name': 'Jack oLantern',
               'type': 'lit_pumpkin'
            },
            {
@@ -4355,7 +4417,7 @@ Wool',
               'name': 'Wait Disc',
               'type': 'record_wait'
            }
-        ]";
+        }]}";
             
     
 

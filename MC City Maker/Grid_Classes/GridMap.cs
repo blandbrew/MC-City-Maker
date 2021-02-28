@@ -185,7 +185,48 @@ namespace MC_City_Maker
        
         }
 
-        public void SelectedSquare(Grid_Square selected, GridSquare_Zoning zone)
+        /************************************************************************
+         * Grid Tools
+         * 
+         * - Select
+         * - Place
+         * - Delete
+         * 
+         * 
+         * 
+         */
+
+
+
+
+        /// <summary>
+        /// Selects the UI Square for editing properties
+        /// </summary>
+        /// <param name="selected"></param>
+        /// <param name="zone"></param>
+        public void SelectSquare(Grid_Square selected, GridSquare_Zoning zone)
+        {
+            if (selected.Selected == false)
+            {
+                selected.OutlineColor = UI_Constants.GetZoningColor(zone);
+                
+                selected.Selected = true;
+                return;
+            }
+
+            if (selected.Selected == true)
+            {
+                selected.OutlineColor = UI_Constants.GetZoningColor(zone);
+                selected.Selected = true;
+
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                
+                return;
+            }
+        }
+
+
+        public void PlaceSquare(Grid_Square selected, GridSquare_Zoning zone)
         {
             if (selected.Selected == false)
             {
@@ -194,6 +235,8 @@ namespace MC_City_Maker
                 selected.Selected = true;
                 return;
             }
+
+            //This overrides the existing building
             if (selected.Selected == true && selected.Zone != zone)
             {
 
@@ -201,8 +244,14 @@ namespace MC_City_Maker
                 selected.Zone = zone;
                 return;
             }
+        }
 
-            if (selected.Selected == true)
+
+
+
+        public void DeleteSquare(Grid_Square selected)
+        {
+            if(selected.Selected == true)
             {
                 //clear the square
                 selected.FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);

@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,7 +36,11 @@ namespace MC_City_Maker.UI.ViewModel
         private ICommand vm_MouseDownCommand;
         private ICommand vmClickGridContainer;
         private ICommand vmClickGridSquare;
+        private ICommand vmRightClickGridSquare;
         private ICommand vmSelectZone;
+        private ICommand vmSelectTool;
+        private ICommand vmPlaceTool;
+        private ICommand vmDeleteTool;
         private ICommand closeWindow;
         
         //used for displaying the coordinates in labels on the UI Window
@@ -43,6 +49,12 @@ namespace MC_City_Maker.UI.ViewModel
 
         //initializes zone to building
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
+        //Default Building for zone
+        private GenericBuilding _BuildingTemplate;
+
+
+       
+
 
         //Grid_Container[,] containers_and_squares;
 
@@ -50,8 +62,10 @@ namespace MC_City_Maker.UI.ViewModel
         public ObservableCollection<Grid_Square> observable_ui_gridSquare { get; private set; } = new ObservableCollection<Grid_Square>();
 
 
-        private String _BuildingStackPanel;
-        private GenericBuilding _GenericBuildingTest;
+        private string _BuildingStackPanel;
+        private bool _ToolSelect;
+        private bool _ToolPlace;
+        private bool _ToolDelete;
         private string _TemplateLabelTest;
 
 
@@ -66,8 +80,12 @@ namespace MC_City_Maker.UI.ViewModel
             NewCityMenu = new RelayCommand(new Action<object>(NewCity));
             MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
-            ClickGridSquare = new RelayCommand(new Action<object>(SelectSquare));
+            ClickGridSquare = new RelayCommand(new Action<object>(UpdateSquare));
+            RightClickGridSquare = new RelayCommand(new Action<object>(DeselectSquare));
             ClickZone = new RelayCommand(new Action<object>(SelectZone));
+            ClickToolSelect = new RelayCommand(new Action<object>(SelectTool));
+            ClickToolPlace = new RelayCommand(new Action<object>(PlaceTool));
+            ClickToolDelete = new RelayCommand(new Action<object>(DeleteTool));
             _TemplateLabelTest = "THIS IS A TEST";
         }
 
@@ -109,12 +127,49 @@ namespace MC_City_Maker.UI.ViewModel
                 vmClickGridSquare = value;
             }
         }
+
+        public ICommand RightClickGridSquare
+        {
+            get { return vmRightClickGridSquare; }
+            set
+            {
+                vmRightClickGridSquare = value;
+            }
+        }
+
         public ICommand ClickZone
         {
             get { return vmSelectZone; }
             set
             {
                 vmSelectZone = value;
+            }
+        }
+
+        public ICommand ClickToolSelect
+        {
+            get { return vmSelectTool; }
+            set
+            {
+                vmSelectTool = value;
+            }
+        }
+
+        public ICommand ClickToolPlace
+        {
+            get { return vmPlaceTool; }
+            set
+            {
+                vmPlaceTool = value;
+            }
+        }
+
+        public ICommand ClickToolDelete
+        {
+            get { return vmDeleteTool; }
+            set
+            {
+                vmDeleteTool = value;
             }
         }
 
@@ -131,25 +186,48 @@ namespace MC_City_Maker.UI.ViewModel
 
         #endregion Icommands
 
-        #region GridMapSize Definition
 
-        /*Marked for deletion*/
-        ///// <summary>
-        ///// Number of Grid Containers that the city will contain.
-        ///// </summary>
-        //ObservableCollection<string> GridMapSizes = new ObservableCollection<string>()
-        //{
-        //    "1","4","9","16","25","36","49","64","81","100","121","144","169","196"
-        //};
-        ////public ObservableCollection<UIRectangle> RectItems { get; set; }
+        public bool ToolSelect
+        {
+            get
+            {
+                return _ToolSelect;
+            }
+            set
+            {
+                _ToolSelect = value;
+                RaisePropertyChanged(nameof(ToolSelect));
+            }
+        }
 
-        //public ObservableCollection<string> GridSizes
-        //{
-        //    get { return GridMapSizes; }
-        //    set { GridMapSizes = value;  }
-        //}
+        public bool ToolPlace
+        {
+            get
+            {
+                return _ToolPlace;
+            }
+            set
+            {
+                _ToolPlace = value;
+                RaisePropertyChanged(nameof(ToolPlace));
+            }
+        }
+
+        public bool ToolDelete
+        {
+            get
+            {
+                return _ToolDelete;
+            }
+            set
+            {
+                _ToolDelete = value;
+                RaisePropertyChanged(nameof(ToolDelete));
+            }
+        }
 
 
+        //Marked for deletion
         /// <summary>
         /// Handles building stack panel on the UI
         /// </summary>
@@ -169,16 +247,16 @@ namespace MC_City_Maker.UI.ViewModel
         /// <summary>
         /// Testing creation of templates for 
         /// </summary>
-        public GenericBuilding GenericBuildingTest
+        public GenericBuilding BuildingTemplate
         {
             get
             {
-                return _GenericBuildingTest;
+                return _BuildingTemplate;
             }
             set
             {
-                _GenericBuildingTest = value;
-                RaisePropertyChanged(nameof(GenericBuildingTest));
+                _BuildingTemplate = value;
+                RaisePropertyChanged(nameof(BuildingTemplate));
             }
         }
 
@@ -199,36 +277,6 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
-        //marked for deletion
-        //public int SelectedGridSize
-        //{
-        //    get { return GridMap.number_of_Grid_Containers; }
-        //    set {
-        //        Console.WriteLine("GridSize Selected: " + value);
-        //            if(observable_ui_gridContainer != null)
-        //            {
-        //                observable_ui_gridContainer.Clear();   
-        //            }
-        //            if(observable_ui_gridSquare != null)
-        //            {
-        //                observable_ui_gridSquare.Clear();
-        //            }
-
-        //            //Inlitializes the grid with the square root of the selected map size, the container array
-        //            //is returned to be added to observables
-        //            int grid_size = (int)Math.Sqrt(value);
-        //            containers_and_squares = new UI_GridContainer[grid_size, grid_size];
-        //            containers_and_squares = ui_gridmap.InitializeGrid(grid_size);
-        //            InitalizeGridObservables(containers_and_squares);
-
-        //            //initializes the first gridcontainer to be selected
-        //            ui_gridmap.SelectedContainer(containers_and_squares[0, 0]);
-
-        //        }
-        //}
-        #endregion GridMapSize Definition
-
-
         /// <summary>
         /// Launches NewCity Window to define coordinate and starting grid size
         /// </summary>
@@ -240,6 +288,11 @@ namespace MC_City_Maker.UI.ViewModel
             NewCityWindow _ncwindow = new NewCityWindow();
             _ncwindow.ShowDialog();
             SelectedGridSize();
+
+            //Creates the genericbuilding and assigns genericbuildingdefault to display template
+            GenericBuilding Template = new GenericBuilding();
+            BuildingTemplate = Template;
+           
 
             Console.WriteLine("Static size of grid is: " + Property_SizeOfTheGrid);
             Console.WriteLine("Static X,y,z is: " + StartCoordinate.x + "," + StartCoordinate.y + "," + StartCoordinate.z);
@@ -282,8 +335,6 @@ namespace MC_City_Maker.UI.ViewModel
             MessageBox.Show("Showme");
         }
 
-
-
         /// <summary>
         /// When a Grid Container is selected this method executes
         /// </summary>
@@ -293,6 +344,9 @@ namespace MC_City_Maker.UI.ViewModel
         {
             if (obj is not Grid_Container)
                 return;
+
+
+
 
             Grid_Container _selected = (Grid_Container)obj;
             gridMap.SelectedContainer(_selected);
@@ -307,18 +361,65 @@ namespace MC_City_Maker.UI.ViewModel
         /// Handles action when square is selected
         /// </summary>
         /// <param name="obj"></param>
-        public void SelectSquare(object obj)
+        public void UpdateSquare(object obj)
         {
-            BuildingStackPanel = "Hidden";
-            GenericBuilding aaa = new GenericBuilding();
-            aaa.TemplateLabelTest = "SELECT SQUARE LABEL TEST";
+            //BuildingStackPanel = "Hidden";
+            //GenericBuilding aaa = new GenericBuilding();
+            //aaa.TemplateLabelTest = "SELECT SQUARE LABEL TEST";
 
-            GenericBuildingTest = aaa;
-            Grid_Square _selectedSquare = (Grid_Square)obj;
-            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-            gridMap.SelectedSquare(_selectedSquare, vmSelectedZone);
+            //GenericBuildingTest = aaa;
+          
+
+
+
+            if(ToolSelect)
+            {
+                Grid_Square _selectedSquare = (Grid_Square)obj;
+
+                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+                gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
+
+            }
+
+
+
+            if(ToolPlace)
+            {
+                Grid_Square _selectedSquare = (Grid_Square)obj;
+
+                Debug.WriteLine("Square selected");
+                Debug.WriteLine("WIDTH OF BUILDING IS:  " + BuildingTemplate.width);
+
+                //Assign a building that copies the default building values over.
+                //_selectedSquare.Building = DefaultBuilding;
+
+                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+                gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+            }
+
+
+            if(ToolDelete)
+            {
+                Grid_Square _selectedSquare = (Grid_Square)obj;
+                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+                gridMap.DeleteSquare(_selectedSquare);
+            }
+
+
+
             //_selectedSquare.FillColor = UI_Constants.GetZoningColor(vmSelectedZone);
             //Console.WriteLine("Selectingsquare: " + UISquareArrayCoordinate.Item1 + "," + UISquareArrayCoordinate.Item2);
+        }
+
+        /// <summary>
+        /// Unselects a square and updates square data.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void DeselectSquare(object obj)
+        {
+            Grid_Square _selectedSquare = (Grid_Square)obj;
+            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            gridMap.DeleteSquare(_selectedSquare);
         }
 
         /// <summary>
@@ -332,7 +433,55 @@ namespace MC_City_Maker.UI.ViewModel
             Console.WriteLine(selectedZone);
         }
 
+        public void SelectTool(object obj)
+        {
+            SetToolToggleButton("select");
+            Debug.WriteLine("select CLICKED");
+            bool test = (bool)obj;
+            Debug.WriteLine(test);
+            
+        }
 
+        public void PlaceTool(object obj)
+        {
+            SetToolToggleButton("place");
+            Debug.WriteLine("place CLICKED");
+            bool test = (bool)obj;
+            Debug.WriteLine(test);
+            
+        }
+
+        public void DeleteTool(object obj)
+        {
+            SetToolToggleButton("delete");
+            Debug.WriteLine("delete CLICKED");
+            bool test = (bool)obj;
+            Debug.WriteLine(test);
+           
+        }
+
+        public void SetToolToggleButton(string togglebutton)
+        {
+            switch(togglebutton)
+            {
+                case "select":
+                    //ToolSelect = true;
+                    ToolPlace = false;
+                    ToolDelete = false;
+                    break;
+                case "place":
+                    ToolSelect = false;
+                    //ToolPlace = true;
+                    ToolDelete = false;
+                    break;
+                case "delete":
+                    ToolSelect = false;
+                    ToolPlace = false;
+                    //ToolDelete = true;
+                    break;
+
+            }
+        }
 
         /// <summary>
         /// Updates the Gridcontainer and square observables when there are changes

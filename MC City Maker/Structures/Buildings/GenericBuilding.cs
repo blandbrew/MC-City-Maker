@@ -1,7 +1,9 @@
 ﻿using MC_City_Maker.Command_Generator;
+using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,31 +21,74 @@ namespace MC_City_Maker.Structures
         string buildingType;
         string color;
         string blockType;
-        
+
 
         public GenericBuilding(int height, BuildingClass buildingClass)
         {
             Height = height;
         }
 
+        public GenericBuilding(int height)
+        {
+
+        }
+
+
         public GenericBuilding()
         {
-
+            
         }
 
-        private string _TemplateLabelTest;
-        public string TemplateLabelTest
+
+        public string TemplateLabelTest { get; set; }
+        
+        //How to access protected values
+        public int width
         {
-            get
-            {
-                return _TemplateLabelTest;
-            }
-            set
-            {
-                _TemplateLabelTest = value;
-                
-            }
+            get { return Width; }
+            set { Width = value; RaisePropertyChanged(nameof(width)); }
         }
+
+        public int height
+        {
+            get { return Height; }
+            set { Height = value; RaisePropertyChanged(nameof(height)); }
+        }
+
+        public int numberOfFloors
+        {
+            get { return NumberOfFloors; }
+            set { NumberOfFloors = value; RaisePropertyChanged(nameof(numberOfFloors)); }
+        }
+
+        public int spaceBetweenFloors
+        {
+            get { return SpaceBetweenFloors; }
+            set { SpaceBetweenFloors = value; RaisePropertyChanged(nameof(spaceBetweenFloors)); }
+        }
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*BUILD Methods*/
+
+
+
+
+
+
 
         public void Building_OutsideWalls(Grid_Square square)
         {
@@ -105,5 +150,9 @@ namespace MC_City_Maker.Structures
             //throw new NotImplementedException();
         }
 
+        public void Building_Direction()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -19,6 +19,10 @@ namespace MC_City_Maker.Constants
             //Building, Infrustructure, Scenery, Water, None
             switch (zone)
             {
+                case GridSquare_Zoning.Selected:
+                    {
+                        return Colors.Red;
+                    }
                 case GridSquare_Zoning.Building:
                 {
                     return Colors.Gray;

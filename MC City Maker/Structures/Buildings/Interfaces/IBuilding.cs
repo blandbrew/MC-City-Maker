@@ -14,6 +14,7 @@ namespace MC_City_Maker
 {
     interface IBuilding
     {
+        void Building_Direction();
         void Building_OutsideWalls(Grid_Square square); //fill hollow
         void Building_Floor(Grid_Square square); //startpoint / endpoint
         void Building_Lighting();

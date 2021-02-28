@@ -15,4 +15,17 @@
     <Resource Include="blandbrew_Resource_Icon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Structures\Buildings\Commercial\" />
+    <Folder Include="Structures\Buildings\Industrial\" />
+    <Folder Include="Structures\Buildings\Municiple\" />
+    <Folder Include="Structures\Buildings\Residential\" />
+    <Folder Include="Structures\Infrustructure\Transportation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
 </Project>

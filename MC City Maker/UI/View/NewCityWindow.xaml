@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:MC_City_Maker.UI.ViewModel"
         xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="New City" Height="212.084" Width="328.248" Topmost="True" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+        Title="New City" Height="271" Width="428" Topmost="True" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
 
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -20,36 +20,36 @@
     <Window.DataContext>
         <local1:NewCity_ViewModel/>
     </Window.DataContext>
-    
+
     <Grid>
-        <GroupBox x:Name="groupBox" Header="Coordinates" HorizontalAlignment="Left" Height="117" Margin="45,32,0,0" VerticalAlignment="Top" Width="233" FontFamily="Segoe UI Black" FontSize="14" RenderTransformOrigin="0.524,0.786">
-            <Grid >
-                <Label x:Name="label_xcoordinate" Content="X:" VerticalAlignment="Top" Height="29" Width="26" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_xcoordinate" Text="{Binding xVal}" Height="19" Margin="22,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
+        <GroupBox x:Name="groupBox" Header="Coordinates" HorizontalAlignment="Left" Height="153" Margin="65,32,0,0" VerticalAlignment="Top" Width="285" FontFamily="Segoe UI Black" FontSize="14" RenderTransformOrigin="0.524,0.786">
+            <Grid Margin="0,5,0,-5" Width="234" >
+                <Label x:Name="label_xcoordinate" Content="X:" VerticalAlignment="Top" Height="29" Width="26" HorizontalAlignment="Left" FontFamily="Segoe UI Black" Margin="6,4,0,0"/>
+                <TextBox x:Name="textBox_xcoordinate" Text="{Binding xVal}" Height="23" Margin="28,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_ycoordinate" Content="Y:" VerticalAlignment="Top" Height="28" Width="26" Margin="68,0,0,0" RenderTransformOrigin="0.439,0.319" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_ycoordinate" Text="{Binding yVal}" Height="19" Margin="90,5,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
+                <Label x:Name="label_ycoordinate" Content="Y:" VerticalAlignment="Top" Height="28" Width="26" Margin="74,4,0,0" RenderTransformOrigin="0.439,0.319" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
+                <TextBox x:Name="textBox_ycoordinate" Text="{Binding yVal}" Height="23" Margin="96,9,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_zcoordinate" Content="Z:" VerticalAlignment="Top" Height="29" Width="27" Margin="139,0,0,0" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
-                <TextBox x:Name="textBox_zcoordinate" Text="{Binding zVal}" Height="19" Margin="162,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
+                <Label x:Name="label_zcoordinate" Content="Z:" VerticalAlignment="Top" Height="29" Width="27" Margin="145,4,0,0" HorizontalAlignment="Left" FontFamily="Segoe UI Black"/>
+                <TextBox x:Name="textBox_zcoordinate" Text="{Binding zVal}" Height="23" Margin="168,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" HorizontalAlignment="Left" FontSize="11"/>
 
-                <Label x:Name="label_numberofcontainers" Content="Number of Containers?"  FontFamily="Segoe UI Black" ToolTip="Each container is 169x169 blocks" Margin="-4,36,4,30"/>
+                <Label x:Name="label_numberofcontainers" Content="Number of Containers?"  FontFamily="Segoe UI Black" ToolTip="Each container is 169x169 blocks" Margin="2,47,36,-1"/>
                 <ComboBox x:Name="comboBox_numberofgridcontainers" 
                           HorizontalAlignment="Left" 
-                          Margin="163,38,0,0" 
+                          Margin="170,40,0,0" 
                           VerticalAlignment="Top" 
                           Width="56"
                           ItemsSource="{Binding GridSizes}"
                           SelectedItem="{Binding SelectedGridSize}"
                           />
-                
+
             </Grid>
         </GroupBox>
-        
+
         <Button Content="Close"
                 Height="30" 
                 Width="100" 
-                Margin="0,0,10,10" 
+                Margin="0,0,94,35" 
                 IsCancel="True" 
                 VerticalAlignment="Bottom" 
                 HorizontalAlignment="Right" 
