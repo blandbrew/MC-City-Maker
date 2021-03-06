@@ -363,52 +363,48 @@ namespace MC_City_Maker.UI.ViewModel
         /// <param name="obj"></param>
         public void UpdateSquare(object obj)
         {
-            //BuildingStackPanel = "Hidden";
-            //GenericBuilding aaa = new GenericBuilding();
-            //aaa.TemplateLabelTest = "SELECT SQUARE LABEL TEST";
+            Grid_Square _selectedSquare = (Grid_Square)obj;
 
-            //GenericBuildingTest = aaa;
-          
-
-
-
-            if(ToolSelect)
+            if (ToolSelect)
             {
-                Grid_Square _selectedSquare = (Grid_Square)obj;
-
-                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-                gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
-
+                SelectSquare(_selectedSquare);
             }
-
-
 
             if(ToolPlace)
             {
-                Grid_Square _selectedSquare = (Grid_Square)obj;
+                PlaceSquare(_selectedSquare);
 
-                Debug.WriteLine("Square selected");
-                Debug.WriteLine("WIDTH OF BUILDING IS:  " + BuildingTemplate.width);
-
-                //Assign a building that copies the default building values over.
-                //_selectedSquare.Building = DefaultBuilding;
-
-                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-                gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
             }
-
 
             if(ToolDelete)
             {
-                Grid_Square _selectedSquare = (Grid_Square)obj;
                 UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
                 gridMap.DeleteSquare(_selectedSquare);
             }
+        }
 
+        private void SelectSquare(Grid_Square _selectedSquare)
+        {
+            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
+        }
 
+        private void PlaceSquare(Grid_Square _selectedSquare)
+        {
+            Debug.WriteLine("Square selected");
+            Debug.WriteLine("WIDTH OF BUILDING IS:  " + BuildingTemplate.width);
 
-            //_selectedSquare.FillColor = UI_Constants.GetZoningColor(vmSelectedZone);
-            //Console.WriteLine("Selectingsquare: " + UISquareArrayCoordinate.Item1 + "," + UISquareArrayCoordinate.Item2);
+            //Assign a building that copies the default building values over.
+            //_selectedSquare.Building = DefaultBuilding;
+
+            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+        }
+
+        private void DeleteSquare(Grid_Square _selectedSquare)
+        {
+            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            gridMap.DeleteSquare(_selectedSquare);
         }
 
         /// <summary>

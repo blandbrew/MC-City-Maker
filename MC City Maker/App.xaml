@@ -9,6 +9,8 @@
                 <ResourceDictionary Source="UI/View/BuildingDataTemplate.xaml" />
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Cyan" SecondaryColor="LightGreen" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />-->
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />-->
                 <!--<ResourceDictionary Source="\UI\View\BuildingDataTemplate.xaml" />-->
                 <!--<ResourceDictionary Source="Another/Path/To/Your/ResourceFile/EGButtonTemplateStyle.xaml" />-->
             </ResourceDictionary.MergedDictionaries>

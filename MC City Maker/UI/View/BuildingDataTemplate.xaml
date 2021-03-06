@@ -1,4 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:MC_City_Maker.Structures">
     <DataTemplate DataType="{x:Type local:GenericBuilding}">
@@ -12,7 +13,7 @@
                 
                 <StackPanel Orientation="Vertical" MaxWidth="200">
                     
-                    <Label Content="Select Building Class" />
+                    <!--<Label Content="Select Building Class" />
                     <ComboBox Name="cmb_BuildingClass" Background="Gray" HorizontalAlignment="Right">
                             <ComboBoxItem>ComboBox Item #1 asdf sadf sdf asdf </ComboBoxItem>
                             <ComboBoxItem IsSelected="True">ComboBox Item #2</ComboBoxItem>
@@ -31,83 +32,99 @@
                         <ComboBoxItem>ComboBox Item #1 asdf sadf sdf asdf</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">ComboBox Item #2</ComboBoxItem>
                         <ComboBoxItem>ComboBox Item #3</ComboBoxItem>
+                    </ComboBox>-->
+
+                    <Label Content="BUILDING PROPERTIES"
+                           FontWeight="Bold"
+                           FontSize="17"
+                           />
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Building Size = " FontWeight="Bold"/>
+                        <TextBlock Text="{Binding length}" FontWeight="Bold"/>
+                        <TextBlock Text=" x " FontWeight="Bold"/>
+                        <TextBlock Text="{Binding width}" FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Height = " FontWeight="Bold"/>
+                        <TextBlock Text="{Binding length}" FontWeight="Bold"/>
+                        <TextBlock Text=" x " FontWeight="Bold"/>
+                        <TextBlock Text="{Binding width}" FontWeight="Bold"/>
+                    </StackPanel>
+
+
+
+
+                    <Label Content="Building Length" />
+                    <ComboBox Name="cmb_BuildingLength"
+                              
+                              Width="75px"
+                              Background="White" 
+                              HorizontalAlignment="Right"
+                              HorizontalContentAlignment="Right"
+                              ItemsSource="{Binding Path=UISelectionLength}"
+                              SelectedItem="{Binding Path=length}">
                     </ComboBox>
 
-                    <Label Content="Width" />
-
-                    <TextBox Width="75px" HorizontalContentAlignment="Center" Background="White" HorizontalAlignment="Right" Text="{Binding width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
   
-                    <!-- ROW 0 -->
-
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="FirstColumn" />
-                            <ColumnDefinition SharedSizeGroup="SecondColumn" />
-                        </Grid.ColumnDefinitions>
-
-                        <!--DATA BIND THE COMBO BOX HERE SO it does not have to be defined -->
-
-                        <!--<TextBox Width="250px" Background="White" Grid.Column="1" Content="{Binding spaceBetweenFloors}"/>-->
+                    <Label Content="Building Width" />
+                    <ComboBox Name="cmb_BuildingWidth"
+                              Width="75px"
+                              Background="White" 
+                              HorizontalAlignment="Right"
+                              HorizontalContentAlignment="Right"
+                              ItemsSource="{Binding Path=UISelectionWidth}"
+                              SelectedItem="{Binding Path=width}">
+                    </ComboBox>
 
 
-                    </Grid>
+                    
 
-                    <!-- ROW 1 -->
+                    <Label Content="Block Space Between Floors" />
+                    <ComboBox Name="cmb_spacebetweenfloors" 
+                              Width="75px"
+                              Background="White" 
+                              HorizontalAlignment="Right"
+                              HorizontalContentAlignment="Right"
+                              Text="{Binding Path=spaceBetweenFloors}"
+                              ItemsSource="{Binding Path=UISpaceBetweenFloors}"
+                              SelectedItem="{Binding Path=spaceBetweenFloors}">
+                    </ComboBox>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="FirstColumn"  />
-                            <ColumnDefinition SharedSizeGroup="SecondColumn"  />
-                        </Grid.ColumnDefinitions>
+                    <Label Content="Number of Floors" />
+                    <!--<TextBox Width="75px" HorizontalContentAlignment="Right" Background="White" HorizontalAlignment="Right" Text="{Binding numberOfFloors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    
+                    <ComboBox Name="cmb_numberoffloors" 
+                                materialDesign:HintAssist.Hint="5"
+                                materialDesign:HintAssist.HintOpacity=".26"
+                                IsEditable="True"
+                              Width="75px"
+                              Background="White" 
+                              HorizontalAlignment="Right"
+                              HorizontalContentAlignment="Right"
+                              
+                              ItemsSource="{Binding Path=UINumberOfFloors}"
+                              SelectedItem="{Binding Path=numberOfFloors}">
+                    </ComboBox>
+                    
 
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left">
-                          Space Between Floors
-                        </TextBlock>
-                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding spaceBetweenFloors}"/>
-                    </Grid>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition SharedSizeGroup="secondRow"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="FirstColumn"  />
-                            <ColumnDefinition SharedSizeGroup="SecondColumn"  />
-                        </Grid.ColumnDefinitions>
+                    <Label Content="Roof Type" />
+                    <ComboBox Name="cmb_rooftype" 
+                              Width="75px"
+                              Background="White" 
+                              HorizontalAlignment="Right"
+                              HorizontalContentAlignment="Right"
+                              ItemsSource="{Binding Path=UISpaceBetweenFloors}"
+                              SelectedItem="{Binding Path=spaceBetweenFloors}">
+                    </ComboBox>
 
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left">
-                          Space Between Floors
-                        </TextBlock>
-                        <Label HorizontalAlignment="right" Grid.Row="1" Grid.Column="1" Content="{Binding spaceBetweenFloors}"/>
-                    </Grid>
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition SharedSizeGroup="secondRow"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="FirstColumn"  />
-                            <ColumnDefinition SharedSizeGroup="SecondColumn"  />
-                        </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left">
-                          Space Between Floors
-                        </TextBlock>
-                        <Label Grid.Row="1" Grid.Column="1" Content="{Binding spaceBetweenFloors}"/>
-                    </Grid>
 
                 </StackPanel>
-                <!--<TextBlock Grid.Row="0" Grid.Column="1" Text="" />
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Description:"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text=""/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Priority:"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text=""/>-->
+ 
             </Grid>
         </Border>
     </DataTemplate>

@@ -2,6 +2,7 @@
 using MC_City_Maker.UI.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace MC_City_Maker
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Canvas_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("MOUSE ENTERED");
         }
     }
 }

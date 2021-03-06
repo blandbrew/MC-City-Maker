@@ -105,10 +105,11 @@
                     <ColumnDefinition SharedSizeGroup="FirstColumn"  />
                 </Grid.ColumnDefinitions>
 
-                <ItemsControl Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding observable_ui_gridContainer}" Width="255"  Height="247"   >
+
+                <ItemsControl Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Center" ItemsSource="{Binding observable_ui_gridContainer}" Width="255"  Height="247"   >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Background="DarkOliveGreen"/>
+                            <Canvas Background="DarkOliveGreen" MouseMove="Canvas_MouseEnter"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -127,6 +128,7 @@
                                 MouseAction="LeftClick"/>
                                 </Rectangle.InputBindings>
                             </Rectangle>
+
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
@@ -308,6 +310,9 @@
             </Grid>
         </StackPanel>
 
+        <!--Row 2-->
+        
+        
         <Grid Grid.RowSpan="4" Grid.Column="5" Margin="0,18,2,13" Grid.Row="1" >
             <ContentControl x:Name="foo" Content="{Binding BuildingTemplate}" />
         </Grid>

@@ -3,6 +3,7 @@ using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.Structures.Buildings.Building_Construction;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,10 +21,16 @@ namespace MC_City_Maker.Structures
 
         protected Coordinate startCoordinate; //Upper left most point
         protected Coordinate EndCoordinate; //lower right most point
+
+        //This is necessary to store larger buildings that take up more than one square
+        protected Grid_Square startSquare; //upper left most square
+        protected Grid_Square endSquare; //lower right most square
+
         //Building Description
         protected int NumberOfFloors { get; set; }
         protected int Height { get; set; }
         protected int Width { get; set; }
+        protected int Length { get; set; }
         protected int SpaceBetweenFloors { get; set; } = 4;
         protected bool Windows { get; set; }
 
@@ -35,7 +42,22 @@ namespace MC_City_Maker.Structures
         protected Direction Direction {get; set;}
 
         protected BuildingClass building_Class;
-        protected BuildingType building_Type;
+        //protected BuildingType building_Type;
+
+
+
+        //protected ObservableCollection<string> building_class { get; private set; } = new ObservableCollection<string>()
+        //{
+        //    "1","4","9","16","25","36","49","64","81","100","121","144","169","196"
+        //};
+
+        //protected ObservableCollection<string> building_type { get; private set; } = new ObservableCollection<string>()
+        //{
+        //    "1","4","9","16","25","36","49","64","81","100","121","144","169","196"
+        //};
+
+
+
 
 
 

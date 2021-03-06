@@ -10,11 +10,10 @@ namespace MC_City_Maker
 
     //public enum gridsquare_legend { Initialized, Selected, Infrustructure, Building, Scenery, water };
     public enum GridSquare_Zoning {Selected, Building, Infrustructure, Scenery, Water, None }
+    public enum BuildingClass { Residential, Commercial, Industrial, Government, Educational, Recreational, Landmarks }
+    public enum BuildingTypeResidential { Residential, Commercial, Industrial, Utility, Service, None }
 
 
-
-    public enum BuildingClass { Residential, Commercial, Industrial, Utility, Service, None }
-    public enum BuildingType { Residential, Commercial, Industrial, Utility, Service, None }
     public enum InfrustructureClass { Road, Rail, Subway, bridge, Wall, None }
     public enum SceneryClass { Park, Playground, Garden, Other, None }
     public enum WaterClass { pond, lake, coast, waterfall, river}
@@ -50,5 +49,7 @@ namespace MC_City_Maker
         public const string INFRUSTRUCTURE = "Infrustructure";
         public const string WATER = "Water";
         public const string SCENARY = "Scenary";
+
+
     }
 }
