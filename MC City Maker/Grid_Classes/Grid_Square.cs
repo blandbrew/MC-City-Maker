@@ -59,7 +59,30 @@ namespace MC_City_Maker.Grid_Classes
 
         }
 
+        //All squres need to designate what the start square for multi grid square buildings
+        private bool _EntityStartSquare;
+        public bool EntityStartSquare
+        {
+            get { return _EntityStartSquare; }
+            set { _EntityStartSquare = value; RaisePropertyChanged(nameof(EntityStartSquare)); }
 
+        }
+
+        //All squres need to designate what the start square for multi grid square buildings
+        private bool _EntityEndSquare;
+        public bool EntityEndSquare
+        {
+            get { return _EntityEndSquare; }
+            set { _EntityEndSquare = value; RaisePropertyChanged(nameof(EntityEndSquare)); }
+        }
+
+        //This square is identified as one that has an entity placed on it, but it is not the primary square
+        private bool _EntitySecondarySquare;
+        public bool EntitySecondarySquare
+        {
+            get { return _EntitySecondarySquare; }
+            set { _EntitySecondarySquare = value; RaisePropertyChanged(nameof(EntitySecondarySquare)); }
+        }
 
         //stores a generic building on the grid, remember to cycle through this during generation
         private GenericBuilding building;

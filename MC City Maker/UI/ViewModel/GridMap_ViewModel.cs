@@ -1,6 +1,7 @@
 ﻿using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.Structures;
+using MC_City_Maker.Structures.Infrustructure;
 using MC_City_Maker.UI.View;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 //YOU CAN ONLY BIND PROPERTIES and NOT! Individual variables!
 
@@ -42,7 +44,9 @@ namespace MC_City_Maker.UI.ViewModel
         private ICommand vmPlaceTool;
         private ICommand vmDeleteTool;
         private ICommand closeWindow;
-        
+
+        //private ICommand mouseMove;
+
         //used for displaying the coordinates in labels on the UI Window
         private (int, int) _UIContainerArrayCoordinate;
         private (int, int) _UISquareArrayCoordinate;
@@ -51,7 +55,7 @@ namespace MC_City_Maker.UI.ViewModel
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
         //Default Building for zone
         private GenericBuilding _BuildingTemplate;
-
+        private Roads _RoadTemplate;
 
        
 
@@ -78,14 +82,15 @@ namespace MC_City_Maker.UI.ViewModel
             //observable_ui_gridContainer = new ObservableCollection<UI_GridContainer>();
             //observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
             NewCityMenu = new RelayCommand(new Action<object>(NewCity));
-            MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
+            //MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
-            ClickGridSquare = new RelayCommand(new Action<object>(UpdateSquare));
+            //ClickGridSquare = new RelayCommand(new Action<object>(UpdateSquare));
             RightClickGridSquare = new RelayCommand(new Action<object>(DeselectSquare));
             ClickZone = new RelayCommand(new Action<object>(SelectZone));
             ClickToolSelect = new RelayCommand(new Action<object>(SelectTool));
             ClickToolPlace = new RelayCommand(new Action<object>(PlaceTool));
             ClickToolDelete = new RelayCommand(new Action<object>(DeleteTool));
+            //MouseMoveGridSquare = new RelayCommand(new Action<object>(OnMouseMove));
             _TemplateLabelTest = "THIS IS A TEST";
         }
 
@@ -102,14 +107,14 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
-        public ICommand MouseDownCommand
-        {
-            get { return vm_MouseDownCommand; }
-            set
-            {
-                vm_MouseDownCommand = value;
-            }
-        }
+        //public ICommand MouseDownCommand
+        //{
+        //    get { return vm_MouseDownCommand; }
+        //    set
+        //    {
+        //        vm_MouseDownCommand = value;
+        //    }
+        //}
 
         public ICommand ClickGridContainer
         {
@@ -245,7 +250,7 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
         /// <summary>
-        /// Testing creation of templates for 
+        /// Creates Template for Generic Building
         /// </summary>
         public GenericBuilding BuildingTemplate
         {
@@ -260,6 +265,21 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        /// <summary>
+        /// Creates Template for Roads
+        /// </summary>
+        public Roads RoadTemplate
+        {
+            get
+            {
+                return _RoadTemplate;
+            }
+            set
+            {
+                _RoadTemplate = value;
+                RaisePropertyChanged(nameof(RoadTemplate));
+            }
+        }
 
         /// <summary>
         /// Testing the label on a template
@@ -290,8 +310,8 @@ namespace MC_City_Maker.UI.ViewModel
             SelectedGridSize();
 
             //Creates the genericbuilding and assigns genericbuildingdefault to display template
-            GenericBuilding Template = new GenericBuilding();
-            BuildingTemplate = Template;
+            BuildingTemplate = new GenericBuilding();
+            //BuildingTemplate = Template;
            
 
             Console.WriteLine("Static size of grid is: " + Property_SizeOfTheGrid);
@@ -325,6 +345,8 @@ namespace MC_City_Maker.UI.ViewModel
             gridMap.SelectedContainer(gridMap.PrimaryGridMap[0, 0]);
         }
 
+
+        //Marked For deletion
         /// <summary>
         /// Example Message
         /// </summary>
@@ -345,50 +367,58 @@ namespace MC_City_Maker.UI.ViewModel
             if (obj is not Grid_Container)
                 return;
 
-
-
-
             Grid_Container _selected = (Grid_Container)obj;
             gridMap.SelectedContainer(_selected);
 
             UpdateGridSquares(_selected);
             UIContainerArrayCoordinate = _selected.ContainerArrayUICoordinate;
-            //Console.WriteLine("SelectingContainer");
+
 
         }
 
+
+        //MARKED FOR REMOVAL, now handling with mouse behavior
         /// <summary>
         /// Handles action when square is selected
         /// </summary>
         /// <param name="obj"></param>
-        public void UpdateSquare(object obj)
-        {
-            Grid_Square _selectedSquare = (Grid_Square)obj;
+        //public void UpdateSquare(object obj)
+        //{
+        //    Grid_Square _selectedSquare = (Grid_Square)obj;
 
-            if (ToolSelect)
-            {
-                SelectSquare(_selectedSquare);
-            }
+        //    if (ToolSelect)
+        //    {
+        //        SelectSquare(_selectedSquare);
+        //    }
 
-            if(ToolPlace)
-            {
-                PlaceSquare(_selectedSquare);
+        //    if(ToolPlace)
+        //    {
+        //        PlaceSquare(_selectedSquare);
 
-            }
+        //    }
 
-            if(ToolDelete)
-            {
-                UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-                gridMap.DeleteSquare(_selectedSquare);
-            }
-        }
+        //    if(ToolDelete)
+        //    {
+        //        UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+        //        gridMap.DeleteSquare(_selectedSquare);
+        //    }
+        //}
 
+
+        /// <summary>
+        /// Selects square which loads the data into the template
+        /// </summary>
+        /// <param name="_selectedSquare"></param>
         private void SelectSquare(Grid_Square _selectedSquare)
         {
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
             gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
         }
 
+        /// <summary>
+        /// Places square
+        /// </summary>
+        /// <param name="_selectedSquare"></param>
         private void PlaceSquare(Grid_Square _selectedSquare)
         {
             Debug.WriteLine("Square selected");
@@ -399,6 +429,7 @@ namespace MC_City_Maker.UI.ViewModel
 
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
             gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+            observable_ui_gridSquare.Add(_selectedSquare);
         }
 
         private void DeleteSquare(Grid_Square _selectedSquare)
@@ -426,7 +457,17 @@ namespace MC_City_Maker.UI.ViewModel
         {
             string selectedZone = (string)obj;
             vmSelectedZone = UI_Constants.StringToZoneConverter(selectedZone);
-            Console.WriteLine(selectedZone);
+            if(selectedZone.Equals("Infrustructure"))
+            {
+                Debug.WriteLine("Road Template");
+                RoadTemplate = new Roads();
+                BuildingTemplate = null;
+            }else
+            {
+                BuildingTemplate = new GenericBuilding();
+                RoadTemplate = null;
+            }
+            Debug.WriteLine(selectedZone);
         }
 
         public void SelectTool(object obj)
@@ -478,6 +519,305 @@ namespace MC_City_Maker.UI.ViewModel
 
             }
         }
+
+
+
+        /**
+         * Mouse Actions
+         * 
+         * This section handles the mouse down/move/up etc actions on the gird
+         */
+
+
+        private RelayCommand _mouseDownCommand;
+        public RelayCommand MouseDownCommand
+        {
+            get
+            {
+                if (_mouseDownCommand == null) _mouseDownCommand = new RelayCommand(param => MouseDown((MouseEventArgs)param));
+                return _mouseDownCommand;
+            }
+            set { _mouseDownCommand = value; }
+        }
+
+        private RelayCommand _mouseUpCommand;
+        public RelayCommand MouseUpCommand
+        {
+            get
+            {
+                if (_mouseUpCommand == null) _mouseUpCommand = new RelayCommand(param => MouseUp((MouseEventArgs)param));
+                return _mouseUpCommand;
+            }
+            set { _mouseUpCommand = value; }
+        }
+
+        private RelayCommand _mouseMoveCommand;
+        public RelayCommand MouseMoveCommand
+        {
+            get
+            {
+                if (_mouseMoveCommand == null) _mouseMoveCommand = new RelayCommand(param => MouseMove((MouseEventArgs)param));
+                return _mouseMoveCommand;
+            }
+            set { _mouseMoveCommand = value; }
+        }
+
+
+
+        SelectionBox aSelectionBox;
+
+        public ObservableCollection<SelectionBox> observableSelectionBox { get; private set; } = new ObservableCollection<SelectionBox>();
+
+        bool mouseDown = false; // Set to 'true' when mouse is held down.
+        Point mouseDownPos; // The point where the mouse button was clicked down.
+
+
+
+        private void MouseDown(MouseEventArgs e)
+        {
+
+            
+         
+            mouseDownPos = e.GetPosition((IInputElement)e.Source);
+
+            mouseDown = true;
+            if(ToolSelect)
+            {
+
+            }
+
+            if(ToolPlace)
+            {
+
+                    Debug.WriteLine("DRagging");
+                    StartSelectionBox(e);
+
+            }
+
+            if(ToolDelete)
+            {
+
+                    StartSelectionBox(e);
+   
+            }
+
+
+            //MINIMUM THRESHOLD FOR ENABLING DRAGGING EVENT
+            //private const double _dragThreshold = 1.0;
+            //private bool _dragging;
+            //private Point startpos;
+            //var currentpos = e.GetPosition(this);
+            //var delta = currentpos - startpos;
+            //if ((delta.Length > _dragThreshold || _dragging) && e.LeftButton == MouseButtonState.Pressed)
+            //{
+            //    _dragging = true;
+            //    Left += currentpos.X - startpos.X;
+            //    Top += currentpos.Y - startpos.Y;
+            //}
+
+
+
+            //Debug.WriteLine("MOUSE DOWN EVENT");
+            //Debug.WriteLine(e.GetPosition((IInputElement)e.Source).ToString());
+
+            //SolidColorBrush redBrush = new SolidColorBrush();
+            //redBrush.Color = Colors.Red;
+            //mouseDown = true;
+            //mouseDownPos = e.GetPosition((IInputElement)e.Source);
+            //Debug.WriteLine(mouseDownPos.X);
+            //Debug.WriteLine(mouseDownPos.Y);
+            //aSelectionBox = new SelectionBox(mouseDownPos.X, mouseDownPos.Y,0,0, redBrush);
+            //aSelectionBox.selectionBoxVisibility = Visibility.Visible;
+
+            //observableSelectionBox.Add(aSelectionBox);
+
+        }
+
+        private void StartSelectionBox(MouseEventArgs e)
+        {
+            
+            SolidColorBrush redBrush = new SolidColorBrush();
+            redBrush.Color = Colors.Red;
+            mouseDown = true;
+            mouseDownPos = e.GetPosition((IInputElement)e.Source);
+            Debug.WriteLine(mouseDownPos.X);
+            Debug.WriteLine(mouseDownPos.Y);
+            aSelectionBox = new SelectionBox(mouseDownPos.X, mouseDownPos.Y, 0, 0, redBrush);
+            aSelectionBox.selectionBoxVisibility = Visibility.Visible;
+
+            observableSelectionBox.Add(aSelectionBox);
+        }
+
+        private bool DetermineMouseDownHoldThreshold(Point mouseDown, Point mouseUp)
+        {
+            Debug.WriteLine("Drag Test");
+            const double _dragThreshold = 1.0;
+            //bool _dragging;
+            //Point startpos;
+            Vector delta;
+
+            delta = mouseUp - mouseDown;
+
+            Debug.WriteLine("delta = " + delta);
+
+            if (delta.Length > _dragThreshold)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void MouseMove(MouseEventArgs e)
+        {
+            //MessageBox.Show(e.GetPosition((IInputElement)e.Source).ToString());
+            //Debug.WriteLine(e.GetPosition((IInputElement)e.Source).ToString());
+
+            if (mouseDown && (ToolPlace || ToolDelete))
+            {
+                Debug.WriteLine("Mouse down and moving");
+                // When the mouse is held down, reposition the drag selection box.
+
+                Point mousePos = e.GetPosition((IInputElement)e.Source);
+
+                if (mouseDownPos.X < mousePos.X)
+                {
+
+                    aSelectionBox.selectionBoxX = mouseDownPos.X;
+                    //Canvas.SetLeft(selectionBoxX, mouseDownPos.X);
+                    aSelectionBox.selectionBoxWidth = mousePos.X - mouseDownPos.X;
+                }
+                else
+                {
+
+                    aSelectionBox.selectionBoxX = mousePos.X;
+                    //Canvas.SetLeft(selectionBoxX, mousePos.X);
+                    aSelectionBox.selectionBoxWidth = mouseDownPos.X - mousePos.X;
+                }
+
+                if (mouseDownPos.Y < mousePos.Y)
+                {
+                    aSelectionBox.selectionBoxY = mouseDownPos.Y;
+                    //Canvas.SetTop(selectionBox, mouseDownPos.Y);
+                    aSelectionBox.selectionBoxHeight = mousePos.Y - mouseDownPos.Y;
+                }
+                else
+                {
+                    aSelectionBox.selectionBoxY = mousePos.Y;
+                    //Canvas.SetTop(selectionBox, mousePos.Y);
+                    aSelectionBox.selectionBoxHeight = mouseDownPos.Y - mousePos.Y;
+                }
+            }
+
+        }
+
+
+        private void MouseUp(MouseEventArgs e)
+        {
+            //MessageBox.Show(e.GetPosition((IInputElement)e.Source).ToString());
+
+            mouseDown = false;
+            Point mouseUpPos = e.GetPosition((IInputElement)e.Source);
+
+
+
+            //
+
+
+            if (DetermineMouseDownHoldThreshold(mouseDownPos, mouseUpPos))
+            {
+                Debug.WriteLine("Dragged");
+
+                if(ToolPlace ||ToolDelete)
+                {
+                    SelectionBoxPlaceOrDelete();
+                    aSelectionBox.selectionBoxVisibility = Visibility.Collapsed;
+                }
+                 
+
+                
+            }
+            else
+            {
+
+                Debug.WriteLine("NOT dragged");
+
+                foreach (Grid_Square sq in observable_ui_gridSquare.ToList())
+                {
+                    if (sq != null)
+                    {
+                        //Debug.WriteLine("NOT NULL");
+
+                        //Rectangle rectangle = sq.gridSquareRectangle;
+
+                        Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+
+                        if (rect.Contains(mouseDownPos))
+                        {
+                            if(ToolPlace)
+                                PlaceSquare(sq);
+
+                            if (ToolDelete)
+                                DeleteSquare(sq);
+
+                            Debug.WriteLine("Clicked square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
+                        }
+
+
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        public void SelectionBoxPlaceOrDelete()
+        {
+            foreach (Grid_Square sq in observable_ui_gridSquare.ToList())
+            {
+                if (sq != null)
+                {
+                    //Debug.WriteLine("NOT NULL");
+
+                    //Rectangle rectangle = sq.gridSquareRectangle;
+
+                    Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+                    Rect rect2 = new Rect(aSelectionBox.selectionBoxX, aSelectionBox.selectionBoxY, aSelectionBox.selectionBoxWidth, aSelectionBox.selectionBoxHeight);
+
+                    if (rect.IntersectsWith(rect2))
+                    {
+                        //Debug.WriteLine("INTERSECTION " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
+
+                        if(ToolPlace)
+                        {
+                            PlaceSquare(sq);
+                        }
+                        if(ToolDelete)
+                        {
+                            DeleteSquare(sq);
+                        }
+                        
+                    }
+
+                }
+            }
+        }
+
+
+
+
+
+
+        /**
+         * Grid operations
+         * 
+         * This section handles operations within the grid and the binded elements wired up
+         */
+
+
+
 
         /// <summary>
         /// Updates the Gridcontainer and square observables when there are changes

@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:MC_City_Maker" 
-        xmlns:local1="clr-namespace:MC_City_Maker.UI.ViewModel" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local1="clr-namespace:MC_City_Maker.UI.ViewModel" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:MouseBehaviour="clr-namespace:MC_City_Maker.UI.ViewModel"
         mc:Ignorable="d"
         Title="MC City Maker" MinHeight="817" MinWidth="1127" MaxHeight="817" MaxWidth="1127" Icon="/blandbrew_Resource_Icon.png" Height="817" Width="1127">
     <Window.Background>
@@ -97,7 +99,9 @@
 
             <!-- ROW 1 -->
 
-            <Grid >
+            <Grid>
+                
+                
                 <Grid.RowDefinitions>
                     <RowDefinition SharedSizeGroup="FirstRow"/>
                 </Grid.RowDefinitions>
@@ -105,11 +109,13 @@
                     <ColumnDefinition SharedSizeGroup="FirstColumn"  />
                 </Grid.ColumnDefinitions>
 
+                
+                
 
                 <ItemsControl Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Center" ItemsSource="{Binding observable_ui_gridContainer}" Width="255"  Height="247"   >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Background="DarkOliveGreen" MouseMove="Canvas_MouseEnter"/>
+                            <Canvas Background="DarkOliveGreen"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -128,7 +134,6 @@
                                 MouseAction="LeftClick"/>
                                 </Rectangle.InputBindings>
                             </Rectangle>
-
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
@@ -139,6 +144,12 @@
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
 
+
+
+
+
+
+
             </Grid>
         </StackPanel>
 
@@ -146,7 +157,8 @@
 
             <!-- ROW 0 -->
 
-            <Grid >
+            <Grid>
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -209,7 +221,15 @@
 
             <!-- ROW 1 -->
 
-            <Grid >
+            <Grid x:Name="theGrid" 
+                  MouseBehaviour:MouseBehaviour.MouseMoveCommand="{Binding MouseMoveCommand}"
+                  MouseBehaviour:MouseBehaviour.MouseUpCommand="{Binding MouseUpCommand}"
+                  MouseBehaviour:MouseBehaviour.MouseDownCommand="{Binding MouseDownCommand}">
+
+
+                
+               
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -219,31 +239,34 @@
                     <ColumnDefinition Width="80*"/>
                 </Grid.ColumnDefinitions>
 
-                <ItemsControl Grid.Column="0" Margin="10,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding observable_ui_gridSquare}" Width="316"  Height="316" Grid.ColumnSpan="2" >
+                <ItemsControl x:Name = "_ItemsControl" Grid.Column="0" Margin="10,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding observable_ui_gridSquare}" Width="316"  Height="316" Grid.ColumnSpan="2" >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas Background="gray"/>
+                            <Canvas Background="gray" x:Name="squareCanvas" IsItemsHost="True"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Rectangle Width="{Binding Width}" Height="{Binding Height}">
+                            <Rectangle 
+                                Width="{Binding Width}" 
+                                Height="{Binding Height}">
                                 <Rectangle.Stroke>
                                     <SolidColorBrush Color="{Binding OutlineColor}" />
                                 </Rectangle.Stroke>
                                 <Rectangle.Fill>
                                     <SolidColorBrush Color="{Binding FillColor}" />
                                 </Rectangle.Fill>
-                                <Rectangle.InputBindings>
+                                <!--<Rectangle.InputBindings>
                                     <MouseBinding 
                                     Command="{Binding DataContext.ClickGridSquare, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
-                                    MouseAction="LeftClick"/>
+                                    MouseAction="LeftDoubleClick"/>
                                     <MouseBinding 
                                     Command="{Binding DataContext.RightClickGridSquare, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                     CommandParameter="{Binding}" 
                                     MouseAction="RightClick"/>
-                                </Rectangle.InputBindings>
+                                   
+                                </Rectangle.InputBindings>-->
                             </Rectangle>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -254,6 +277,56 @@
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
+
+                <!--Selection Box-->
+                <ItemsControl ItemsSource="{Binding Path=observableSelectionBox}" Margin="10,12,31,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Left" Value="{Binding selectionBoxX}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding selectionBoxY}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle 
+                                Width="{Binding selectionBoxWidth}" 
+                                Height="{Binding selectionBoxHeight}"
+                                Visibility="{Binding selectionBoxVisibility}"
+                                Stroke="{Binding Brush}">
+                            </Rectangle>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+
+
+                <!--<Canvas>
+                    --><!-- This canvas is overlaid over the previous canvas and is used to 
+                place the rectangle that implements the drag selection box. --><!--
+                    <Rectangle 
+                        x:Name="selectionBox"
+                        Visibility="{Binding selectionBoxVisibility}"
+                        Stroke="Red"
+                        StrokeDashArray="4,1"
+                        Width="{Binding selectionBoxWidth}"
+                        Height="{Binding selectionBoxHeight}"
+                        Canvas.Left="{Binding selectionBoxX}"
+                        Canvas.Top="{Binding selectionBoxY}"
+                        
+                        >
+                        
+
+                    </Rectangle>
+
+                </Canvas>-->
+
+
+
             </Grid>
 
             <Grid >
@@ -314,7 +387,8 @@
         
         
         <Grid Grid.RowSpan="4" Grid.Column="5" Margin="0,18,2,13" Grid.Row="1" >
-            <ContentControl x:Name="foo" Content="{Binding BuildingTemplate}" />
+            <ContentControl x:Name="buildingTemplatePanel" Content="{Binding BuildingTemplate}" />
+            <ContentControl x:Name="infrustructureRoadTemplatePanel" Content="{Binding RoadTemplate}" />
         </Grid>
     </Grid>
 

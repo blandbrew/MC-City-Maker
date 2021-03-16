@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace MC_City_Maker.UI.ViewModel
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         readonly Action<object> _execute = null;
         readonly Predicate<object> _canExecute = null;

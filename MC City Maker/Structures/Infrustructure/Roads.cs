@@ -2,21 +2,37 @@
 using MC_City_Maker.Grid_Classes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MC_City_Maker.Structures.Infrustructure
 {
-    public class Roads
+    public class Roads : INotifyPropertyChanged
     {
         /**
          * City Generator roads will consume 1 Grid_Square.
          * 
          */
         Coordinate StartPoint;
-        int StreetWidth { get; set; } = 8;
+        //int StreetWidth { get; set; } = 8;
         int SidewalkWidth { get; set; } = 2;
+
+
+
+        private int _StreetWidth = 8;
+        public int StreetWidth
+        {
+            get { return _StreetWidth; }
+            set
+            {
+                _StreetWidth = value;
+                RaisePropertyChanged(nameof(StreetWidth));
+            }
+        }
+
+
 
         Coordinate CenterlineStart;
         Coordinate CrosswalkStart;
@@ -434,5 +450,23 @@ namespace MC_City_Maker.Structures.Infrustructure
                 return;
             }
         }
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            //Console.WriteLine("Changed: " + propertyName);
+            // take a copy to prevent thread issues
+            PropertyChangedEventHandler handler = PropertyChanged;
+
+            if (handler != null)
+            {
+
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
+
 }
