@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Structures\Buildings\Commercial\" />
-    <Folder Include="Structures\Buildings\Industrial\" />
-    <Folder Include="Structures\Buildings\Municiple\" />
-    <Folder Include="Structures\Buildings\Residential\" />
-    <Folder Include="Structures\Infrustructure\Transportation\" />
+    <Folder Include="Grid_Zones\Structures\Buildings\Commercial\" />
+    <Folder Include="Grid_Zones\Structures\Buildings\Industrial\" />
+    <Folder Include="Grid_Zones\Structures\Buildings\Municiple\" />
+    <Folder Include="Grid_Zones\Structures\Buildings\Residential\" />
+    <Folder Include="Grid_Zones\Infrustructure\Transportation\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MC_City_Maker.Structures">
+                    xmlns:local="clr-namespace:MC_City_Maker.Grid_Zones.Structures">
     <DataTemplate DataType="{x:Type local:GenericBuilding}">
         <Border Name="border" BorderBrush="Aqua" BorderThickness="1"
           Padding="5" Margin="5">
@@ -48,9 +48,7 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="Height = " FontWeight="Bold"/>
-                        <TextBlock Text="{Binding length}" FontWeight="Bold"/>
-                        <TextBlock Text=" x " FontWeight="Bold"/>
-                        <TextBlock Text="{Binding width}" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding height}" FontWeight="Bold"/>
                     </StackPanel>
 
 
@@ -58,28 +56,25 @@
 
                     <Label Content="Building Length" />
                     <ComboBox Name="cmb_BuildingLength"
-                              
                               Width="75px"
                               Background="White" 
                               HorizontalAlignment="Right"
                               HorizontalContentAlignment="Right"
+                              Text="{Binding Path=length}"
                               ItemsSource="{Binding Path=UISelectionLength}"
                               SelectedItem="{Binding Path=length}">
                     </ComboBox>
 
-  
                     <Label Content="Building Width" />
                     <ComboBox Name="cmb_BuildingWidth"
                               Width="75px"
                               Background="White" 
                               HorizontalAlignment="Right"
                               HorizontalContentAlignment="Right"
+                              Text="{Binding Path=width}"
                               ItemsSource="{Binding Path=UISelectionWidth}"
                               SelectedItem="{Binding Path=width}">
                     </ComboBox>
-
-
-                    
 
                     <Label Content="Block Space Between Floors" />
                     <ComboBox Name="cmb_spacebetweenfloors" 
@@ -103,7 +98,7 @@
                               Background="White" 
                               HorizontalAlignment="Right"
                               HorizontalContentAlignment="Right"
-                              
+                              Text="{Binding Path=numberOfFloors}"
                               ItemsSource="{Binding Path=UINumberOfFloors}"
                               SelectedItem="{Binding Path=numberOfFloors}">
                     </ComboBox>

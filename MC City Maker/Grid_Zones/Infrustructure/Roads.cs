@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures.Infrustructure
+namespace MC_City_Maker.Grid_Zones.Infrustructure
 {
     public class Roads : INotifyPropertyChanged
     {
@@ -15,11 +15,6 @@ namespace MC_City_Maker.Structures.Infrustructure
          * City Generator roads will consume 1 Grid_Square.
          * 
          */
-        Coordinate StartPoint;
-        //int StreetWidth { get; set; } = 8;
-        int SidewalkWidth { get; set; } = 2;
-
-
 
         private int _StreetWidth = 8;
         public int StreetWidth
@@ -32,12 +27,18 @@ namespace MC_City_Maker.Structures.Infrustructure
             }
         }
 
+        private int _SidewalkWidth = 2;
+        public int SidewalkWidth
+        {
+            get { return _SidewalkWidth; }
+            set
+            {
+                _SidewalkWidth = value;
+                RaisePropertyChanged(nameof(SidewalkWidth));
+            }
+        }
 
 
-        Coordinate CenterlineStart;
-        Coordinate CrosswalkStart;
-
-        Direction roadDirection;
         public Roads()
         {
 

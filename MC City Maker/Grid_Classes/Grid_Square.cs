@@ -2,7 +2,7 @@
 //each can have specific properties such ash
 //marking adjacent grids, offsets for roads, subterannian features, etc.
 
-using MC_City_Maker.Structures;
+using MC_City_Maker.Grid_Zones.Structures;
 using MC_City_Maker.UI;
 using System;
 using System.Collections.Generic;
@@ -91,6 +91,10 @@ namespace MC_City_Maker.Grid_Classes
             get { return building; }
             set { building = value; RaisePropertyChanged(nameof(Building)); }
         }
+
+
+        //TODO Need to create a new class to store all the different Generic types for the zones
+
 
 
         private bool _Selected = false;

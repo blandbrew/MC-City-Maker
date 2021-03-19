@@ -4,15 +4,15 @@
 
 using MC_City_Maker.Command_Generator;
 using MC_City_Maker.Grid_Classes;
-using MC_City_Maker.Structures.Infrustructure;
-using MC_City_Maker.Structures.Scenary;
+using MC_City_Maker.Grid_Zones.Infrustructure;
+using MC_City_Maker.Grid_Zones.Scenary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures
+namespace MC_City_Maker.Grid_Zones.Structures
 {
     public class Build_Manager
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures.Scenary
+namespace MC_City_Maker.Grid_Zones.Scenary
 {
     public class Scenery
     {

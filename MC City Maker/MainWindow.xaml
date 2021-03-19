@@ -52,10 +52,10 @@
                 <MenuItem VerticalAlignment="Center" Header="_File" Foreground="Black">
                     <MenuItem Header="New City" Command="{Binding NewCityMenu}"/>
                     <!--<MenuItem Header="_Load City" Command="{StaticResource DoSomethingCommand}"/>-->
-                    <MenuItem Header="Open City" Command="Open" />
-                    <MenuItem Header="Save City" Command="Save" />
+                    <MenuItem Header="Load City" Command="{Binding LoadCityMenu}" />
+                    <MenuItem Header="Save City" Command="{Binding SaveCityMenu}" />
                     <Separator />
-                    <MenuItem Header="Close Application" Command="Close" />
+                    <MenuItem Header="Close Application" Command="{Binding CloseApplication}" />
                 </MenuItem>
                 <MenuItem VerticalAlignment="Center" Header="Edit" Foreground="Black">
                     <MenuItem Command="Cut" />
@@ -73,6 +73,11 @@
                     <MenuItem Header="Preferences" />
                     <MenuItem Header="Full Map Editor" />
                     <MenuItem Header="Building Editor" />
+                </MenuItem>
+                <MenuItem VerticalAlignment="Center" Header="Help" Foreground="Black">
+                    <MenuItem Header="User Guide" />
+                    <MenuItem Header="Report Issues" />
+                    <MenuItem Header="About" />
                 </MenuItem>
             </Menu>
         </DockPanel>

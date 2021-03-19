@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures
+namespace MC_City_Maker.Grid_Zones.Structures
 {
 
     //public enum BuildingClass { Residential, Commercial, Industrial, Other, None}
@@ -27,10 +27,10 @@ namespace MC_City_Maker.Structures
         protected Grid_Square endSquare; //lower right most square
 
         //Building Description
-        protected int NumberOfFloors { get; set; }
-        protected int Height { get; set; }
-        protected int Width { get; set; }
-        protected int Length { get; set; }
+        protected int NumberOfFloors { get; set; } = 1;
+        protected int Height { get; set; } = 4;
+        protected int Width { get; set; } = 1;
+        protected int Length { get; set; } = 1;
         protected int SpaceBetweenFloors { get; set; } = 4;
         protected bool Windows { get; set; }
 

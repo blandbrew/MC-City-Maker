@@ -1,7 +1,7 @@
 ﻿using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Classes;
-using MC_City_Maker.Structures;
-using MC_City_Maker.Structures.Infrustructure;
+using MC_City_Maker.Grid_Zones.Structures;
+using MC_City_Maker.Grid_Zones.Infrustructure;
 using MC_City_Maker.UI.View;
 using System;
 using System.Collections.Generic;
@@ -30,10 +30,6 @@ namespace MC_City_Maker.UI.ViewModel
         private GridMap gridMap;
 
         /*Menu File Commands - vm prefix is View Model*/
-        private ICommand vm_NewCity;
-        private ICommand vm_OpenCity;
-        private ICommand vm_SaveCity;
-        private ICommand vm_CloseApplication;
 
         private ICommand vm_MouseDownCommand;
         private ICommand vmClickGridContainer;
@@ -81,20 +77,54 @@ namespace MC_City_Maker.UI.ViewModel
             gridMap = new GridMap();
             //observable_ui_gridContainer = new ObservableCollection<UI_GridContainer>();
             //observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
-            NewCityMenu = new RelayCommand(new Action<object>(NewCity));
             //MouseDownCommand = new RelayCommand(new Action<object>(ShowMessage));
-            ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
             //ClickGridSquare = new RelayCommand(new Action<object>(UpdateSquare));
+            //MouseMoveGridSquare = new RelayCommand(new Action<object>(OnMouseMove));
+
+            //MENU RIBBON COMMANDS
+                /* Menu Commands - File*/
+                NewCityMenu = new RelayCommand(new Action<object>(NewCity));
+                LoadCityMenu = new RelayCommand(new Action<object>(NewCity));
+                SaveCityMenu = new RelayCommand(new Action<object>(NewCity));
+                CloseApplication = new RelayCommand(new Action<object>(ApplicationClose));
+
+            /* Menu Commands - Edit*/
+                NewCityMenu = new RelayCommand(new Action<object>(NewCity));
+                LoadCityMenu = new RelayCommand(new Action<object>(NewCity));
+                SaveCityMenu = new RelayCommand(new Action<object>(NewCity));
+
+                /* Menu Commands - View*/
+                NewCityMenu = new RelayCommand(new Action<object>(NewCity));
+                LoadCityMenu = new RelayCommand(new Action<object>(NewCity));
+                SaveCityMenu = new RelayCommand(new Action<object>(NewCity));
+
+                /* Menu Commands - Tools*/
+                NewCityMenu = new RelayCommand(new Action<object>(NewCity));
+                LoadCityMenu = new RelayCommand(new Action<object>(NewCity));
+                SaveCityMenu = new RelayCommand(new Action<object>(NewCity));
+
+                /* Menu Commands - Help*/
+                NewCityMenu = new RelayCommand(new Action<object>(NewCity));
+                LoadCityMenu = new RelayCommand(new Action<object>(NewCity));
+                SaveCityMenu = new RelayCommand(new Action<object>(NewCity));
+
+            /*Placement Radio Buttons*/
+
+
+
+            ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
             RightClickGridSquare = new RelayCommand(new Action<object>(DeselectSquare));
             ClickZone = new RelayCommand(new Action<object>(SelectZone));
             ClickToolSelect = new RelayCommand(new Action<object>(SelectTool));
             ClickToolPlace = new RelayCommand(new Action<object>(PlaceTool));
             ClickToolDelete = new RelayCommand(new Action<object>(DeleteTool));
-            //MouseMoveGridSquare = new RelayCommand(new Action<object>(OnMouseMove));
-            _TemplateLabelTest = "THIS IS A TEST";
+            
+            //_TemplateLabelTest = "THIS IS A TEST";
         }
 
         #region Icommands
+
+        private ICommand vm_NewCity;
         public ICommand NewCityMenu
         {
             get
@@ -107,14 +137,49 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
-        //public ICommand MouseDownCommand
-        //{
-        //    get { return vm_MouseDownCommand; }
-        //    set
-        //    {
-        //        vm_MouseDownCommand = value;
-        //    }
-        //}
+
+        private ICommand vm_LoadCityMenu;
+        public ICommand LoadCityMenu
+        {
+            get
+            {
+                return vm_LoadCityMenu;
+            }
+            set
+            {
+                vm_LoadCityMenu = value;
+            }
+        }
+
+        private ICommand vm_SaveCityMenu;
+        public ICommand SaveCityMenu
+        {
+            get
+            {
+                return vm_SaveCityMenu;
+            }
+            set
+            {
+                vm_SaveCityMenu = value;
+            }
+        }
+
+        private ICommand vm_CloseApplication;
+        public ICommand CloseApplication
+        {
+            get
+            {
+                return vm_CloseApplication;
+            }
+            set
+            {
+                vm_CloseApplication = value;
+            }
+        }
+
+
+
+
 
         public ICommand ClickGridContainer
         {
@@ -421,8 +486,8 @@ namespace MC_City_Maker.UI.ViewModel
         /// <param name="_selectedSquare"></param>
         private void PlaceSquare(Grid_Square _selectedSquare)
         {
-            Debug.WriteLine("Square selected");
-            Debug.WriteLine("WIDTH OF BUILDING IS:  " + BuildingTemplate.width);
+            //Debug.WriteLine("Square selected");
+            //Debug.WriteLine("WIDTH OF BUILDING IS:  " + BuildingTemplate.width);
 
             //Assign a building that copies the default building values over.
             //_selectedSquare.Building = DefaultBuilding;
@@ -906,9 +971,13 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
- 
+        public void ApplicationClose(object obj)
+        {
+            Application curApp = Application.Current;
+            curApp.Shutdown();
+        }
 
- 
+
 
 
 

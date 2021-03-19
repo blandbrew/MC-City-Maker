@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures
+namespace MC_City_Maker.Grid_Zones.Structures
 {
     public class GenericBuilding : abstract_Building, IBuilding
     {
@@ -43,6 +44,11 @@ namespace MC_City_Maker.Structures
             "24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44",
             "45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60"
 
+        };
+
+        public ObservableCollection<string> UISelectionRooftop { get; private set; } = new ObservableCollection<string>()
+        {
+             "Flat","Overhang","A-Frame","Pyramid",
         };
 
         //"13","26","39","52","65","78","91","104","117","130","143","156","169"
@@ -88,13 +94,18 @@ namespace MC_City_Maker.Structures
         public int numberOfFloors
         {
             get { return NumberOfFloors; }
-            set { NumberOfFloors = value; RaisePropertyChanged(nameof(numberOfFloors)); }
+            set {
+                    NumberOfFloors = value;
+                    height = (NumberOfFloors * spaceBetweenFloors) + spaceBetweenFloors + 1;
+                    RaisePropertyChanged(nameof(numberOfFloors)); }
         }
 
         public int spaceBetweenFloors
         {
             get { return SpaceBetweenFloors; }
-            set { SpaceBetweenFloors = value; RaisePropertyChanged(nameof(spaceBetweenFloors)); }
+            set { SpaceBetweenFloors = value;
+                  height = (numberOfFloors * SpaceBetweenFloors) + SpaceBetweenFloors + 1; 
+                  RaisePropertyChanged(nameof(spaceBetweenFloors)); }
         }
 
 

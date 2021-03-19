@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC_City_Maker.Structures.Infrustructure
+namespace MC_City_Maker.Grid_Zones.Infrustructure
 {
     public class Subway
     {

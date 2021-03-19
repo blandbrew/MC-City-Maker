@@ -24,6 +24,7 @@ namespace MC_City_Maker.UI.ViewModel
         {
         }
 
+
         /// <summary>
         /// Creates a new command.
         /// </summary>
