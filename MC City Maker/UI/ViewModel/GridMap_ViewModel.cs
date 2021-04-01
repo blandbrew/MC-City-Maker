@@ -49,6 +49,7 @@ namespace MC_City_Maker.UI.ViewModel
 
         //initializes zone to building
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
+        //private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.None;
         //Default Building for zone
         private GenericBuilding _BuildingTemplate;
         private Roads _RoadTemplate;
@@ -118,7 +119,11 @@ namespace MC_City_Maker.UI.ViewModel
             ClickToolSelect = new RelayCommand(new Action<object>(SelectTool));
             ClickToolPlace = new RelayCommand(new Action<object>(PlaceTool));
             ClickToolDelete = new RelayCommand(new Action<object>(DeleteTool));
-            
+            ClickZoneBuilding = new RelayCommand(new Action<object>(ZoneBuildingSelected));
+            ClickZoneInfrustructure = new RelayCommand(new Action<object>(ZoneInfrustructureSelected));
+            ClickZoneScenery = new RelayCommand(new Action<object>(ZoneScenerySelected));
+            ClickZoneWater = new RelayCommand(new Action<object>(ZoneWaterSelected));
+
             //_TemplateLabelTest = "THIS IS A TEST";
         }
 
@@ -256,6 +261,103 @@ namespace MC_City_Maker.UI.ViewModel
 
         #endregion Icommands
 
+        private bool _ZoneBuilding;
+        public bool ZoneBuilding
+        {
+            get
+            {
+                return _ZoneBuilding;
+            }
+            set
+            {
+                _ZoneBuilding = value;
+                RaisePropertyChanged(nameof(ZoneBuilding));
+            }
+        }
+
+        private ICommand vmZoneBuilding;
+        public ICommand ClickZoneBuilding
+        {
+            get { return vmZoneBuilding; }
+            set
+            {
+                vmZoneBuilding = value;
+            }
+        }
+
+
+        private bool _ZoneInfrustructure;
+        public bool ZoneInfrustructure
+        {
+            get
+            {
+                return _ZoneInfrustructure;
+            }
+            set
+            {
+                _ZoneInfrustructure = value;
+                RaisePropertyChanged(nameof(ZoneInfrustructure));
+            }
+        }
+
+        private ICommand vmZoneInfrustructure;
+        public ICommand ClickZoneInfrustructure
+        {
+            get { return vmZoneInfrustructure; }
+            set
+            {
+                vmZoneInfrustructure = value;
+            }
+        }
+
+        private bool _ZoneScenery;
+        public bool ZoneScenery
+        {
+            get
+            {
+                return _ZoneScenery;
+            }
+            set
+            {
+                _ZoneScenery = value;
+                RaisePropertyChanged(nameof(ZoneScenery));
+            }
+        }
+
+        private ICommand vmZoneScenery;
+        public ICommand ClickZoneScenery
+        {
+            get { return vmZoneScenery; }
+            set
+            {
+                vmZoneScenery = value;
+            }
+        }
+
+        private bool _ZoneWater;
+        public bool ZoneWater
+        {
+            get
+            {
+                return _ZoneWater;
+            }
+            set
+            {
+                _ZoneWater = value;
+                RaisePropertyChanged(nameof(ZoneWater));
+            }
+        }
+
+        private ICommand vmZoneWater;
+        public ICommand ClickZoneWater
+        {
+            get { return vmZoneWater; }
+            set
+            {
+                vmZoneWater = value;
+            }
+        }
+
 
         public bool ToolSelect
         {
@@ -346,6 +448,7 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        /*Marked for deletion*/
         /// <summary>
         /// Testing the label on a template
         /// </summary>
@@ -375,6 +478,9 @@ namespace MC_City_Maker.UI.ViewModel
             SelectedGridSize();
 
             //Creates the genericbuilding and assigns genericbuildingdefault to display template
+
+            //This is the default creation.
+            ZoneBuilding = true;
             BuildingTemplate = new GenericBuilding();
             //BuildingTemplate = Template;
            
@@ -411,16 +517,6 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        //Marked For deletion
-        /// <summary>
-        /// Example Message
-        /// </summary>
-        /// <param name="obj"></param>
-        public void ShowMessage(object obj)
-        {
-            
-            MessageBox.Show("Showme");
-        }
 
         /// <summary>
         /// When a Grid Container is selected this method executes
@@ -469,16 +565,17 @@ namespace MC_City_Maker.UI.ViewModel
         //    }
         //}
 
-
+        /*Marked for deletion*/
         /// <summary>
         /// Selects square which loads the data into the template
         /// </summary>
         /// <param name="_selectedSquare"></param>
         private void SelectSquare(Grid_Square _selectedSquare)
         {
-            UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-            gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
+            //UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            //gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
         }
+
 
         /// <summary>
         /// Places square
@@ -492,9 +589,10 @@ namespace MC_City_Maker.UI.ViewModel
             //Assign a building that copies the default building values over.
             //_selectedSquare.Building = DefaultBuilding;
 
+            Debug.WriteLine("PlaceSquare executed");
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
             gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
-            observable_ui_gridSquare.Add(_selectedSquare);
+            //observable_ui_gridSquare.Add(_selectedSquare);
         }
 
         private void DeleteSquare(Grid_Square _selectedSquare)
@@ -514,6 +612,8 @@ namespace MC_City_Maker.UI.ViewModel
             gridMap.DeleteSquare(_selectedSquare);
         }
 
+
+        /*Marked for removal - no longer needed - need to handle in a different manner*/
         /// <summary>
         /// Sets zone value for the clicked square
         /// </summary>
@@ -532,7 +632,7 @@ namespace MC_City_Maker.UI.ViewModel
                 BuildingTemplate = new GenericBuilding();
                 RoadTemplate = null;
             }
-            Debug.WriteLine(selectedZone);
+            Debug.WriteLine("clicked zone set: " + selectedZone);
         }
 
         public void SelectTool(object obj)
@@ -585,6 +685,112 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        public void ZoneBuildingSelected(object obj)
+        {
+            SetZoneToggleButton("Building");
+            Debug.WriteLine("Building CLICKED");
+            bool test = (bool)obj;
+
+        }
+
+        public void ZoneInfrustructureSelected(object obj)
+        {
+            SetZoneToggleButton("Infrustructure");
+            Debug.WriteLine("Infrustructure CLICKED");
+            bool test = (bool)obj;
+
+        }
+
+        public void ZoneScenerySelected(object obj)
+        {
+            SetZoneToggleButton("Scenery");
+            Debug.WriteLine("Scenery CLICKED");
+            bool test = (bool)obj;
+
+        }
+
+        public void ZoneWaterSelected(object obj)
+        {
+            SetZoneToggleButton("Water");
+            Debug.WriteLine("select CLICKED");
+            bool test = (bool)obj;
+
+        }
+
+        public void SetZoneToggleButton(string togglebutton)
+        {
+            //TODO handle generic zone classes here, by creating and nullifying others
+            switch (togglebutton)
+            {
+                case "Building":
+                    ZoneInfrustructure = false;
+                    ZoneWater = false;
+                    ZoneScenery = false;
+                    SetZoneClass(togglebutton);
+                    break;
+                case "Infrustructure":
+                    ZoneBuilding = false;
+                    ZoneWater = false;
+                    ZoneScenery = false;
+                    SetZoneClass(togglebutton);
+                    break;
+                case "Scenery":
+                    ZoneBuilding = false;
+                    ZoneInfrustructure = false;
+                    ZoneWater = false;
+                    SetZoneClass(togglebutton);
+                    break;
+                case "Water":
+                    ZoneBuilding = false;
+                    ZoneInfrustructure = false;
+                    ZoneScenery = false;
+                    SetZoneClass(togglebutton);
+                    break;
+                default:
+                    ZoneInfrustructure = false;
+                    ZoneWater = false;
+                    ZoneScenery = false;
+                    SetZoneClass(togglebutton);
+                    break;
+
+            }
+        }
+
+
+
+        private void SetZoneClass(string zone)
+        {
+            
+            switch (zone)
+            {
+                case "Building":
+                    BuildingTemplate = new GenericBuilding();
+                    RoadTemplate = null;
+                    //scenery = null
+                    //water = null;
+                    break;
+                case "Infrustructure":
+                    RoadTemplate = new Roads();
+                    BuildingTemplate = null;
+                    //scenery = null
+                    //water = null;
+                    break;
+                case "Scenery":
+                    //TODO add scenery template handling
+                    break;
+                case "Water":
+                    //TODO Add water template handling
+                    break;
+                default:
+                    BuildingTemplate = new GenericBuilding();
+                    RoadTemplate = null;
+                    //scenery = null
+                    //water = null;
+                    break;
+
+            }
+
+        }
 
 
         /**
@@ -641,8 +847,8 @@ namespace MC_City_Maker.UI.ViewModel
         private void MouseDown(MouseEventArgs e)
         {
 
-            
-         
+            Debug.WriteLine("Mouse down");
+
             mouseDownPos = e.GetPosition((IInputElement)e.Source);
 
             mouseDown = true;
@@ -738,6 +944,7 @@ namespace MC_City_Maker.UI.ViewModel
             //MessageBox.Show(e.GetPosition((IInputElement)e.Source).ToString());
             //Debug.WriteLine(e.GetPosition((IInputElement)e.Source).ToString());
 
+            /*For Selection box*/
             if (mouseDown && (ToolPlace || ToolDelete))
             {
                 Debug.WriteLine("Mouse down and moving");
@@ -774,12 +981,21 @@ namespace MC_City_Maker.UI.ViewModel
                 }
             }
 
+            /*For placement hover*/
+            if(mouseDown == false && ToolPlace)
+            {
+                Point mousePos = e.GetPosition((IInputElement)e.Source);
+                MouseInSquare(mousePos);
+            }
+
         }
 
 
         private void MouseUp(MouseEventArgs e)
         {
             //MessageBox.Show(e.GetPosition((IInputElement)e.Source).ToString());
+
+            Debug.WriteLine("Mouse Up");
 
             mouseDown = false;
             Point mouseUpPos = e.GetPosition((IInputElement)e.Source);
@@ -868,6 +1084,127 @@ namespace MC_City_Maker.UI.ViewModel
 
                 }
             }
+        }
+
+
+
+        private void MouseInSquare(Point mouseLocation)
+        {
+            List<Grid_Square> HoverSquares = new List<Grid_Square>();
+
+            foreach (Grid_Square sq in observable_ui_gridSquare.ToList())
+            {
+                if (sq != null)
+                {
+                    //Debug.WriteLine("NOT NULL");
+
+                    //Rectangle rectangle = sq.gridSquareRectangle;
+
+                    //converts gridsquare rectangle to object that can determain contains point
+                    Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+
+                    if (rect.Contains(mouseLocation))
+                    {
+                        //outputs coordinate (y,x) int format
+                        Debug.WriteLine("Hover square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
+
+                        if (ZoneBuilding)
+                        {
+                            //get the generic building object length and width
+                            int buildingWidth = BuildingTemplate.width;
+                            int buildingLength = BuildingTemplate.length;
+
+                            (int, int) parentContainer = sq.ParentContainerArrayCoordinate;
+                            (int, int) startingSquare = sq.SquareArrayCoordinate;
+
+                            
+
+                            try
+                            {
+
+                                //HoverSquares.Clear();
+                                for (int i = 0; i < buildingLength; i++)
+                                {
+                                    //get squares from y
+                                    //Grid_Square _tempSquare1 = gridMap.Get_SquareFromContainer(parentContainer, (startingSquare.Item1 + i, startingSquare.Item2));
+
+                                    //if(!HoverSquares.Contains(_tempSquare1))
+                                    //{
+                                    //   _tempSquare1.HoverStatus = true;   //TODO NEED TO TRACK HOVER STATUS TO COMPARE
+                                    //   HoverSquares.Add(_tempSquare1);
+                                    //}
+
+                                    
+                                    
+                                    for (int j = 0; j < buildingWidth; j++)
+                                    {
+                                        //get squares from x
+                                        Grid_Square _tempSquare2 = gridMap.Get_SquareFromContainer(parentContainer, (startingSquare.Item1 + i, startingSquare.Item2 + j));
+                                        if (!HoverSquares.Contains(_tempSquare2))
+                                        {
+                                            _tempSquare2.HoverStatus = true;
+                                            HoverSquares.Add(_tempSquare2);
+
+                                        }
+
+                                    }
+
+                                }
+                            } catch (IndexOutOfRangeException e)
+                            {
+                                Debug.WriteLine("index error");
+
+                                ////Colors each square red when it is not properly alighted
+                                ////NOT WORKING RIGHT NOW
+                                //foreach (Grid_Square hovSq in HoverSquares)
+                                //{
+                                //    //Red Color
+                                //    Color HovorColor = Color.FromArgb(75, 255, 0, 0);
+
+                                //    hovSq.FillColor = HovorColor;
+
+                                //}
+                            }
+
+                    }
+
+
+                    }
+                }
+            }
+
+
+
+
+                foreach(Grid_Square obsSq in observable_ui_gridSquare.ToList())
+                {
+                    if (!HoverSquares.Contains(obsSq) && obsSq.HoverStatus == true)
+                    {
+                        HoverSquares.Remove(obsSq);
+                        obsSq.HoverStatus = false;
+
+                        obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
+                    //Color clear = Colors.White;
+
+                    //obsSq.FillColor = clear;
+
+                    //Debug.WriteLine("Squares zone = " + obsSq.Zone);
+                    //Debug.WriteLine("Squares selected status = " + obsSq.Selected);
+               
+                }
+                }
+
+            foreach (Grid_Square hovSq in HoverSquares)
+            {
+                
+                Color HovorColor = Color.FromArgb(75, 0, 255, 0);
+
+                hovSq.FillColor = HovorColor;
+
+            }
+
+
+
         }
 
 
@@ -978,31 +1315,6 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-
-
-
-        //private ObservableCollection<UI_Grid_Square> _observable_ui_gridSquare = new ObservableCollection<UI_Grid_Square>();
-        //public ObservableCollection<UI_Grid_Square> _observable_ui_gridSquare
-        //{
-        //    get { return observable_ui_gridSquare; }
-        //    set
-        //    {
-        //        observable_ui_gridSquare = value;
-        //        //RaisePropertyChanged("observable_ui_gridSquare");
-        //    }
-
-        //}
-
-        //public ObservableCollection<UI_GridContainer> _observable_ui_gridContainer
-        //{
-        //    get { return observable_ui_gridContainer; }
-        //    set
-        //    {
-        //        observable_ui_gridContainer = value;
-        //        //RaisePropertyChanged("observable_ui_gridContainer");
-        //    }
-
-        //}
 
 
 

@@ -198,32 +198,32 @@ namespace MC_City_Maker
 
 
 
-
+        //Depricated - Looking to remove this feature
         /// <summary>
         /// Selects the UI Square for editing properties
         /// </summary>
         /// <param name="selected"></param>
         /// <param name="zone"></param>
-        public void SelectSquare(Grid_Square selected, GridSquare_Zoning zone)
-        {
-            if (selected.Selected == false)
-            {
-                selected.OutlineColor = UI_Constants.GetZoningColor(zone);
+        //public void SelectSquare(Grid_Square selected, GridSquare_Zoning zone)
+        //{
+        //    if (selected.Selected == false)
+        //    {
+        //        selected.OutlineColor = UI_Constants.GetZoningColor(zone);
                 
-                selected.Selected = true;
-                return;
-            }
+        //        selected.Selected = true;
+        //        return;
+        //    }
 
-            if (selected.Selected == true)
-            {
-                selected.OutlineColor = UI_Constants.GetZoningColor(zone);
-                selected.Selected = true;
+        //    if (selected.Selected == true)
+        //    {
+        //        selected.OutlineColor = UI_Constants.GetZoningColor(zone);
+        //        selected.Selected = true;
 
-                selected.FillColor = UI_Constants.GetZoningColor(zone);
+        //        selected.FillColor = UI_Constants.GetZoningColor(zone);
                 
-                return;
-            }
-        }
+        //        return;
+        //    }
+        //}
 
 
         public void PlaceSquare(Grid_Square selected, GridSquare_Zoning zone)
@@ -246,6 +246,89 @@ namespace MC_City_Maker
             }
         }
 
+        /// <summary>
+        /// Specify the Length and the width of the placed zone.  The clicked square
+        /// will be designated the start square and squares are evaluated left to right then top to bottom and repeat.
+        /// </summary>
+        /// <param name="selected"></param>
+        /// <param name="zone"></param>
+        /// <param name="length"></param>
+        /// <param name="width"></param>
+        public void PlaceSquare(Grid_Square selected, GridSquare_Zoning zone, int length, int width)
+        {
+            if (selected.Selected == false)
+            {
+
+                try
+                {
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        //get squares from y
+
+                        for (int j = 0; j < width; j++)
+                        {
+                            //get squares from x
+                            Grid_Square _tempSquare2 = Get_SquareFromContainer(selected.ParentContainerArrayCoordinate, (selected.SquareArrayCoordinate.Item1 + i, selected.SquareArrayCoordinate.Item2 + j));
+
+                            if( i == length-1 && j == width-1)
+                            {
+                                //end Square
+                                //sets the end square in the start square
+                                selected.EntityEndSquare = _tempSquare2;
+
+                                //Sets the properties for the square
+                                _tempSquare2.FillColor = UI_Constants.GetZoningColor(zone);
+                                _tempSquare2.Zone = zone;
+                                _tempSquare2.Selected = true;
+
+                            } else if(i == 0 && j ==0)
+                            {
+                                //start square
+                                selected.IsEntityStartSquare = true;
+                                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                                selected.Zone = zone;
+                                selected.Selected = true;
+                            } else
+                            {
+                                //Secondary squares
+                                //Every secondary square has reference back to the start square which has reference to the end square as well.
+                                
+                                //added to the list of secondary squares which is stored in the start square
+                                selected.EntitySecondarySquareList.Add(_tempSquare2);
+
+                                //sets the properties of the secondary squares.
+                                _tempSquare2.EntityStartSquare = selected;
+                                _tempSquare2.IsEntitySecondarySquare = true;
+                                _tempSquare2.FillColor = UI_Constants.GetZoningColor(zone);
+                                _tempSquare2.Zone = zone;
+                                _tempSquare2.Selected = true;
+                                
+                                
+                            }
+                        }
+
+                    }
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    Debug.WriteLine("index error");
+                }
+
+
+
+                return;
+            }
+
+            //This overrides the existing building
+            if (selected.Selected == true && selected.Zone != zone)
+            {
+
+                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                selected.Zone = zone;
+                return;
+            }
+        }
 
 
 
@@ -434,7 +517,7 @@ namespace MC_City_Maker
                             aSquare.isValid = true;
                        
                             aGridSquareMap[m, n] = aSquare;
-
+                            //Debug.WriteLine("Default zone = " + aSquare.Zone);
                             _tempX = aSquare.startCoordinate.x + Shared_Constants.GRID_SQUARE_SIZE;
 
                         }
@@ -473,7 +556,7 @@ namespace MC_City_Maker
                             //Console.WriteLine("Initalize grid5");
                             //_uiGridSquares[m, n] = new UI_Grid_Square(x, y, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Colors.White, Colors.White, (i, j), (m, n));
                             _uiGridSquares[m, n].SetGrid_Square_UI(x, y, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Shared_Constants.UI_GRID_RECTANGLE_SIZE + 7, Colors.White, Colors.White, (i, j), (m, n));
-
+                           
                             x += separatorValue;
                             //Console.WriteLine("Initalize grid6");
                         }

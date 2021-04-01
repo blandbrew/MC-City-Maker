@@ -105,8 +105,8 @@
             <!-- ROW 1 -->
 
             <Grid>
-                
-                
+
+
                 <Grid.RowDefinitions>
                     <RowDefinition SharedSizeGroup="FirstRow"/>
                 </Grid.RowDefinitions>
@@ -114,8 +114,8 @@
                     <ColumnDefinition SharedSizeGroup="FirstColumn"  />
                 </Grid.ColumnDefinitions>
 
-                
-                
+
+
 
                 <ItemsControl Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Center" ItemsSource="{Binding observable_ui_gridContainer}" Width="255"  Height="247"   >
                     <ItemsControl.ItemsPanel>
@@ -163,7 +163,7 @@
             <!-- ROW 0 -->
 
             <Grid>
-                
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -178,12 +178,12 @@
                   Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
                     Height="35"
                     Width="35"
-                    ToolTip="MaterialDesignFlatToggleButton" 
+                    ToolTip="MaterialDesignFlatToggleButton"  
                     Margin="232,11,90,-1"
                     Background="White"
                     IsChecked="{Binding ToolSelect}"
                     Command="{Binding ClickToolSelect}" 
-                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}" >
                     <materialDesign:PackIcon
                       Kind="Select"
                       Height="25"
@@ -232,9 +232,9 @@
                   MouseBehaviour:MouseBehaviour.MouseDownCommand="{Binding MouseDownCommand}">
 
 
-                
-               
-                
+
+
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -311,8 +311,10 @@
 
 
                 <!--<Canvas>
-                    --><!-- This canvas is overlaid over the previous canvas and is used to 
-                place the rectangle that implements the drag selection box. --><!--
+                    -->
+                <!-- This canvas is overlaid over the previous canvas and is used to 
+                place the rectangle that implements the drag selection box. -->
+                <!--
                     <Rectangle 
                         x:Name="selectionBox"
                         Visibility="{Binding selectionBoxVisibility}"
@@ -342,55 +344,77 @@
                     <ColumnDefinition SharedSizeGroup="FirstColumn"  />
                 </Grid.ColumnDefinitions>
 
-                <GroupBox x:Name="groupBox1" 
-                          Style="{DynamicResource MaterialDesignGroupBox}" 
-                          Header="Zoning" 
-                          HorizontalAlignment="Center"  
-                          Width="339" 
-                          Margin="0,23,0,-18" 
-                          UseLayoutRounding="True"
-                          SnapsToDevicePixels="True"
-                          AutomationProperties.IsColumnHeader="True" >
-                    <StackPanel   Orientation="Horizontal"  Width="317">
-                        <StackPanel.Resources>
-                            <Style TargetType="{x:Type RadioButton}">
-                                <Setter Property="Margin" Value="10,0,0,0"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <RadioButton x:Name="building" 
-                                 Content="Building" 
-                                 Command="{Binding ClickZone}" 
-                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                                 IsChecked="True"
-                                 HorizontalAlignment="Left" 
-                                 VerticalAlignment="Top" />
-                        <RadioButton x:Name="infrustructure" 
-                                 Content="Infrustructure" 
-                                 Command="{Binding ClickZone}"
-                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                                 HorizontalAlignment="Left" 
-                                 VerticalAlignment="Top"/>
-                        <RadioButton x:Name="water" 
-                                 Content="Water" 
-                                 Command="{Binding ClickZone}"
-                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                                 HorizontalAlignment="Left" 
-                                 VerticalAlignment="Top" />
-                        <RadioButton x:Name="Scenary" 
-                                 Content="Scenary" 
-                                 Command="{Binding ClickZone}"
-                                 CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Self}}"
-                                 HorizontalAlignment="Left" 
-                                 VerticalAlignment="Top"/>
-                    </StackPanel>
-                </GroupBox>
+
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton" 
+                    Margin="13,10,309,0"
+                    Background="White"
+                    IsChecked="{Binding ZoneBuilding}"
+                    Command="{Binding ClickZoneBuilding}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                      Kind="Domain"
+                      Height="25"
+                      Width="25" 
+                      HorizontalAlignment="Center" />
+                </ToggleButton>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton"
+                    Margin="48,10,274,0"
+                    Background="White"
+                    IsChecked="{Binding ZoneInfrustructure}"
+                    Command="{Binding ClickZoneInfrustructure}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                      Kind="Road"
+                      Height="25"
+                      Width="25" />
+                </ToggleButton>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton" 
+                    Margin="83,10,239,0"
+                    Background="White"
+                    IsChecked="{Binding ZoneScenery}"
+                    Command="{Binding ClickZoneScenery}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                    Kind="PineTree"
+                    Height="25"
+                    Width="25"
+                    />
+                </ToggleButton>
+                <ToggleButton
+                  Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                    Height="35"
+                    Width="35"
+                    ToolTip="MaterialDesignFlatToggleButton" 
+                    Margin="118,10,204,0"
+                    Background="White"
+                    IsChecked="{Binding ZoneWater}"
+                    Command="{Binding ClickZoneWater}" 
+                    CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}">
+                    <materialDesign:PackIcon
+                    Kind="Water"
+                    Height="25"
+                    Width="25"
+                    />
+                </ToggleButton>
 
             </Grid>
         </StackPanel>
 
         <!--Row 2-->
-        
-        
+
+
         <Grid Grid.RowSpan="4" Grid.Column="5" Margin="0,18,2,13" Grid.Row="1" >
             <ContentControl x:Name="buildingTemplatePanel" Content="{Binding BuildingTemplate}" />
             <ContentControl x:Name="infrustructureRoadTemplatePanel" Content="{Binding RoadTemplate}" />

@@ -37,7 +37,7 @@ namespace MC_City_Maker.Grid_Zones.Structures
   
         protected List<Coordinate> Doors { get; set; }
         protected Block WallBlock { get; set; }
-        protected Roof RoofType { get; set; }
+        protected string RoofType { get; set; }
 
         protected Direction Direction {get; set;}
 

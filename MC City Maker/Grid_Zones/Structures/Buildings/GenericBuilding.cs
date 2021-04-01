@@ -48,7 +48,7 @@ namespace MC_City_Maker.Grid_Zones.Structures
 
         public ObservableCollection<string> UISelectionRooftop { get; private set; } = new ObservableCollection<string>()
         {
-             "Flat","Overhang","A-Frame","Pyramid",
+             "Flat","Overhang","A-Frame","Pyramid"
         };
 
         //"13","26","39","52","65","78","91","104","117","130","143","156","169"
@@ -108,6 +108,11 @@ namespace MC_City_Maker.Grid_Zones.Structures
                   RaisePropertyChanged(nameof(spaceBetweenFloors)); }
         }
 
+        public string rooftype
+        {
+            get { return RoofType; }
+            set { RoofType = value; RaisePropertyChanged(nameof(rooftype)); }
+        }
 
         /// <summary>
         /// Converts UI Selected width or length and multiplies it by 12 because there are 13 blocks [0-12]

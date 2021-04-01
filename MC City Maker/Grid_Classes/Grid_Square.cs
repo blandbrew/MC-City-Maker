@@ -59,29 +59,59 @@ namespace MC_City_Maker.Grid_Classes
 
         }
 
+        /// <summary>
+        /// Returns true if the square is being hovered over
+        /// </summary>
+        private bool _HoverStatus;
+        public bool HoverStatus
+        {
+            get { return _HoverStatus; }
+            set { _HoverStatus = value; RaisePropertyChanged(nameof(HoverStatus)); }
+        }
+
         //All squres need to designate what the start square for multi grid square buildings
-        private bool _EntityStartSquare;
-        public bool EntityStartSquare
+        private Grid_Square _EntityStartSquare;
+        public Grid_Square EntityStartSquare
         {
             get { return _EntityStartSquare; }
             set { _EntityStartSquare = value; RaisePropertyChanged(nameof(EntityStartSquare)); }
 
         }
+        private bool _IsEntityStartSquare;
+        public bool IsEntityStartSquare
+        {
+            get { return _IsEntityStartSquare; }
+            set { _IsEntityStartSquare = value; RaisePropertyChanged(nameof(IsEntityStartSquare)); }
+        }
 
         //All squres need to designate what the start square for multi grid square buildings
-        private bool _EntityEndSquare;
-        public bool EntityEndSquare
+        private Grid_Square _EntityEndSquare;
+        public Grid_Square EntityEndSquare
         {
             get { return _EntityEndSquare; }
             set { _EntityEndSquare = value; RaisePropertyChanged(nameof(EntityEndSquare)); }
         }
 
-        //This square is identified as one that has an entity placed on it, but it is not the primary square
-        private bool _EntitySecondarySquare;
-        public bool EntitySecondarySquare
+        private bool _IsEntityEndSquare;
+        public bool IsEntityEndSquare
         {
-            get { return _EntitySecondarySquare; }
-            set { _EntitySecondarySquare = value; RaisePropertyChanged(nameof(EntitySecondarySquare)); }
+            get { return _IsEntityEndSquare; }
+            set { _IsEntityEndSquare = value; RaisePropertyChanged(nameof(IsEntityEndSquare)); }
+        }
+
+        private List<Grid_Square> _EntitySecondarySquareList;
+        public List<Grid_Square> EntitySecondarySquareList
+        {
+            get { return _EntitySecondarySquareList; }
+            set { _EntitySecondarySquareList = value; RaisePropertyChanged(nameof(EntitySecondarySquareList)); }
+        }
+
+        //This square is identified as one that has an entity placed on it, but it is not the primary square
+        private bool _IsEntitySecondarySquare;
+        public bool IsEntitySecondarySquare
+        {
+            get { return _IsEntitySecondarySquare; }
+            set { _IsEntitySecondarySquare = value; RaisePropertyChanged(nameof(IsEntitySecondarySquare)); }
         }
 
         //stores a generic building on the grid, remember to cycle through this during generation

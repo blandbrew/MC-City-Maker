@@ -9,14 +9,14 @@ namespace MC_City_Maker
 {
 
     //public enum gridsquare_legend { Initialized, Selected, Infrustructure, Building, Scenery, water };
-    public enum GridSquare_Zoning {Selected, Building, Infrustructure, Scenery, Water, None }
-    public enum BuildingClass { Residential, Commercial, Industrial, Government, Educational, Recreational, Landmarks }
-    public enum BuildingTypeResidential { Residential, Commercial, Industrial, Utility, Service, None }
+    public enum GridSquare_Zoning {None, Selected, Building, Infrustructure, Scenery, Water }
+    public enum BuildingClass { None, Residential, Commercial, Industrial, Government, Educational, Recreational, Landmarks }
+    public enum BuildingTypeResidential { None, Residential, Commercial, Industrial, Utility, Service }
 
 
-    public enum InfrustructureClass { Road, Rail, Subway, bridge, Wall, None }
-    public enum SceneryClass { Park, Playground, Garden, Other, None }
-    public enum WaterClass { pond, lake, coast, waterfall, river}
+    public enum InfrustructureClass { None, Road, Rail, Subway, bridge, Wall }
+    public enum SceneryClass { None, Park, Playground, Garden, Other }
+    public enum WaterClass { None, pond, lake, coast, waterfall, river}
 
 
 

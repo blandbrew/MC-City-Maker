@@ -111,8 +111,8 @@
                               Background="White" 
                               HorizontalAlignment="Right"
                               HorizontalContentAlignment="Right"
-                              ItemsSource="{Binding Path=UISpaceBetweenFloors}"
-                              SelectedItem="{Binding Path=spaceBetweenFloors}">
+                              ItemsSource="{Binding Path=UISelectionRooftop}"
+                              SelectedItem="{Binding Path=rooftype}">
                     </ComboBox>
 
 
