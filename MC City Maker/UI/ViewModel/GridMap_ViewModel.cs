@@ -115,7 +115,7 @@ namespace MC_City_Maker.UI.ViewModel
 
             ClickGridContainer = new RelayCommand(new Action<object>(SelectContainer));
             RightClickGridSquare = new RelayCommand(new Action<object>(DeselectSquare));
-            ClickZone = new RelayCommand(new Action<object>(SelectZone));
+
             ClickToolSelect = new RelayCommand(new Action<object>(SelectTool));
             ClickToolPlace = new RelayCommand(new Action<object>(PlaceTool));
             ClickToolDelete = new RelayCommand(new Action<object>(DeleteTool));
@@ -399,22 +399,7 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        //Marked for deletion
-        /// <summary>
-        /// Handles building stack panel on the UI
-        /// </summary>
-        public string BuildingStackPanel
-        {
-            get
-            {
-                return _BuildingStackPanel;
-            }
-            set
-            {
-                _BuildingStackPanel = value;
-                RaisePropertyChanged(nameof(BuildingStackPanel));
-            }
-        }
+
 
         /// <summary>
         /// Creates Template for Generic Building
@@ -448,22 +433,6 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
-        /*Marked for deletion*/
-        /// <summary>
-        /// Testing the label on a template
-        /// </summary>
-        public string TemplateLabelTest
-        {
-            get
-            {
-                return _TemplateLabelTest;
-            }
-            set
-            {
-                _TemplateLabelTest = value;
-                RaisePropertyChanged(nameof(TemplateLabelTest));
-            }
-        }
 
         /// <summary>
         /// Launches NewCity Window to define coordinate and starting grid size
@@ -538,44 +507,6 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        //MARKED FOR REMOVAL, now handling with mouse behavior
-        /// <summary>
-        /// Handles action when square is selected
-        /// </summary>
-        /// <param name="obj"></param>
-        //public void UpdateSquare(object obj)
-        //{
-        //    Grid_Square _selectedSquare = (Grid_Square)obj;
-
-        //    if (ToolSelect)
-        //    {
-        //        SelectSquare(_selectedSquare);
-        //    }
-
-        //    if(ToolPlace)
-        //    {
-        //        PlaceSquare(_selectedSquare);
-
-        //    }
-
-        //    if(ToolDelete)
-        //    {
-        //        UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-        //        gridMap.DeleteSquare(_selectedSquare);
-        //    }
-        //}
-
-        /*Marked for deletion*/
-        /// <summary>
-        /// Selects square which loads the data into the template
-        /// </summary>
-        /// <param name="_selectedSquare"></param>
-        private void SelectSquare(Grid_Square _selectedSquare)
-        {
-            //UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
-            //gridMap.SelectSquare(_selectedSquare, GridSquare_Zoning.Selected);
-        }
-
 
         /// <summary>
         /// Places square
@@ -591,6 +522,28 @@ namespace MC_City_Maker.UI.ViewModel
 
             Debug.WriteLine("PlaceSquare executed");
             UISquareArrayCoordinate = _selectedSquare.SquareArrayCoordinate;
+            //gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+
+            switch (vmSelectedZone)
+            {
+                case GridSquare_Zoning.Building:
+
+                    gridMap.PlaceSquare(_selectedSquare, vmSelectedZone, BuildingTemplate.length, BuildingTemplate.width);
+                    break;
+                case GridSquare_Zoning.Infrustructure:
+
+                    gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+                    break;
+                case GridSquare_Zoning.Scenery:
+  
+                    gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+                    break;
+                case GridSquare_Zoning.Water:
+
+                    gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
+                    break;
+
+            }
             gridMap.PlaceSquare(_selectedSquare, vmSelectedZone);
             //observable_ui_gridSquare.Add(_selectedSquare);
         }
@@ -613,27 +566,7 @@ namespace MC_City_Maker.UI.ViewModel
         }
 
 
-        /*Marked for removal - no longer needed - need to handle in a different manner*/
-        /// <summary>
-        /// Sets zone value for the clicked square
-        /// </summary>
-        /// <param name="obj"></param>
-        public void SelectZone(object obj)
-        {
-            string selectedZone = (string)obj;
-            vmSelectedZone = UI_Constants.StringToZoneConverter(selectedZone);
-            if(selectedZone.Equals("Infrustructure"))
-            {
-                Debug.WriteLine("Road Template");
-                RoadTemplate = new Roads();
-                BuildingTemplate = null;
-            }else
-            {
-                BuildingTemplate = new GenericBuilding();
-                RoadTemplate = null;
-            }
-            Debug.WriteLine("clicked zone set: " + selectedZone);
-        }
+
 
         public void SelectTool(object obj)
         {
@@ -719,37 +652,42 @@ namespace MC_City_Maker.UI.ViewModel
 
         public void SetZoneToggleButton(string togglebutton)
         {
-            //TODO handle generic zone classes here, by creating and nullifying others
+            
             switch (togglebutton)
             {
                 case "Building":
                     ZoneInfrustructure = false;
                     ZoneWater = false;
                     ZoneScenery = false;
+                    vmSelectedZone = GridSquare_Zoning.Building;
                     SetZoneClass(togglebutton);
                     break;
                 case "Infrustructure":
                     ZoneBuilding = false;
                     ZoneWater = false;
                     ZoneScenery = false;
+                    vmSelectedZone = GridSquare_Zoning.Infrustructure;
                     SetZoneClass(togglebutton);
                     break;
                 case "Scenery":
                     ZoneBuilding = false;
                     ZoneInfrustructure = false;
                     ZoneWater = false;
+                    vmSelectedZone = GridSquare_Zoning.Scenery;
                     SetZoneClass(togglebutton);
                     break;
                 case "Water":
                     ZoneBuilding = false;
                     ZoneInfrustructure = false;
                     ZoneScenery = false;
+                    vmSelectedZone = GridSquare_Zoning.Water;
                     SetZoneClass(togglebutton);
                     break;
                 default:
                     ZoneInfrustructure = false;
                     ZoneWater = false;
                     ZoneScenery = false;
+                    vmSelectedZone = GridSquare_Zoning.Building;
                     SetZoneClass(togglebutton);
                     break;
 
@@ -1108,6 +1046,8 @@ namespace MC_City_Maker.UI.ViewModel
                         //outputs coordinate (y,x) int format
                         Debug.WriteLine("Hover square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
 
+
+                        //TODO: Need to add the capability for ZoneInfrustructure, Scenery, and Water
                         if (ZoneBuilding)
                         {
                             //get the generic building object length and width
@@ -1183,7 +1123,12 @@ namespace MC_City_Maker.UI.ViewModel
                         HoverSquares.Remove(obsSq);
                         obsSq.HoverStatus = false;
 
+                        Debug.WriteLine("observable filling zone");
+
+                        //TODO - square zone lookup method.
                         obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
+                        
+
                     //Color clear = Colors.White;
 
                     //obsSq.FillColor = clear;
@@ -1199,6 +1144,7 @@ namespace MC_City_Maker.UI.ViewModel
                 
                 Color HovorColor = Color.FromArgb(75, 0, 255, 0);
 
+                Debug.WriteLine("hover filling zone");
                 hovSq.FillColor = HovorColor;
 
             }

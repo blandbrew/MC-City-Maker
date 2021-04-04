@@ -34,6 +34,7 @@ namespace MC_City_Maker.Grid_Classes
         public (int, int) ParentContainerArrayCoordinate { get; private set; }
         public (int, int) SquareArrayCoordinate { get; private set; }
 
+
         //marked for removal
         public Rectangle gridSquareRectangle { get; set; }
 
@@ -99,7 +100,7 @@ namespace MC_City_Maker.Grid_Classes
             set { _IsEntityEndSquare = value; RaisePropertyChanged(nameof(IsEntityEndSquare)); }
         }
 
-        private List<Grid_Square> _EntitySecondarySquareList;
+        private List<Grid_Square> _EntitySecondarySquareList = new List<Grid_Square>();
         public List<Grid_Square> EntitySecondarySquareList
         {
             get { return _EntitySecondarySquareList; }

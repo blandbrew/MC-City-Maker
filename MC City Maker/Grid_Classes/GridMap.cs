@@ -277,16 +277,20 @@ namespace MC_City_Maker
                                 //sets the end square in the start square
                                 selected.EntityEndSquare = _tempSquare2;
 
+                                Color greyRed = new Color();
+                                greyRed = Color.FromRgb(99, 75, 70);
                                 //Sets the properties for the square
-                                _tempSquare2.FillColor = UI_Constants.GetZoningColor(zone);
+                                _tempSquare2.FillColor = greyRed;
                                 _tempSquare2.Zone = zone;
                                 _tempSquare2.Selected = true;
 
                             } else if(i == 0 && j ==0)
                             {
+                                Color greyRed = new Color();
+                                greyRed = Color.FromRgb(99, 75, 70);
                                 //start square
                                 selected.IsEntityStartSquare = true;
-                                selected.FillColor = UI_Constants.GetZoningColor(zone);
+                                selected.FillColor = greyRed;
                                 selected.Zone = zone;
                                 selected.Selected = true;
                             } else
@@ -323,7 +327,7 @@ namespace MC_City_Maker
             //This overrides the existing building
             if (selected.Selected == true && selected.Zone != zone)
             {
-
+                Debug.WriteLine("OverWriting zone");
                 selected.FillColor = UI_Constants.GetZoningColor(zone);
                 selected.Zone = zone;
                 return;
