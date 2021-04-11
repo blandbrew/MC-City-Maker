@@ -250,13 +250,16 @@ namespace MC_City_Maker
         /// Specify the Length and the width of the placed zone.  The clicked square
         /// will be designated the start square and squares are evaluated left to right then top to bottom and repeat.
         /// </summary>
-        /// <param name="selected"></param>
+        /// <param name="startSquare"></param>
         /// <param name="zone"></param>
         /// <param name="length"></param>
         /// <param name="width"></param>
-        public void PlaceSquare(Grid_Square selected, GridSquare_Zoning zone, int length, int width)
+        public void PlaceSquare(Grid_Square startSquare, GridSquare_Zoning zone, int length, int width)
         {
-            if (selected.Selected == false)
+            //TODO this section needs to be re-written to properly handle setting of properties through a consistent method vs individually.
+            //TODO need to have a "CAN PLACE" bool value to ensure that the placement of a square can occur.
+
+            if (startSquare.Selected == false)
             {
 
                 try
@@ -269,44 +272,54 @@ namespace MC_City_Maker
                         for (int j = 0; j < width; j++)
                         {
                             //get squares from x
-                            Grid_Square _tempSquare2 = Get_SquareFromContainer(selected.ParentContainerArrayCoordinate, (selected.SquareArrayCoordinate.Item1 + i, selected.SquareArrayCoordinate.Item2 + j));
+                            Grid_Square _loopSquare = Get_SquareFromContainer(startSquare.ParentContainerArrayCoordinate, (startSquare.SquareArrayCoordinate.Item1 + i, startSquare.SquareArrayCoordinate.Item2 + j));
 
+                            //EndSquare
                             if( i == length-1 && j == width-1)
                             {
-                                //end Square
-                                //sets the end square in the start square
-                                selected.EntityEndSquare = _tempSquare2;
+                                _loopSquare.PlaceEndSquare_set_properties(startSquare, zone);
 
-                                Color greyRed = new Color();
-                                greyRed = Color.FromRgb(99, 75, 70);
-                                //Sets the properties for the square
-                                _tempSquare2.FillColor = greyRed;
-                                _tempSquare2.Zone = zone;
-                                _tempSquare2.Selected = true;
 
+                                //Debug.WriteLine("End Square set - GridMap");
+                                ////end Square
+                                ////sets the end square in the start square
+                                //startSquare.EntityEndSquare = _loopSquare;
+                                //_loopSquare.IsEntityEndSquare = true;
+                                //_loopSquare.EntityEndSquare = _loopSquare;
+                                
+                                ////Sets the properties for the square
+                                //_loopSquare.FillColor = UI_Constants.Start_End_GridSquare_Color;
+                                //_loopSquare.Zone = zone;
+                                //_loopSquare.Selected = true;
+
+                            //Start square
                             } else if(i == 0 && j ==0)
                             {
-                                Color greyRed = new Color();
-                                greyRed = Color.FromRgb(99, 75, 70);
-                                //start square
-                                selected.IsEntityStartSquare = true;
-                                selected.FillColor = greyRed;
-                                selected.Zone = zone;
-                                selected.Selected = true;
+                                startSquare.PlaceStartSquare_set_properties(startSquare, zone);
+                                ////start square
+                                //startSquare.EntityStartSquare = startSquare;
+                                //startSquare.IsEntityStartSquare = true;
+                                //startSquare.FillColor = UI_Constants.Start_End_GridSquare_Color;
+                                //startSquare.Zone = zone;
+                                //startSquare.Selected = true;
+
+                            //All other Squares
                             } else
                             {
                                 //Secondary squares
                                 //Every secondary square has reference back to the start square which has reference to the end square as well.
-                                
-                                //added to the list of secondary squares which is stored in the start square
-                                selected.EntitySecondarySquareList.Add(_tempSquare2);
 
-                                //sets the properties of the secondary squares.
-                                _tempSquare2.EntityStartSquare = selected;
-                                _tempSquare2.IsEntitySecondarySquare = true;
-                                _tempSquare2.FillColor = UI_Constants.GetZoningColor(zone);
-                                _tempSquare2.Zone = zone;
-                                _tempSquare2.Selected = true;
+                                _loopSquare.PlaceSecondarySquare_set_properties(startSquare, zone);
+
+                                ////added to the list of secondary squares which is stored in the start square
+                                //startSquare.EntitySecondarySquareList.Add(_loopSquare);
+
+                                ////sets the properties of the secondary squares.
+                                //_loopSquare.EntityStartSquare = startSquare;
+                                //_loopSquare.IsEntitySecondarySquare = true;
+                                //_loopSquare.FillColor = UI_Constants.GetZoningColor(zone);
+                                //_loopSquare.Zone = zone;
+                                //_loopSquare.Selected = true;
                                 
                                 
                             }
@@ -314,6 +327,7 @@ namespace MC_City_Maker
 
                     }
                 }
+
                 catch (IndexOutOfRangeException e)
                 {
                     Debug.WriteLine("index error");
@@ -324,28 +338,80 @@ namespace MC_City_Maker
                 return;
             }
 
+            /*Marked For Removeal*/
             //This overrides the existing building
-            if (selected.Selected == true && selected.Zone != zone)
-            {
-                Debug.WriteLine("OverWriting zone");
-                selected.FillColor = UI_Constants.GetZoningColor(zone);
-                selected.Zone = zone;
-                return;
-            }
+            //if (selected.Selected == true && selected.Zone != zone)
+            //{
+            //    Debug.WriteLine("OverWriting zone");
+            //    selected.FillColor = UI_Constants.GetZoningColor(zone);
+            //    selected.Zone = zone;
+            //    return;
+            //}
         }
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selected"></param>
         public void DeleteSquare(Grid_Square selected)
         {
             if(selected.Selected == true)
             {
-                //clear the square
-                selected.FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);
-                selected.Zone = GridSquare_Zoning.None;
-                selected.Selected = false;
+
+                //start square
+                if(selected.IsEntityStartSquare)
+                {
+                    
+                    foreach(Grid_Square secondarySquare in selected.EntitySecondarySquareList)
+                    {
+                        secondarySquare.DeleteSquare_set_propeties();
+                    }
+                    selected.EntityEndSquare.DeleteSquare_set_propeties();
+                    selected.DeleteSquare_set_propeties();
+
+                }else if(selected.IsEntityEndSquare )
+                {
+                    Grid_Square startSquare = selected.EntityStartSquare;
+
+                    foreach (Grid_Square secondarySquare in startSquare.EntitySecondarySquareList)
+                    {
+                        secondarySquare.DeleteSquare_set_propeties();
+                    }
+                    startSquare.EntityEndSquare.DeleteSquare_set_propeties();
+                    startSquare.DeleteSquare_set_propeties();
+
+                }else if(selected.IsEntitySecondarySquare)
+                {
+                    Grid_Square startSquare = selected.EntityStartSquare;
+
+                    foreach (Grid_Square secondarySquare in startSquare.EntitySecondarySquareList)
+                    {
+                        Debug.WriteLine(secondarySquare.startCoordinate);
+                        secondarySquare.DeleteSquare_set_propeties();
+                    }
+                    startSquare.EntityEndSquare.DeleteSquare_set_propeties();
+                    startSquare.DeleteSquare_set_propeties();
+                }
+
+            }else
+            {
+                //TODO provide Toast message nothing to delete
+                return;
             }
         }
+
+        private void DeleteSquare_clearsquare(Grid_Square squareToClear)
+        {
+            squareToClear.IsEntityStartSquare = false;
+            squareToClear.IsEntityEndSquare = false;
+            squareToClear.IsEntitySecondarySquare = false;
+            squareToClear.FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);
+            squareToClear.Zone = GridSquare_Zoning.None;
+            squareToClear.Selected = false;
+        }
+
 
         /// <summary>
         /// Method to begin the process of generating all of the grids.

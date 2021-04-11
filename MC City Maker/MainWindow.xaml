@@ -229,7 +229,8 @@
             <Grid x:Name="theGrid" 
                   MouseBehaviour:MouseBehaviour.MouseMoveCommand="{Binding MouseMoveCommand}"
                   MouseBehaviour:MouseBehaviour.MouseUpCommand="{Binding MouseUpCommand}"
-                  MouseBehaviour:MouseBehaviour.MouseDownCommand="{Binding MouseDownCommand}">
+                  MouseBehaviour:MouseBehaviour.MouseDownCommand="{Binding MouseDownCommand}"
+                  MouseBehaviour:MouseBehaviour.MouseLeaveCommand="{Binding MouseLeaveCommand}">
 
 
 

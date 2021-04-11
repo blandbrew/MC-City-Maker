@@ -2,11 +2,13 @@
 //each can have specific properties such ash
 //marking adjacent grids, offsets for roads, subterannian features, etc.
 
+using MC_City_Maker.Constants;
 using MC_City_Maker.Grid_Zones.Structures;
 using MC_City_Maker.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,14 +103,20 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private List<Grid_Square> _EntitySecondarySquareList = new List<Grid_Square>();
+        /// <summary>
+        /// List of entity squares
+        /// </summary>
         public List<Grid_Square> EntitySecondarySquareList
         {
             get { return _EntitySecondarySquareList; }
             set { _EntitySecondarySquareList = value; RaisePropertyChanged(nameof(EntitySecondarySquareList)); }
         }
 
-        //This square is identified as one that has an entity placed on it, but it is not the primary square
+
         private bool _IsEntitySecondarySquare;
+        /// <summary>
+        /// This square is identified as one that has an entity placed on it, but it is not the primary square
+        /// </summary>
         public bool IsEntitySecondarySquare
         {
             get { return _IsEntitySecondarySquare; }
@@ -129,12 +137,16 @@ namespace MC_City_Maker.Grid_Classes
 
 
         private bool _Selected = false;
+        /// <summary>
+        /// Marks a grid square as having been selected
+        /// </summary>
         public bool Selected
         {
             get { return _Selected; }
             set { _Selected = value; RaisePropertyChanged(nameof(Selected)); }
         }
 
+        /*Deprication review- this may be OBE and replaced with the new entity start/stop/secondary*/
         private bool _Placed = false;
         public bool Placed
         {
@@ -178,10 +190,13 @@ namespace MC_City_Maker.Grid_Classes
         }
 
         private System.Windows.Media.Color _FillColor;
-        public System.Windows.Media.Color FillColor
+        public System.Windows.Media.Color FillColor //Should look at setting this to private
         {
             get { return _FillColor; }
-            set { _FillColor = value; RaisePropertyChanged(nameof(FillColor)); }
+            set { //BUG MCB-14
+                  _FillColor = value; RaisePropertyChanged(nameof(FillColor)); }
+
+         
         }
 
         //marked for removal
@@ -249,5 +264,113 @@ namespace MC_City_Maker.Grid_Classes
         }
 
 
+        /*Placing Square Properties*/
+
+        /**Grid Square handling
+         * The start square is the main square for the entire placement/deleting.  All squares reference back to the placed entities start square.
+         * This way, when a user interacts with the grid, a reference can always be called back to the start square and retrieve all information
+         * of any associated square of the entity.
+         */
+
+
+        /// <summary>
+        /// Grid Placement - Sets the properties for the entity's start square
+        /// </summary>
+        /// <param name="startSquare"></param>
+        /// <param name="zone"></param>
+        public void PlaceStartSquare_set_properties(Grid_Square startSquare, GridSquare_Zoning zone)
+        {
+            EntityStartSquare = startSquare;
+            IsEntityStartSquare = true;
+            IsEntitySecondarySquare = false;
+            IsEntityEndSquare = false;
+            FillColor = UI_Constants.Start_End_GridSquare_Color;
+            Zone = zone;
+            Selected = true;
+        }
+
+        /// <summary>
+        /// Grid Placement - Sets the properties for entity's secondary square
+        /// </summary>
+        /// <param name="secondarySquare"></param>
+        /// <param name="startSquare"></param>
+        /// <param name="zone"></param>
+        public void PlaceSecondarySquare_set_properties(Grid_Square startSquare, GridSquare_Zoning zone)
+        {
+            EntityStartSquare = startSquare;
+            IsEntityStartSquare = false;
+            IsEntitySecondarySquare = true;
+            IsEntityEndSquare = false;
+            FillColor = UI_Constants.Start_End_GridSquare_Color;
+            Zone = zone;
+            Selected = true;
+            startSquare.EntitySecondarySquareList.Add(this); //adds the secondary square to the list inside the start square
+        }
+
+        /// <summary>
+        /// Grid Placement - Sets the properties for the entity's end square
+        /// </summary>
+        /// <param name="endSquare"></param>
+        /// <param name="startSquare"></param>
+        /// <param name="zone"></param>
+        public void PlaceEndSquare_set_properties(Grid_Square startSquare, GridSquare_Zoning zone)
+        {
+            EntityStartSquare = startSquare;
+            startSquare.EntityEndSquare = this;
+            IsEntityStartSquare = false;
+            IsEntitySecondarySquare = false;
+            IsEntityEndSquare = true;
+            FillColor = UI_Constants.Start_End_GridSquare_Color;
+            Zone = zone;
+            Selected = true;
+            
+        }
+
+
+
+        public void DeleteSquare_set_propeties()
+        {
+
+            EntityStartSquare = null;
+            EntityEndSquare = null;
+            IsEntityStartSquare = false;
+            IsEntitySecondarySquare = false;
+            IsEntityEndSquare = false;
+            FillColor = UI_Constants.GetZoningColor(GridSquare_Zoning.None);
+            Zone = GridSquare_Zoning.None; ;
+            Selected = false;
+
+
+            //if(selectedSquareToDelete.IsEntityStartSquare)
+            //{
+
+
+
+            //} else if(selectedSquareToDelete.IsEntityEndSquare)
+            //{
+
+            //} else if(selectedSquareToDelete.IsEntitySecondarySquare)
+            //{
+
+            //}
+            //else
+            //{
+            //   //Not valid selected square was clicked
+            //}
+
+
+        }
+
+
+        private bool IsSquareFilledCheck()
+        {
+            if (IsEntityStartSquare || IsEntitySecondarySquare || IsEntityEndSquare)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
     }
 }

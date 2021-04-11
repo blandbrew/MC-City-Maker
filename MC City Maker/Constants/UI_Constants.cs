@@ -13,6 +13,10 @@ namespace MC_City_Maker.Constants
         public const int UI_Rectangle_Height = 15;
         public static Color Selected_Container_Color = Colors.Red;
         public static Color Unselected_grid = Colors.White;
+        public static Color Start_End_GridSquare_Color = Color.FromRgb(99, 75, 70);  //greyred
+        public static Color Cannot_Place_Square = Colors.PaleVioletRed;
+        public static Color Can_Place_Square = Color.FromArgb(75, 0, 255, 0);
+
 
         public static Color GetZoningColor(GridSquare_Zoning zone)
         {

@@ -285,6 +285,22 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        /// <summary>
+        /// Controls whether or not grid square can be placed
+        /// </summary>
+        private bool _AllowGridSquarePlacement;
+        public bool AllowGridSquarePlacement
+        {
+            get
+            {
+                return _AllowGridSquarePlacement;
+            }
+            set
+            {
+                _AllowGridSquarePlacement = value;
+                RaisePropertyChanged(nameof(AllowGridSquarePlacement));
+            }
+        }
 
         private bool _ZoneInfrustructure;
         public bool ZoneInfrustructure
@@ -771,6 +787,16 @@ namespace MC_City_Maker.UI.ViewModel
             set { _mouseMoveCommand = value; }
         }
 
+        private RelayCommand _mouseLeaveCommand;
+        public RelayCommand MouseLeaveCommand
+        {
+            get
+            {
+                if (_mouseLeaveCommand == null) _mouseLeaveCommand = new RelayCommand(param => MouseLeave((MouseEventArgs)param));
+                return _mouseLeaveCommand;
+            }
+            set { _mouseLeaveCommand = value; }
+        }
 
 
         SelectionBox aSelectionBox;
@@ -923,6 +949,7 @@ namespace MC_City_Maker.UI.ViewModel
             if(mouseDown == false && ToolPlace)
             {
                 Point mousePos = e.GetPosition((IInputElement)e.Source);
+              
                 MouseInSquare(mousePos);
             }
 
@@ -937,10 +964,6 @@ namespace MC_City_Maker.UI.ViewModel
 
             mouseDown = false;
             Point mouseUpPos = e.GetPosition((IInputElement)e.Source);
-
-
-
-            //
 
 
             if (DetermineMouseDownHoldThreshold(mouseDownPos, mouseUpPos))
@@ -973,11 +996,14 @@ namespace MC_City_Maker.UI.ViewModel
 
                         if (rect.Contains(mouseDownPos))
                         {
-                            if(ToolPlace)
+                            if (ToolPlace && AllowGridSquarePlacement)
+                            {
                                 PlaceSquare(sq);
-
-                            if (ToolDelete)
+                            } else if (ToolDelete)
+                            {
                                 DeleteSquare(sq);
+                            }
+                                
 
                             Debug.WriteLine("Clicked square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
                         }
@@ -988,10 +1014,16 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        private void MouseLeave(MouseEventArgs e)
+        {
+            //Point mousePos = e.GetPosition((IInputElement)e.Source);
+            Debug.WriteLine("Mouse left location");
+        }
 
 
-
-
+        /// <summary>
+        /// Identifies the selection box squares and places or deletes them
+        /// </summary>
         public void SelectionBoxPlaceOrDelete()
         {
             foreach (Grid_Square sq in observable_ui_gridSquare.ToList())
@@ -1009,15 +1041,16 @@ namespace MC_City_Maker.UI.ViewModel
                     {
                         //Debug.WriteLine("INTERSECTION " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
 
-                        if(ToolPlace)
+                        if (ToolPlace && AllowGridSquarePlacement)
                         {
                             PlaceSquare(sq);
                         }
-                        if(ToolDelete)
+                        else if (ToolDelete)
                         {
+                            Debug.WriteLine("Delete Square");
                             DeleteSquare(sq);
                         }
-                        
+
                     }
 
                 }
@@ -1062,7 +1095,7 @@ namespace MC_City_Maker.UI.ViewModel
                             try
                             {
 
-                                //HoverSquares.Clear();
+                                //Loop gets the squares that will be hovering based on users selection of placement size
                                 for (int i = 0; i < buildingLength; i++)
                                 {
                                     //get squares from y
@@ -1094,16 +1127,7 @@ namespace MC_City_Maker.UI.ViewModel
                             {
                                 Debug.WriteLine("index error");
 
-                                ////Colors each square red when it is not properly alighted
-                                ////NOT WORKING RIGHT NOW
-                                //foreach (Grid_Square hovSq in HoverSquares)
-                                //{
-                                //    //Red Color
-                                //    Color HovorColor = Color.FromArgb(75, 255, 0, 0);
 
-                                //    hovSq.FillColor = HovorColor;
-
-                                //}
                             }
 
                     }
@@ -1118,34 +1142,68 @@ namespace MC_City_Maker.UI.ViewModel
 
                 foreach(Grid_Square obsSq in observable_ui_gridSquare.ToList())
                 {
+                    //If a gridsquare is not in hoversquares, but hover status is still true
+                        //this means the user has moved the cursor and it is not valid anymore
+                     //Remove the status and remove the square from the hoverlist
+                     //then set the properties to return the square to the proper color
                     if (!HoverSquares.Contains(obsSq) && obsSq.HoverStatus == true)
                     {
                         HoverSquares.Remove(obsSq);
                         obsSq.HoverStatus = false;
 
-                        Debug.WriteLine("observable filling zone");
+                        //Debug.WriteLine("observable filling zone");
 
                         //TODO - square zone lookup method.
-                        obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
+                        //This is overwriting the squares
                         
+                        if(obsSq.IsEntityStartSquare || obsSq.IsEntityEndSquare)
+                        {
+                            obsSq.FillColor = UI_Constants.Start_End_GridSquare_Color;
+                        }else
+                        {
+                            //Fill squares with their zone type
+                            obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
+                        }
 
-                    //Color clear = Colors.White;
-
-                    //obsSq.FillColor = clear;
-
-                    //Debug.WriteLine("Squares zone = " + obsSq.Zone);
-                    //Debug.WriteLine("Squares selected status = " + obsSq.Selected);
-               
-                }
+                    }else
+                    {
+                        //do nothing
+                    }
                 }
 
             foreach (Grid_Square hovSq in HoverSquares)
             {
-                
-                Color HovorColor = Color.FromArgb(75, 0, 255, 0);
+                foreach (Grid_Square obsSq in observable_ui_gridSquare.ToList())
+                {
 
-                Debug.WriteLine("hover filling zone");
-                hovSq.FillColor = HovorColor;
+                    if(GridSquare_IntersectionTest(hovSq, obsSq) && obsSq.Selected)
+                    {
+                        foreach (Grid_Square hoverSquares in HoverSquares)
+                        {
+                            hoverSquares.FillColor = UI_Constants.Cannot_Place_Square;
+                            
+                        }
+
+                        //Prevents grid square placement
+                        AllowGridSquarePlacement = false;
+                        return;
+                            
+                    }
+                    else
+                    {
+                        //Allows gridsquare placement
+                        AllowGridSquarePlacement = true;
+                        hovSq.FillColor = UI_Constants.Can_Place_Square;
+                    }
+                }
+                   
+
+                //Debug.WriteLine("hover filling zone");
+
+                //TODO NEW METHOD GRID SQUARE INTERSECT TEST WITH OBSERVABLE SQUARES.
+                //IF NO INTERSECTION, Do hover color, if intersection RED COVER COLOR
+                //TODO, NEED TO CREATE Bool - CAN PLACE, to prevent placement if it is not acceptable.
+               
 
             }
 
@@ -1153,8 +1211,21 @@ namespace MC_City_Maker.UI.ViewModel
 
         }
 
+        /// <summary>
+        /// Tests if two Grid Squares intersect
+        /// </summary>
+        /// <param name="square1"></param>
+        /// <param name="square2"></param>
+        /// <returns></returns>
+        private bool GridSquare_IntersectionTest(Grid_Square square1, Grid_Square square2)
+        {
+            Rect rect1 = new Rect(square1.X, square1.Y, square1.Width, square1.Height);
+            Rect rect2 = new Rect(square2.X, square2.Y, square2.Width, square2.Height);
 
+            return rect1.IntersectsWith(rect2);
 
+            
+        }
 
 
 

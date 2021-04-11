@@ -19,6 +19,9 @@ namespace MC_City_Maker.UI.ViewModel
         public static readonly DependencyProperty MouseMoveCommandProperty =
         DependencyProperty.RegisterAttached("MouseMoveCommand", typeof(ICommand), typeof(MouseBehaviour), new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseMoveCommandChanged)));
 
+        public static readonly DependencyProperty MouseLeaveCommandProperty =
+        DependencyProperty.RegisterAttached("MouseLeaveCommand", typeof(ICommand), typeof(MouseBehaviour), new FrameworkPropertyMetadata(new PropertyChangedCallback(MouseLeaveCommandChanged)));
+
 
         /*Mouse Up Commands*/
 
@@ -102,6 +105,34 @@ namespace MC_City_Maker.UI.ViewModel
         public static ICommand GetMouseMoveCommand(UIElement element)
         {
             return (ICommand)element.GetValue(MouseMoveCommandProperty);
+        }
+
+
+        /*Mouse Leave Commands*/
+        private static void MouseLeaveCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            FrameworkElement element = (FrameworkElement)d;
+
+            element.MouseLeave += new MouseEventHandler(element_MouseLeave);
+        }
+
+        static void element_MouseLeave(object sender, MouseEventArgs e)
+        {
+            FrameworkElement element = (FrameworkElement)sender;
+
+            ICommand command = GetMouseLeaveCommand(element);
+
+            command.Execute(e);
+        }
+
+        public static void SetMouseLeaveCommand(UIElement element, ICommand value)
+        {
+            element.SetValue(MouseLeaveCommandProperty, value);
+        }
+
+        public static ICommand GetMouseLeaveCommand(UIElement element)
+        {
+            return (ICommand)element.GetValue(MouseLeaveCommandProperty);
         }
     }
 }
