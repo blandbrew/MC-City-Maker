@@ -418,7 +418,9 @@
 
         <Grid Grid.RowSpan="4" Grid.Column="5" Margin="0,18,2,13" Grid.Row="1" >
             <ContentControl x:Name="buildingTemplatePanel" Content="{Binding BuildingTemplate}" />
-            <ContentControl x:Name="infrustructureRoadTemplatePanel" Content="{Binding RoadTemplate}" />
+            <ContentControl x:Name="infrustructureTemplatePanel" Content="{Binding InfrustructureTemplate}" />
+            <ContentControl x:Name="SceneryTemplatePanel" Content="{Binding SceneryTemplate}" />
+            <ContentControl x:Name="WaterTemplatePanel" Content="{Binding WaterTemplate}" />
         </Grid>
     </Grid>
 

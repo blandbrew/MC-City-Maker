@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -261,6 +262,15 @@ namespace MC_City_Maker.Grid_Classes
         {
             return adjacent_Squares;
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Converts current gridsquare to system.windows.Rect
+        /// </summary>
+        /// <returns></returns>
+        public Rect Convert_GridSqureToRect()
+        {
+            return new Rect(this.X, this.Y, this.Width, this.Height);
         }
 
 

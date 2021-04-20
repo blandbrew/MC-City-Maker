@@ -393,6 +393,9 @@ namespace MC_City_Maker
                     }
                     startSquare.EntityEndSquare.DeleteSquare_set_propeties();
                     startSquare.DeleteSquare_set_propeties();
+                } else
+                {
+                    selected.DeleteSquare_set_propeties();
                 }
 
             }else

@@ -19,6 +19,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MC_City_Maker.Grid_Zones.Scenery;
+using MC_City_Maker.Grid_Zones.Water;
 
 //YOU CAN ONLY BIND PROPERTIES and NOT! Individual variables!
 
@@ -51,8 +53,8 @@ namespace MC_City_Maker.UI.ViewModel
         private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.Building;
         //private GridSquare_Zoning vmSelectedZone = GridSquare_Zoning.None;
         //Default Building for zone
-        private GenericBuilding _BuildingTemplate;
-        private Roads _RoadTemplate;
+        //private GenericBuilding _BuildingTemplate;
+        //private Roads _RoadTemplate;
 
        
 
@@ -417,6 +419,7 @@ namespace MC_City_Maker.UI.ViewModel
 
 
 
+        private GenericBuilding _BuildingTemplate;
         /// <summary>
         /// Creates Template for Generic Building
         /// </summary>
@@ -433,19 +436,54 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+        private GenericInfrustructure _InfrustructureTemplate;
         /// <summary>
         /// Creates Template for Roads
         /// </summary>
-        public Roads RoadTemplate
+        public GenericInfrustructure InfrustructureTemplate
         {
             get
             {
-                return _RoadTemplate;
+                return _InfrustructureTemplate;
             }
             set
             {
-                _RoadTemplate = value;
-                RaisePropertyChanged(nameof(RoadTemplate));
+                _InfrustructureTemplate = value;
+                RaisePropertyChanged(nameof(InfrustructureTemplate));
+            }
+        }
+
+        private GenericScenery _SceneryTemplate;
+        /// <summary>
+        /// Creates Template for Roads
+        /// </summary>
+        public GenericScenery SceneryTemplate
+        {
+            get
+            {
+                return _SceneryTemplate;
+            }
+            set
+            {
+                _SceneryTemplate = value;
+                RaisePropertyChanged(nameof(SceneryTemplate));
+            }
+        }
+
+        private GenericWater _WaterTemplate;
+        /// <summary>
+        /// Creates Template for Roads
+        /// </summary>
+        public GenericWater WaterTemplate
+        {
+            get
+            {
+                return _WaterTemplate;
+            }
+            set
+            {
+                _WaterTemplate = value;
+                RaisePropertyChanged(nameof(WaterTemplate));
             }
         }
 
@@ -719,27 +757,33 @@ namespace MC_City_Maker.UI.ViewModel
             {
                 case "Building":
                     BuildingTemplate = new GenericBuilding();
-                    RoadTemplate = null;
-                    //scenery = null
-                    //water = null;
+                    InfrustructureTemplate = null;
+                    SceneryTemplate = null;
+                    WaterTemplate = null;
                     break;
                 case "Infrustructure":
-                    RoadTemplate = new Roads();
                     BuildingTemplate = null;
-                    //scenery = null
-                    //water = null;
+                    InfrustructureTemplate = new GenericInfrustructure();
+                    SceneryTemplate = null;
+                    WaterTemplate = null;
                     break;
                 case "Scenery":
-                    //TODO add scenery template handling
+                    BuildingTemplate = null;
+                    InfrustructureTemplate = null;
+                    SceneryTemplate = new GenericScenery();
+                    WaterTemplate = null;
                     break;
                 case "Water":
-                    //TODO Add water template handling
+                    BuildingTemplate = null;
+                    InfrustructureTemplate = null;
+                    SceneryTemplate = null;
+                    WaterTemplate = new GenericWater();
                     break;
                 default:
                     BuildingTemplate = new GenericBuilding();
-                    RoadTemplate = null;
-                    //scenery = null
-                    //water = null;
+                    InfrustructureTemplate = null;
+                    SceneryTemplate = null;
+                    WaterTemplate = null;
                     break;
 
             }
@@ -814,6 +858,7 @@ namespace MC_City_Maker.UI.ViewModel
             Debug.WriteLine("Mouse down");
 
             mouseDownPos = e.GetPosition((IInputElement)e.Source);
+            MouseInGrid = true;
 
             mouseDown = true;
             if(ToolSelect)
@@ -988,11 +1033,8 @@ namespace MC_City_Maker.UI.ViewModel
                 {
                     if (sq != null)
                     {
-                        //Debug.WriteLine("NOT NULL");
-
-                        //Rectangle rectangle = sq.gridSquareRectangle;
-
-                        Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+                        //converts rectangle to position
+                        Rect rect = sq.Convert_GridSqureToRect();
 
                         if (rect.Contains(mouseDownPos))
                         {
@@ -1001,6 +1043,7 @@ namespace MC_City_Maker.UI.ViewModel
                                 PlaceSquare(sq);
                             } else if (ToolDelete)
                             {
+                                Debug.WriteLine("Not Dragged - Delete condition");
                                 DeleteSquare(sq);
                             }
                                 
@@ -1014,8 +1057,23 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+
+        bool MouseInGrid;
+       
+
+        /// <summary>
+        /// Executes when mouseLeaves an area
+        /// </summary>
+        /// <param name="e"></param>
         private void MouseLeave(MouseEventArgs e)
         {
+            MouseInGrid = false;
+
+            if (mouseDown && (ToolPlace || ToolDelete))
+            {
+                mouseDown = false;
+                aSelectionBox.selectionBoxVisibility = Visibility.Collapsed;
+            }
             //Point mousePos = e.GetPosition((IInputElement)e.Source);
             Debug.WriteLine("Mouse left location");
         }
@@ -1034,18 +1092,18 @@ namespace MC_City_Maker.UI.ViewModel
 
                     //Rectangle rectangle = sq.gridSquareRectangle;
 
-                    Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+                    Rect rect = sq.Convert_GridSqureToRect();
                     Rect rect2 = new Rect(aSelectionBox.selectionBoxX, aSelectionBox.selectionBoxY, aSelectionBox.selectionBoxWidth, aSelectionBox.selectionBoxHeight);
 
                     if (rect.IntersectsWith(rect2))
                     {
                         //Debug.WriteLine("INTERSECTION " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
 
-                        if (ToolPlace && AllowGridSquarePlacement)
+                        if (ToolPlace && AllowGridSquarePlacement && MouseInGrid)
                         {
                             PlaceSquare(sq);
                         }
-                        else if (ToolDelete)
+                        else if (ToolDelete && MouseInGrid)
                         {
                             Debug.WriteLine("Delete Square");
                             DeleteSquare(sq);
@@ -1057,27 +1115,26 @@ namespace MC_City_Maker.UI.ViewModel
             }
         }
 
+     
 
 
         private void MouseInSquare(Point mouseLocation)
         {
             List<Grid_Square> HoverSquares = new List<Grid_Square>();
+            bool offscreen = false;
 
             foreach (Grid_Square sq in observable_ui_gridSquare.ToList())
             {
                 if (sq != null)
                 {
-                    //Debug.WriteLine("NOT NULL");
-
-                    //Rectangle rectangle = sq.gridSquareRectangle;
 
                     //converts gridsquare rectangle to object that can determain contains point
-                    Rect rect = new Rect(sq.X, sq.Y, sq.Width, sq.Height);
+                    Rect rect = sq.Convert_GridSqureToRect();
 
                     if (rect.Contains(mouseLocation))
                     {
                         //outputs coordinate (y,x) int format
-                        Debug.WriteLine("Hover square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
+                        //Debug.WriteLine("Hover square " + sq.SquareArrayCoordinate.Item1 + "," + sq.SquareArrayCoordinate.Item2);
 
 
                         //TODO: Need to add the capability for ZoneInfrustructure, Scenery, and Water
@@ -1090,25 +1147,13 @@ namespace MC_City_Maker.UI.ViewModel
                             (int, int) parentContainer = sq.ParentContainerArrayCoordinate;
                             (int, int) startingSquare = sq.SquareArrayCoordinate;
 
-                            
-
                             try
                             {
 
                                 //Loop gets the squares that will be hovering based on users selection of placement size
                                 for (int i = 0; i < buildingLength; i++)
                                 {
-                                    //get squares from y
-                                    //Grid_Square _tempSquare1 = gridMap.Get_SquareFromContainer(parentContainer, (startingSquare.Item1 + i, startingSquare.Item2));
 
-                                    //if(!HoverSquares.Contains(_tempSquare1))
-                                    //{
-                                    //   _tempSquare1.HoverStatus = true;   //TODO NEED TO TRACK HOVER STATUS TO COMPARE
-                                    //   HoverSquares.Add(_tempSquare1);
-                                    //}
-
-                                    
-                                    
                                     for (int j = 0; j < buildingWidth; j++)
                                     {
                                         //get squares from x
@@ -1123,11 +1168,13 @@ namespace MC_City_Maker.UI.ViewModel
                                     }
 
                                 }
+                                offscreen = false;
                             } catch (IndexOutOfRangeException e)
                             {
-                                Debug.WriteLine("index error");
+                                offscreen = true;
 
 
+                               // Debug.WriteLine("MouseInSquare - index error");
                             }
 
                     }
@@ -1140,48 +1187,42 @@ namespace MC_City_Maker.UI.ViewModel
 
 
 
-                foreach(Grid_Square obsSq in observable_ui_gridSquare.ToList())
+            foreach(Grid_Square obsSq in observable_ui_gridSquare.ToList())
+            {
+                //If a gridsquare is not in hoversquares, but hover status is still true
+                    //this means the user has moved the cursor and it is not valid anymore
+                    //Remove the status and remove the square from the hoverlist
+                    //then set the properties to return the square to the proper color
+                if (!HoverSquares.Contains(obsSq) && obsSq.HoverStatus == true)
                 {
-                    //If a gridsquare is not in hoversquares, but hover status is still true
-                        //this means the user has moved the cursor and it is not valid anymore
-                     //Remove the status and remove the square from the hoverlist
-                     //then set the properties to return the square to the proper color
-                    if (!HoverSquares.Contains(obsSq) && obsSq.HoverStatus == true)
+                    HoverSquares.Remove(obsSq);
+                    obsSq.HoverStatus = false;
+
+                    if(obsSq.IsEntityStartSquare || obsSq.IsEntityEndSquare)
                     {
-                        HoverSquares.Remove(obsSq);
-                        obsSq.HoverStatus = false;
-
-                        //Debug.WriteLine("observable filling zone");
-
-                        //TODO - square zone lookup method.
-                        //This is overwriting the squares
-                        
-                        if(obsSq.IsEntityStartSquare || obsSq.IsEntityEndSquare)
-                        {
-                            obsSq.FillColor = UI_Constants.Start_End_GridSquare_Color;
-                        }else
-                        {
-                            //Fill squares with their zone type
-                            obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
-                        }
-
+                        obsSq.FillColor = UI_Constants.Start_End_GridSquare_Color;
                     }else
                     {
-                        //do nothing
+                        //Fill squares with their zone type
+                        obsSq.FillColor = UI_Constants.GetZoningColor(obsSq.Zone);
                     }
+
+                }else
+                {
+                    //do nothing
                 }
+            }
 
             foreach (Grid_Square hovSq in HoverSquares)
             {
                 foreach (Grid_Square obsSq in observable_ui_gridSquare.ToList())
                 {
 
-                    if(GridSquare_IntersectionTest(hovSq, obsSq) && obsSq.Selected)
+                    if(GridSquare_IntersectionTest(hovSq, obsSq) && (obsSq.Selected || offscreen))
                     {
                         foreach (Grid_Square hoverSquares in HoverSquares)
                         {
-                            hoverSquares.FillColor = UI_Constants.Cannot_Place_Square;
-                            
+                            hoverSquares.FillColor = UI_Constants.Cannot_Place_Square; 
                         }
 
                         //Prevents grid square placement
@@ -1197,17 +1238,7 @@ namespace MC_City_Maker.UI.ViewModel
                     }
                 }
                    
-
-                //Debug.WriteLine("hover filling zone");
-
-                //TODO NEW METHOD GRID SQUARE INTERSECT TEST WITH OBSERVABLE SQUARES.
-                //IF NO INTERSECTION, Do hover color, if intersection RED COVER COLOR
-                //TODO, NEED TO CREATE Bool - CAN PLACE, to prevent placement if it is not acceptable.
-               
-
             }
-
-
 
         }
 

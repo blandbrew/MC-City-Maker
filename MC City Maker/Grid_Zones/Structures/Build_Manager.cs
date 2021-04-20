@@ -5,7 +5,7 @@
 using MC_City_Maker.Command_Generator;
 using MC_City_Maker.Grid_Classes;
 using MC_City_Maker.Grid_Zones.Infrustructure;
-using MC_City_Maker.Grid_Zones.Scenary;
+using MC_City_Maker.Grid_Zones.Scenery;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace MC_City_Maker.Grid_Zones.Structures
                                     break;
 
                                 case GridSquare_Zoning.Scenery:
-                                    Scenery grass = new Scenery();
+                                    GenericScenery grass = new GenericScenery();
                                     grass.Build_Scenery(aSquare);
                                     break;
 

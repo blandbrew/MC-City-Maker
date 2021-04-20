@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="UI/View/BuildingDataTemplate.xaml" />
                 <ResourceDictionary Source="UI/View/InfrustructureDataTemplate.xaml" />
+                <ResourceDictionary Source="UI/View/SceneryDataTemplate.xaml" />
                 <ResourceDictionary Source="UI/View/WaterDataTemplate.xaml" />
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Cyan" SecondaryColor="LightGreen" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
